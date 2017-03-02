@@ -50,10 +50,19 @@ pip install autoenv # to install if you haven't already installed it
 touch .env
 ```
 
-The `.env` file is where you can declare environment variables specific to this app.  These variables are loaded on `cd`-ing into the directory with the `.env` file.  Your `.env` file should look like this: 
+The `.env` file is where you can declare environment variables specific to this app.  These variables are loaded on `cd`-ing into the directory with the `.env` file.  Your `.env` file should look like this:
 
 ```bash
 export APP_SETTINGS="config.DevelopmentConfig"
 export DATABASE_URL="postgresql://localhost/cu_there_db"
 ...
+```
+
+## Required Environment Variables
+
+```
+APP_SETTINGS
+DATABASE_URL
+FB_CLIENT_ID
+FB_CLIENT_SECRET
 ```
