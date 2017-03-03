@@ -66,5 +66,17 @@ DATABASE_URL
 FB_CLIENT_ID
 FB_CLIENT_SECRET
 LATITUDE # Cornell's latitude
-LONGITUDE # Cornell's longitude 
+LONGITUDE # Cornell's longitude
+```
+
+## Migrating the DB
+To migrate your local `DB`:
+
+```bash
+# Initialize migrations
+python manage.py db init
+# Create a migration
+python manage.py db migrate
+# Apply it to the DB
+python manage.py db upgrade
 ```
