@@ -2,7 +2,7 @@ import requests as r
 import urllib
 import os
 import utils
-import datetime
+import time
 import haversine
 from dateutil import parser
 
@@ -27,12 +27,12 @@ class EventSearch(object):
 
     self.latitude      = kwargs.get('lat', None)
     self.longitude     = kwargs.get('lng', None)
-    self.distance      = kwargs.get('distance', 50)
+    self.distance      = kwargs.get('distance', 500)
     self.access_token  = kwargs.get('access_token', utils.get_app_access_token())
     self.query         = urllib.quote(kwargs.get('query', '').encode('utf-8'))
     self.sort          = kwargs.get('sort', None) if kwargs.get('sort', 'venue') in self.allowed_sorts else None
     self.version       = kwargs.get('version', 'v2.7')
-    self.since         = kwargs.get('since', int(datetime.datetime.now().microsecond / 1000.0))
+    self.since         = kwargs.get('since', int(round(time.time())) - 2.628e+6) # Events from the last month
     self.until         = kwargs.get('until', None)
 
 
@@ -85,7 +85,7 @@ class EventSearch(object):
       return 0
 
 
-  def haversine_distance(self, coords1, coords2, is_miles=True):
+  def haversine_distance(self, coords1, coords2, is_miles=False):
     """
     Haversine distance (https://goo.gl/VdQZp4) between `coords1`
     and `coords2`.
@@ -106,10 +106,9 @@ class EventSearch(object):
 
     # Book-keeping
     id_limit = 50 # Only 50 per /?ids= call allowed by FB
-    curr_time = int(datetime.datetime.now().microsecond / 1000.0)
-    # venues_count = 0
-    # venues_with_events = 0
-    # events_count = 0
+    curr_time = int(round(time.time()))
+    venues_count = 0
+    events_count = 0
 
     # Initial places request info
     place_params = {
@@ -126,7 +125,7 @@ class EventSearch(object):
 
     # Grab places and prepare to get events
     places_data = r.get(place_url).json()['data']
-    venues_len = len(places_data)
+    venues_count = len(places_data)
 
     # Batch places based on FB id_limit
     ids = []
@@ -206,7 +205,7 @@ class EventSearch(object):
           event_r['category']        = event['category'] if 'category' in event else None
           event_r['distance']        = (self.haversine_distance([venue['location']['latitude'],
                                                                  venue['location']['longitude']],
-                                                                [self.latitude, self.longitude])
+                                                                [self.latitude, self.longitude]) * 1000
                                                                  if 'location' in venue else None)
 
           event_r['stats'] = {
@@ -234,18 +233,14 @@ class EventSearch(object):
     for result in results:
       for venue_id in result.keys():
         events.extend(venue_to_events(result[venue_id]))
+    events_count = len(events)
 
     # Sort if specified
     if self.sort is not None:
       events.sort(self.allowed_sorts[self.sort])
 
-    return events
-
-
-# Hand-testing
-"""
-driver = EventSearch(lat=40.710803, lng=-73.964040, distance=100, sort='distance')
-for e in driver.search():
-  print e
-  print ""
-"""
+    # Return events w/metadata
+    return {
+      'events': events,
+      'metadata': { 'venues': venues_count, 'events': events_count }
+    }

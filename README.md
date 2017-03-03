@@ -60,9 +60,11 @@ export DATABASE_URL="postgresql://localhost/cu_there_db"
 
 ## Required Environment Variables
 
-```
+```bash
 APP_SETTINGS
 DATABASE_URL
 FB_CLIENT_ID
 FB_CLIENT_SECRET
+LATITUDE # Cornell's latitude
+LONGITUDE # Cornell's longitude 
 ```
