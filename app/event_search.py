@@ -21,7 +21,7 @@ class EventSearch(object):
     self.longitude     = kwargs.get('lng', None)
     self.distance      = kwargs.get('distance', 50)
     self.access_token  = kwargs.get('access_token', utils.get_app_access_token())
-    self.query         = urllib.quote(kwargs.get('query', '').encode('utf-9'))
+    self.query         = urllib.quote(kwargs.get('query', '').encode('utf-8'))
     self.sort          = kwargs.get('sort', 'venue') if kwargs.get('sort', 'venue') in self.allowed_sorts else None
     self.version       = kwargs.get('version', 'v2.7')
     self.since         = kwargs.get('since', int(datetime.datetime.now().microsecond / 1000.0))
@@ -77,4 +77,42 @@ class EventSearch(object):
     """
     return haversine.haversine(tuple(coords1), tuple(coords2), miles=is_miles)
 
-  
+
+  def search(self):
+    """Overall search function"""
+
+    if (self.latitude is None or self.longitude is None):
+      raise Exception('Please specify both a latitude and longitude')
+
+    if (self.access_token == '' or self.access_token is None):
+      raise Exception('Please specify a valid access token')
+
+    # Book-keeping
+    id_limit = 50 # Only 50 per /?ids= call allowed by FB
+    curr_time = int(datetime.datetime.now().microsecond / 1000.0)
+    venues_count = 0
+    venues_with_events = 0
+    events_count = 0
+
+    # Initial request info
+    place_params = {
+      'type': 'place',
+      'q': self.query,
+      'center': str(self.latitude) + ',' + str(self.longitude),
+      'distance': self.distance,
+      'limit': 1000,
+      'fields': 'id',
+      'access_token': self.access_token
+    }
+    place_url = ('https://graph.facebook.com/' + self.version + '/search?' +
+      urllib.urlencode(place_params))
+
+    places = r.get(place_url)
+
+    # TODO - get events from places
+    return places.json()
+
+
+# Hand-testing
+driver = EventSearch(lat=40.710803, lng=-73.964040,distance=100)
+print driver.search()
