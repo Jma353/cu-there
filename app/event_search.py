@@ -1,10 +1,10 @@
 import requests as r
-import dateutil as du
 import urllib
 import os
 import utils
 import datetime
 import haversine
+from dateutil import parser
 
 class EventSearch(object):
   """
@@ -16,13 +16,21 @@ class EventSearch(object):
 
   def __init__(self, **kwargs):
     """Constructor"""
-    self.allowed_sorts = ['time', 'distance', 'venue', 'popularity']
+
+    # Listed sorts w/matching functions
+    self.allowed_sorts = {
+      'time' : self.compare_time_from_now,
+      'distance': self.compare_distance,
+      'venue': self.compare_venue,
+      'popularity': self.compare_popularity
+    }
+
     self.latitude      = kwargs.get('lat', None)
     self.longitude     = kwargs.get('lng', None)
     self.distance      = kwargs.get('distance', 50)
     self.access_token  = kwargs.get('access_token', utils.get_app_access_token())
     self.query         = urllib.quote(kwargs.get('query', '').encode('utf-8'))
-    self.sort          = kwargs.get('sort', 'venue') if kwargs.get('sort', 'venue') in self.allowed_sorts else None
+    self.sort          = kwargs.get('sort', None) if kwargs.get('sort', 'venue') in self.allowed_sorts else None
     self.version       = kwargs.get('version', 'v2.7')
     self.since         = kwargs.get('since', int(datetime.datetime.now().microsecond / 1000.0))
     self.until         = kwargs.get('until', None)
@@ -30,7 +38,7 @@ class EventSearch(object):
 
   def calculate_start_time_diff(self, curr_time, date_str):
     """Difference based on curr_time and provided date string"""
-    return (du.parser.parse(date_str).microsecond - (curr_time * 1000)) / 1000.0
+    return (parser.parse(date_str).microsecond - (curr_time * 1000)) / 1000.0
 
 
   def compare_venue(self, a, b):
@@ -44,13 +52,22 @@ class EventSearch(object):
       return 0
 
 
-  def compare_time_from_now(self, a, b):
-    """Comparable times of a and b"""
+  def compare_distance(self, a, b):
+    """Comparable distance of a and b"""
     a_dist = int(a['distance'])
     b_dist = int(b['distance'])
     if a_dist < b_dist:
       return -1
     elif a_dist > b_dist:
+      return 1
+    else:
+      return 0
+
+
+  def compare_time_from_now(self, a, b):
+    if a['time_from_now'] < b['time_from_now']:
+      return -1
+    elif a['time_from_now'] > b['time_from_now']:
       return 1
     else:
       return 0
@@ -68,7 +85,7 @@ class EventSearch(object):
       return 0
 
 
-  def haversine_distance(self, coords1, coords2, is_miles):
+  def haversine_distance(self, coords1, coords2, is_miles=True):
     """
     Haversine distance (https://goo.gl/VdQZp4) between `coords1`
     and `coords2`.
@@ -176,25 +193,58 @@ class EventSearch(object):
       venue_events = []
       if 'events' in venue and len(venue['events']['data']) > 0:
         for event in venue['events']['data']:
-          event_r                  = dict()
-          event_r['id']            = event['id']
-          event_r['name']          = event['name']
-          event_r['type']          = event['type']
-          event_r['cover_picture'] = event['cover']['source'] if 'cover' in event else None
+          event_r                    = dict()
+          event_r['id']              = event['id']
+          event_r['name']            = event['name']
+          event_r['type']            = event['type']
+          event_r['cover_picture']   = event['cover']['source'] if 'cover' in event else None
           event_r['profile_picture'] = event['picture']['data']['url'] if 'picture' in event else None
-          # TODO - more fields
+          event_r['description']     = event['description'] if 'description' in event else None
+          event_r['start_time']      = event['start_time'] if 'start_time' in event else None
+          event_r['end_time']        = event['end_time'] if 'end_time' in event else None
+          event_r['time_from_now']   = self.calculate_start_time_diff(curr_time, event['start_time'])
+          event_r['category']        = event['category'] if 'category' in event else None
+          event_r['distance']        = (self.haversine_distance([event['location']['latitude'],
+                                                                 event['location']['longitude']]) * 1000
+                                                                 if 'location' in event else None)
+
+          event_r['stats'] = {
+            'attending': event['attending_count'],
+            'declined': event['declined_count'],
+            'maybe': event['maybe_count'],
+            'noreply': event['noreply_count']
+          }
+
+          event_r['venue'] = {
+            'id': venue['id'],
+            'name': venue['name'],
+            'about': venue['about'] if 'about' in venue else None,
+            'emails': venue['emails'] if 'emails' in venue else None,
+            'cover_picture': venue['cover']['source'] if 'cover' in venue else None,
+            'profile_picture': venue['picture']['data']['url'] if 'picture' in venue else None,
+            'location': venue['location'] if 'location' in venue else None
+          }
+
           venue_events.append(event_r)
       return venue_events
 
     # Grab the events
     events = []
     for result in results:
-      for venue in result.keys():
-        events.extend(venue_to_events(result[venue]))
+      for venue_id in result.keys():
+        events.extend(venue_to_events(result[venue_id]))
+
+    # Sort if specified
+    if self.sort is not None:
+      events.sort(self.allowed_sorts[self.sort])
 
     return events
 
 
 # Hand-testing
-driver = EventSearch(lat=40.710803, lng=-73.964040,distance=100)
-print driver.search()
+"""
+driver = EventSearch(lat=40.710803, lng=-73.964040, distance=100, sort='venue')
+for e in driver.search():
+  print e
+  print ""
+"""
