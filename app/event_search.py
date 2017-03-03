@@ -79,7 +79,7 @@ class EventSearch(object):
 
 
   def search(self):
-    """Overall search function"""
+    """Overall search workhorse function"""
 
     if (self.latitude is None or self.longitude is None):
       raise Exception('Please specify both a latitude and longitude')
@@ -90,11 +90,11 @@ class EventSearch(object):
     # Book-keeping
     id_limit = 50 # Only 50 per /?ids= call allowed by FB
     curr_time = int(datetime.datetime.now().microsecond / 1000.0)
-    venues_count = 0
-    venues_with_events = 0
-    events_count = 0
+    # venues_count = 0
+    # venues_with_events = 0
+    # events_count = 0
 
-    # Initial request info
+    # Initial places request info
     place_params = {
       'type': 'place',
       'q': self.query,
@@ -107,10 +107,92 @@ class EventSearch(object):
     place_url = ('https://graph.facebook.com/' + self.version + '/search?' +
       urllib.urlencode(place_params))
 
-    places = r.get(place_url)
+    # Grab places and prepare to get events
+    places_data = r.get(place_url).json()['data']
+    venues_len = len(places_data)
 
-    # TODO - get events from places
-    return places.json()
+    # Batch places based on FB id_limit
+    ids = []
+    temp_lst = []
+    for place in places_data:
+      temp_lst.append(place['id'])
+      if len(temp_lst) >= id_limit:
+        ids.append(temp_lst)
+        temp_lst = []
+    if len(ids) == 0:
+      ids.append(temp_lst)
+
+    # Inner function to convert a list of
+    # ids to a request url for events
+    def ids_to_url(id_lst):
+      events_fields = [
+        'id',
+        'type',
+        'name',
+        'cover.fields(id,source)',
+        'picture.type(large)',
+        'description',
+        'start_time',
+        'end_time',
+        'category',
+        'attending_count',
+        'declined_count',
+        'maybe_count',
+        'noreply_count'
+      ]
+
+      fields = [
+        'id',
+        'name',
+        'about',
+        'emails',
+        'cover.fields(id,source)',
+        'picture.type(large)',
+        'location',
+        'events.fields(' + ','.join(events_fields) + ')'
+      ]
+
+      timing = ('.since(' + str(self.since) + ')' +
+        ('' if self.until is None else '.until(' + str(self.until) + ')'))
+
+      events_params = {
+        'ids': ','.join(id_lst),
+        'access_token': self.access_token,
+        'fields': ','.join(fields) + timing
+      }
+
+      events_url = ('https://graph.facebook.com/' + self.version + '/?' +
+        urllib.urlencode(events_params))
+
+      return r.get(events_url).json()
+
+    # Event results
+    results = [ids_to_url(id_lst) for id_lst in ids]
+
+    # Inner function to convert a list of
+    # of venue result events to a list of
+    # well-formatted events
+    def venue_to_events(venue):
+      venue_events = []
+      if 'events' in venue and len(venue['events']['data']) > 0:
+        for event in venue['events']['data']:
+          event_r                  = dict()
+          event_r['id']            = event['id']
+          event_r['name']          = event['name']
+          event_r['type']          = event['type']
+          event_r['cover_picture'] = event['cover']['source'] if 'cover' in event else None
+          event_r['profile_picture'] = event['picture']['data']['url'] if 'picture' in event else None
+          # TODO - more fields
+          venue_events.append(event_r)
+      return venue_events
+
+    # Grab the events
+    events = []
+    for result in results:
+      for venue in result.keys():
+        events.extend(venue_to_events(result[venue]))
+
+    return events
 
 
 # Hand-testing
