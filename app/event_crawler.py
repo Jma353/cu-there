@@ -26,5 +26,5 @@ class EventCrawler(object):
 
 
 # Dry run
-crawler = EventCrawler(750, '../results')
+crawler = EventCrawler(1000, '../results')
 crawler.events_in_json()

@@ -18,9 +18,10 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 db = SQLAlchemy(app)
 
 # Import + Register Blueprints
-# WORKFLOW:
-# from app.blue import blue as blue_print
-# app.register_blueprint(blue_print)
+from app.accounts import accounts as accounts
+app.register_blueprint(accounts)
+from app.events import events as events
+app.register_blueprint(events)
 
 # Initialize app w/SocketIO
 socketio.init_app(app)
