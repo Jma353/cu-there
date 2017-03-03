@@ -204,9 +204,10 @@ class EventSearch(object):
           event_r['end_time']        = event['end_time'] if 'end_time' in event else None
           event_r['time_from_now']   = self.calculate_start_time_diff(curr_time, event['start_time'])
           event_r['category']        = event['category'] if 'category' in event else None
-          event_r['distance']        = (self.haversine_distance([event['location']['latitude'],
-                                                                 event['location']['longitude']]) * 1000
-                                                                 if 'location' in event else None)
+          event_r['distance']        = (self.haversine_distance([venue['location']['latitude'],
+                                                                 venue['location']['longitude']],
+                                                                [self.latitude, self.longitude])
+                                                                 if 'location' in venue else None)
 
           event_r['stats'] = {
             'attending': event['attending_count'],
@@ -243,7 +244,7 @@ class EventSearch(object):
 
 # Hand-testing
 """
-driver = EventSearch(lat=40.710803, lng=-73.964040, distance=100, sort='venue')
+driver = EventSearch(lat=40.710803, lng=-73.964040, distance=100, sort='distance')
 for e in driver.search():
   print e
   print ""
