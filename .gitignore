@@ -4,6 +4,7 @@ venv
 node_modules
 *.DS_Store
 npm-debug.log
-bundle.js
 results
 migrations
+secret
+static

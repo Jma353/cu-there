@@ -53,8 +53,8 @@ touch .env
 The `.env` file is where you can declare environment variables specific to this app.  These variables are loaded on `cd`-ing into the directory with the `.env` file.  Your `.env` file should look like this:
 
 ```bash
-export APP_SETTINGS="config.DevelopmentConfig"
-export DATABASE_URL="postgresql://localhost/cu_there_db"
+export APP_SETTINGS=config.DevelopmentConfig
+export DATABASE_URL=postgresql://localhost/cu_there_db
 ...
 ```
 
@@ -67,6 +67,7 @@ FB_CLIENT_ID
 FB_CLIENT_SECRET
 LATITUDE # Cornell's latitude
 LONGITUDE # Cornell's longitude
+GOOGLE_CREDS_PATH # Path to Google credential JSON for this app
 ```
 
 ## Migrating the DB
