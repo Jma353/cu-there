@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 
 /**
- * Main application component.
+ * Sidebar nav.
  */
 
-class App extends Component {
+class Sidebar extends Component {
   render() {
 
   }

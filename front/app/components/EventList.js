@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 
 /**
- * Main application component.
+ * List of EventCells.
  */
 
-class App extends Component {
+class EventList extends Component {
   render() {
 
   }
