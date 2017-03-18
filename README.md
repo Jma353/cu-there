@@ -85,6 +85,12 @@ python manage.py db upgrade
 ```
 
 ## Configure front end
+`cd` into the `front` directory. Install all dependencies with:
+
+```bash
+npm install
+```
+
 ### Development
 Run the webpack dev server with:
 
