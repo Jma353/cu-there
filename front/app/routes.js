@@ -2,10 +2,10 @@ import React from 'react';
 import { Route, IndexRoute, Router } from 'react-router';
 
 /* Routes */
-import SignIn from './components/SignIn';
+import App from './components/App';
 
 /* Routing scheme */
 export default (
-  <Route path='/' component={SignIn}>
+  <Route path='/' component={App}>
   </Route>
 )
