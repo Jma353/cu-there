@@ -2,7 +2,9 @@
 
 `CS 4300` final project
 
-## Virtual Environment Setup
+## Server Configuration
+
+### Virtual Environment Setup
 Run the following arguments to setup the virtual environment necessary to maintain packages
 
 ```bash
@@ -25,7 +27,7 @@ pip install -r requirements.txt
 At this point, if you run `pip freeze`, **only** packages in `requirements.txt` should be shown.
 
 
-## Database Setup
+### Database Setup
 This app uses `PostgreSQL` (or `Postgres`). `Postgres` can be installed a multitude of ways, but if you’re on `OSX` I recommend utilizing the [`Postgres App`](https://postgresapp.com/).
 
 Once you have Postgres setup and have your [`$PATH`](https://postgresapp.com/documentation/cli-tools.html) configured accordingly, run the following:
@@ -39,7 +41,7 @@ CREATE DATABASE cu_there_db;
 \q
 ```
 
-## Autoenv
+### Autoenv
 For environment variable loading, we run [`autoenv`](https://github.com/kennethreitz/autoenv)
 
 To set this up, run the following:
@@ -58,7 +60,7 @@ export DATABASE_URL=postgresql://localhost/cu_there_db
 ...
 ```
 
-## Required Environment Variables
+### Required Environment Variables
 
 ```bash
 APP_SETTINGS
@@ -70,7 +72,7 @@ LONGITUDE # Cornell's longitude
 GOOGLE_CREDS_PATH # Path to Google credential JSON for this app
 ```
 
-## Migrating the DB
+### Migrating the DB
 To migrate your local `DB`:
 
 ```bash
@@ -81,3 +83,14 @@ python manage.py db migrate
 # Apply it to the DB
 python manage.py db upgrade
 ```
+
+## Configure front end
+### Development
+Run the webpack dev server with:
+
+```bash
+npm run dev
+```
+
+### Production
+Figure this out later

@@ -1,4 +1,5 @@
-const staticDIR = '../app/static/' // where we put everything
+const path = require('path');
+const staticDIR = path.join(__dirname, '../app/static/') // where we put everything
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const extractSASS = new ExtractTextPlugin('css/styles.css');
 
@@ -8,7 +9,13 @@ module.exports = {
   ],
   output: {
     path: staticDIR,
+    publicPath: 'static/',
     filename: 'js/bundle.js'
+  },
+  devServer: {
+    contentBase: path.join(__dirname, '../app/templates'),
+    historyApiFallback: true,
+    port: 3000
   },
   module: {
     rules: [
