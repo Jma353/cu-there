@@ -6,6 +6,6 @@ import React, { Component } from 'react';
 
 class ContextSwitcher extends Component {
   render() {
-
+    return (<div></div>); 
   }
 }

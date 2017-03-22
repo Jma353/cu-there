@@ -6,6 +6,6 @@ import React, { Component } from 'react';
 
 class EventCell extends Component {
   render() {
-
+    return (<div></div>); 
   }
 }

@@ -47,7 +47,7 @@ class SignIn extends Component {
         style={customStyle}
         offline={true}
       />
-    )
+    ); 
   }
 
 }

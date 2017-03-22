@@ -3,6 +3,7 @@ const staticDIR = path.join(__dirname, '../app/static/') // where we put everyth
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const extractSASS = new ExtractTextPlugin('css/styles.css');
 
+
 module.exports = {
   entry: [
     './browser.js'
