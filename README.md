@@ -102,4 +102,16 @@ npm run dev
 
 `Heroku` is used for this project's production environment.
 
-`Webpack` must be run locally so it is pushed to `Heroku`.  
+`Webpack` must be run locally so it is pushed to `Heroku`
+
+````bash
+git checkout heroku
+git merge master
+cd front
+webpack
+cd ..
+git add .
+git commit -m "Heroku push"
+git push heroku heroku:master
+git checkout master
+````
