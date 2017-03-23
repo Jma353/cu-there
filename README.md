@@ -2,6 +2,12 @@
 
 `CS 4300` final project
 
+am2269, ac962, jma353, dl743
+
+## Live App!
+
+[HERE!](http://cu-there.herokuapp.com/)
+
 ## Server Configuration
 
 ### Virtual Environment Setup
