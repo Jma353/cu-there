@@ -1,4 +1,5 @@
 from event_search import EventSearch
+import constants
 import json
 import time
 import os
@@ -6,14 +7,10 @@ import os
 class EventCrawler(object):
   """Crawls events"""
 
-  def __init__(self, distance, directory):
+  def __init__(self, **kwargs):
     """Constructor"""
-    self.driver = EventSearch(
-      lat       = float(os.environ['LATITUDE']),
-      lng       = float(os.environ['LONGITUDE']),
-      distance  = distance,
-      sort      = 'distance')
-    self.directory = directory # Where to store results
+    self.driver = EventSearch(**kwargs)
+    self.directory = kwargs.get('directory')
 
   def events_in_json(self):
     """Grab events and store in JSON w/timestamp"""
@@ -24,7 +21,13 @@ class EventCrawler(object):
     with open(self.directory + '/' + secs + '.json', 'w') as outfile:
       json.dump(results, outfile)
 
-
 # Dry run
-crawler = EventCrawler(1000, '../results')
+crawler = EventCrawler(
+  distance=15000,
+  directory='../results',
+  lat=constants.LATITUDE,
+  lng=constants.LONGITUDE,
+  since=int(round(time.time())) - 11 * constants.YEAR)
+
+
 crawler.events_in_json()

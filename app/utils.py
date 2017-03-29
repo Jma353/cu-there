@@ -14,4 +14,4 @@ def get_app_access_token():
   }
   base_url = "https://graph.facebook.com/oauth/access_token?"
   result = r.post(base_url + urllib.urlencode(params))
-  return result.text[(result.text.rfind('=')+1):]
+  return result.json()['access_token']

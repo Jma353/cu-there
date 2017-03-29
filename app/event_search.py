@@ -4,6 +4,7 @@ import os
 import utils
 import time
 import haversine
+import constants
 from dateutil import parser
 
 class EventSearch(object):
@@ -32,7 +33,7 @@ class EventSearch(object):
     self.query         = urllib.quote(kwargs.get('query', '').encode('utf-8'))
     self.sort          = kwargs.get('sort', None) if kwargs.get('sort', 'venue') in self.allowed_sorts else None
     self.version       = kwargs.get('version', 'v2.7')
-    self.since         = kwargs.get('since', int(round(time.time())) - 2.628e+6) # Events from the last month
+    self.since         = kwargs.get('since', int(round(time.time())) - constants.MONTH)
     self.until         = kwargs.get('until', None)
 
 
@@ -124,6 +125,7 @@ class EventSearch(object):
       urllib.urlencode(place_params))
 
     # Grab places and prepare to get events
+
     places_data = r.get(place_url).json()['data']
     venues_count = len(places_data)
 

@@ -73,8 +73,6 @@ APP_SETTINGS
 DATABASE_URL
 FB_CLIENT_ID
 FB_CLIENT_SECRET
-LATITUDE # Cornell's latitude
-LONGITUDE # Cornell's longitude
 GOOGLE_CREDS_PATH # Path to Google credential JSON for this app
 ````
 
