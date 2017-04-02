@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import Navigation from './navigation/Navigation'
 import Footer from './navigation/Footer'
+import Search from './Search'
 require('../../public/sass/main.scss')
 
 /**
@@ -15,6 +16,7 @@ class App extends Component {
     return (
       <div>
         <Navigation />
+        <Search />
         <Footer />
       </div>
     )

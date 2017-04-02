@@ -8,35 +8,36 @@ DIRECTORY = '../results'
 
 def get_events_since(since):
 
-  # Get all the weeks we're querying on
+  # Get all the spans of time we're querying on
   now = int(round(time.time()))
   then = since
-  weeks = []
-  while then < now-WEEK:
-    weeks.append((then, then+WEEK))
-    then += WEEK
+  spans = []
+  interval = DAY
+  while then < now-interval:
+    spans.append((then, then+WEEK))
+    then += interval
   if then < now:
-    weeks.append((then, now))
+    spans.append((then, now))
 
   # Grab results
   results = dict()
-  for w in weeks:
+  for s in spans:
 
     search = EventSearch(
-      distance=12000,
+      distance=7500,
       lat=LATITUDE,
       lng=LONGITUDE,
-      since=w[0],
-      until=w[1]).search()
+      since=s[0],
+      until=s[1]).search()
 
     # Accumulate
     for e in search['events']:
       results[e['id']] = e
 
     # Sleep accordingly
-    time.sleep(4)
+    time.sleep(3)
 
-    print "Grabbed the events in week " + str(w)
+    print "Grabbed the events in week " + str(s)
 
   # Dictionary to list
   results = [results[k] for k in results.keys()]
@@ -50,4 +51,4 @@ def get_events_since(since):
 
 
 # Get events from specific duration
-get_events_since(int(round(time.time())) - 7 * YEAR)
+get_events_since(int(round(time.time())) - 1 * MONTH)
