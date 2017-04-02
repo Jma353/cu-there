@@ -4,7 +4,7 @@ import {
   Navbar,
   NavItem
 } from 'React-Bootstrap'
-require('../../../public/sass/NavBar.scss')
+require('../../../public/sass/Navigation.scss')
 
 /**
  * Navigation at the top of the application
