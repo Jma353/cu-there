@@ -1,7 +1,6 @@
-import React, { Component } from 'react';
-import SignIn from './SignIn';
-import NavBar from './navigation/NavBar';
-require('../../public/sass/main.scss');
+import React, { Component } from 'react'
+import Navigation from './navigation/Navigation'
+require('../../public/sass/main.scss')
 
 /**
  * Main application component.
@@ -9,18 +8,16 @@ require('../../public/sass/main.scss');
 class App extends Component {
 
   /**
-   * Render 
+   * Render
    */
-  render() {
+  render () {
     return (
       <div>
-        <NavBar />
-        <SignIn />
+        <Navigation />
       </div>
-    );
+    )
   }
-
 
 }
 
-export default App;
+export default App

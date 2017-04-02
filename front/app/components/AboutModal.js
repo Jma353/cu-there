@@ -6,6 +6,6 @@ import React, { Component } from 'react';
 
 class AboutModal extends Component {
   render() {
-    return (<div></div>); 
+    return (<div></div>);
   }
 }
