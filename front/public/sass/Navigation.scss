@@ -1,0 +1,56 @@
+@import 'variables';
+
+.top-nav {
+  background-color: $color-4;
+  display: inline-block;
+  width: 100%;
+}
+
+.top-bar {
+  width: 100%;
+  padding: 10px;
+  height: 65px;
+}
+
+.brand-container {
+  float: left;
+  height: 100%;
+  width: 75%;
+}
+
+.brand-link {
+  vertical-align: middle;
+}
+
+.links-container {
+  float: right;
+  height: 100%;
+  width: 25%;
+}
+
+.link {
+  height: 100%;
+  padding-left: 10px;
+  padding-right: 10px;
+  width: auto;
+  float: right;
+  vertical-align: middle; 
+}
+
+.recommend {
+  clear: both;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  width: 70%;
+  margin-left: 15%;
+  @include respond-to(handhelds) {
+    width: 90%;
+    margin-left: 5%;
+  }
+}
+
+.briefing {
+  text-align: center;
+  margin: 10px;
+  color: white;
+}

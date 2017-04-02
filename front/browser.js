@@ -4,7 +4,7 @@ import { Router, browserHistory } from 'react-router';
 import routes from './app/routes';
 
 /* Render the router */
-render (
+render(
   <Router history={browserHistory} routes={routes} />,
   document.getElementById('root')
 );

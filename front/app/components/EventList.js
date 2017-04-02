@@ -1,14 +1,14 @@
-import React, { Component } from 'react'
+import React from 'react';
 
 /**
  * List of EventCells.
  */
-class EventList extends Component {
+class EventList extends React.Component {
   render () {
     return (
       <div />
-    )
+    );
   }
 }
 
-export default EventList
+export default EventList;

@@ -1,11 +1,14 @@
-import React, { Component } from 'react';
+import React from 'react';
 
 /**
- * "About" modal containing project information.
+ * Reusable Modal View
  */
-
-class AboutModal extends Component {
-  render() {
-    return (<div></div>);
+class AboutModal extends React.Component {
+  render () {
+    return (
+      <div />
+    );
   }
 }
+
+export default AboutModal;

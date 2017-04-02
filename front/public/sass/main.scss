@@ -11,6 +11,9 @@ body {
   font-weight: normal;
 }
 
+/* Input styling */
+* { outline: none; }
+
 /* Link Styling */
 $a-tags: 'a, a:active, a:hover, a:visited';
 $a-tags-hover: 'a:active, a:hover';
@@ -23,4 +26,30 @@ $a-tags-hover: 'a:active, a:hover';
 #{$a-tags-hover} {
   color: $link-dark;
   text-decoration: none;
+}
+
+/* Font sizing */
+.lg-text { font-size: 30px; }
+.md-text { font-size: 24px; }
+.sm-text { font-size: 16px; }
+
+
+/* Button Styling */
+.button {
+  display: inline-block;
+  border: none;
+  text-align: center;
+
+  transition: all 0.2s ease;
+  transition-property: color, background;
+  background: $color-3;
+  color: white;
+
+  &:hover {
+    transition: all 0.2s ease;
+    transition-property: color, background;
+    color: $color-4;
+    background: $color-2;
+  }
+
 }

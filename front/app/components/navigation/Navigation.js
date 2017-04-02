@@ -1,38 +1,41 @@
-import React, { Component } from 'react'
-import {
-  Nav,
-  Navbar,
-  NavItem
-} from 'React-Bootstrap'
-require('../../../public/sass/Navigation.scss')
+import React from 'react';
+import Search from '../Search';
+import Brand from '../Brand';
+import Button from '../Button';
+require('../../../public/sass/Navigation.scss');
 
 /**
  * Navigation at the top of the application
  */
-class Navigation extends Component {
+class Navigation extends React.Component {
 
   /**
    * Render
    */
   render () {
     return (
-      <Navbar collapseOnSelect>
-        <Navbar.Header>
-          <Navbar.Brand>
-            <a href='/'>CU There</a>
-          </Navbar.Brand>
-          <Navbar.Toggle />
-        </Navbar.Header>
-        <Navbar.Collapse>
-          <Nav pullRight>
-            <NavItem eventKey={1} href='/about'>About</NavItem>
-            <NavItem eventKey={2} href='/venues'>Venues</NavItem>
-          </Nav>
-        </Navbar.Collapse>
-      </Navbar>
-    )
+      <div className='top-nav'>
+        <div className='top-bar'>
+          <div className='brand-container'>
+            <Brand />
+          </div>
+          <div className='links-container'>
+            <Button value='About' className='link' />
+          </div>
+        </div>
+        <div className='recommend'>
+          <div className='briefing md-text'>
+            Briefly describe your event
+          </div>
+          <Search
+            submit='Recommend'
+            placeholder='e.g. A tech talk hosted by ACSU'
+          />
+        </div>
+      </div>
+    );
   }
 
 }
 
-export default Navigation
+export default Navigation;

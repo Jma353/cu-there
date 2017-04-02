@@ -1,14 +1,14 @@
-import React, { Component } from 'react'
+import React from 'react';
 
 /**
  * Event cell containing event details.
  */
-class EventCell extends Component {
+class EventCell extends React.Component {
   render () {
     return (
       <div />
-    )
+    );
   }
 }
 
-export default EventCell
+export default EventCell;

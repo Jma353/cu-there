@@ -1,0 +1,28 @@
+@import 'variables';
+
+.search {
+  padding: 15px;
+  height: 100px;
+}
+
+.form {
+  display: inline-block;
+  height: 100%;
+  width: 100%;
+}
+
+.bar {
+  height: 100%;
+  width: 80%;
+  padding-left: 10px;
+  border: none;
+  vertical-align: middle;
+  @include respond-to(handhelds) { width: 60%; }
+}
+
+.submit {
+  height: 100%;
+  width: 20%;
+  vertical-align: middle;
+  @include respond-to(handhelds) { width: 40%; }
+}

@@ -1,13 +1,12 @@
-import React, { Component } from 'react'
-import Navigation from './navigation/Navigation'
-import Footer from './navigation/Footer'
-import Search from './Search'
-require('../../public/sass/main.scss')
+import React from 'react';
+import Navigation from './navigation/Navigation';
+import Footer from './navigation/Footer';
+require('../../public/sass/main.scss');
 
 /**
  * Main application component.
  */
-class App extends Component {
+class App extends React.Component {
 
   /**
    * Render
@@ -16,12 +15,11 @@ class App extends Component {
     return (
       <div>
         <Navigation />
-        <Search />
         <Footer />
       </div>
-    )
+    );
   }
 
 }
 
-export default App
+export default App;
