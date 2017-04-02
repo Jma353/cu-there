@@ -116,6 +116,6 @@ webpack
 cd ..
 git add .
 git commit -m "Heroku push"
-git push heroku heroku:master
+git push -f heroku heroku:master
 git checkout master
 ````
