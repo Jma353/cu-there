@@ -1,7 +1,7 @@
 import React from 'react';
 import Search from '../Search';
 import Brand from '../Brand';
-import Button from '../Button';
+import DarkButton from '../DarkButton';
 require('../../../public/sass/Navigation.scss');
 
 /**
@@ -20,7 +20,7 @@ class Navigation extends React.Component {
             <Brand />
           </div>
           <div className='links-container'>
-            <Button value='About' className='link' />
+            <DarkButton value='About' className='link' />
           </div>
         </div>
         <div className='recommend'>

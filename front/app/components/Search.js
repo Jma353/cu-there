@@ -1,4 +1,6 @@
 import React from 'react';
+require('../../public/sass/Button.scss');
+require('../../public/sass/LightButton.scss');
 require('../../public/sass/Search.scss');
 
 /**
@@ -42,7 +44,7 @@ class Search extends React.Component {
           {/* Recommend button */}
           <input type='submit'
             value={this.props.submit}
-            className='button submit' />
+            className='button light-button submit' />
         </form>
       </div>
     );

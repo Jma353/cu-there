@@ -1,0 +1,7 @@
+@import 'variables';
+@import 'Button';
+
+.light-button {
+  @extend .button;
+  @include button-hover($color-2, $color-4, $color-3, white);
+}

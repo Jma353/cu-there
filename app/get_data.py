@@ -24,7 +24,7 @@ def get_events_since(since):
   for s in spans:
 
     search = EventSearch(
-      distance=7500,
+      distance=3000,
       lat=LATITUDE,
       lng=LONGITUDE,
       since=s[0],
@@ -37,7 +37,7 @@ def get_events_since(since):
     # Sleep accordingly
     time.sleep(3)
 
-    print "Grabbed the events in week " + str(s)
+    print "Grabbed the events in span " + str(s)
 
   # Dictionary to list
   results = [results[k] for k in results.keys()]
@@ -51,4 +51,4 @@ def get_events_since(since):
 
 
 # Get events from specific duration
-get_events_since(int(round(time.time())) - 1 * MONTH)
+get_events_since(int(round(time.time())) - 7 * YEAR)

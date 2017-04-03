@@ -1,7 +1,7 @@
 import React from 'react';
 import Navigation from './navigation/Navigation';
 import Footer from './navigation/Footer';
-require('../../public/sass/main.scss');
+require('../../public/sass/App.scss');
 
 /**
  * Main application component.

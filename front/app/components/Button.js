@@ -1,4 +1,5 @@
 import React from 'react';
+require('../../public/sass/Button.scss');
 
 /**
  * Reusable Button Component
