@@ -1,5 +1,5 @@
-from event_search import EventSearch
-from constants import *
+from app.event_search import EventSearch
+from app.constants import *
 import time
 import json
 import os
@@ -24,7 +24,7 @@ def get_events_since(since):
   for s in spans:
 
     search = EventSearch(
-      distance=3000,
+      distance=2000,
       lat=LATITUDE,
       lng=LONGITUDE,
       since=s[0],
