@@ -73,7 +73,6 @@ APP_SETTINGS
 DATABASE_URL
 FB_CLIENT_ID
 FB_CLIENT_SECRET
-GOOGLE_CREDS_PATH # Path to Google credential JSON for this app
 ````
 
 ### Migrating the DB

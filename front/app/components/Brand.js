@@ -8,7 +8,7 @@ class Brand extends React.Component {
    */
   render () {
     return (
-      <div className={'brand md-text ' + this.props.className}>
+      <div className={'brand md-text ' + (this.props.className || '')}>
         <a href='/'>
           CU There
         </a>
