@@ -3,5 +3,5 @@
 
 .dark-button {
   @extend .button;
-  @include button-hover($color-2, $color-4, $color-4, white);
+  @include button-hover($color-2, $color-4, $color-4, $white);
 }
