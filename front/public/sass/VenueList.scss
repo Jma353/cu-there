@@ -1,8 +1,9 @@
 @import 'variables';
 
 .venue-list {
-  display: inline-block;
-  width: 100%;
-  padding: 40px 40px 0px 40px; 
+  padding: 40px 5% 0px 5%;
+  width: 90%;
+  display: flex;
+  flex-wrap: wrap;
   background: $off-white;
 }

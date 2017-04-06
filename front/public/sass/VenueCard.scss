@@ -1,36 +1,23 @@
 @import 'variables';
 
-.venue-card {
-  width: 250px;
+.venue-card-container {
+  display: flex;
+  justify-content: flex-end;
   height: 100px;
   background: $white;
-  margin-bottom: 40px;
-  margin-right: 40px;
-  float: left;
-  @include respond-to(handhelds) {
-    width: 100%;
-    margin-right: 0px;
-  }
-  @include respond-to(medium-screens) {
-    width: 100%;
-    margin-right: 0px;
-  }
+  @include respond-to(handhelds) { margin: 0px 0px 40px 0px; width: 100%; }
+  @include respond-to(medium-screens) { margin: 0px 0px 40px 0px; width: 100%; }
+  @include respond-to(wide-screens) { margin: 0px 40px 40px 40px; }
 }
 
-.venue-info {
-  float: left;
-  width: 60%;
+.venue-info-item {
+  @extend .sm-text;
   padding: 15px;
+  flex-grow: 1;
 }
 
-.venue-img {
-  float: right;
-  width: 40%;
-  height: 100%;
+.venue-img-item {
   overflow: hidden;
-  img {
-    float: right;
-    height: 100px;
-    width: auto;
-  }
+  flex-basis: auto;
+  img { height: 100%; }
 }

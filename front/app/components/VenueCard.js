@@ -8,11 +8,11 @@ class VenueCard extends React.Component {
    */
   render () {
     return (
-      <div className='venue-card'>
-        <div className='venue-info sm-text'>
+      <div className='venue-card-container'>
+        <div className='venue-info-item'>
           {this.props.data.name}
         </div>
-        <div className='venue-img'>
+        <div className='venue-img-item'>
           <img src={this.props.data.profile_picture} />
         </div>
       </div>

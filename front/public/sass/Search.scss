@@ -1,29 +1,26 @@
 @import 'variables';
 
 .search {
+  display: flex;
   padding: 15px;
   height: 100px;
 }
 
-.form {
-  display: inline-block;
-  height: 100%;
-  width: 100%;
-}
-
 .bar {
+  @extend .sm-text;
+  display: block;
   height: 100%;
   width: 80%;
   padding-left: 10px;
   border: none;
-  vertical-align: middle;
   border-radius: 0px;
   @include respond-to(handhelds) { width: 60%; }
 }
 
 .submit {
-  height: 100%;
+  @extend .sm-text;
+  display: block;
+  height: 102%;
   width: 20%;
-  vertical-align: middle;
   @include respond-to(handhelds) { width: 40%; }
 }

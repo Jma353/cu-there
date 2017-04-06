@@ -2,16 +2,19 @@
 @import url(https://fonts.googleapis.com/css?family=Roboto+Condensed);
 $roboto-cond: 'Roboto Condensed', serif;
 
-/* Overall styling */
-body {
-  font-family: $roboto-cond;
-  font-weight: normal;
+/* Over-all */
+html, body {
+  margin: 0;
 }
 
-/* Input styling */
-* { outline: none; }
+/* Overall styling */
+* {
+  font-family: $roboto-cond;
+  font-weight: normal;
+  outline: none;
+}
 
-/* Link Styling */
+/* Link styling */
 $a-tags: 'a, a:active, a:hover, a:visited';
 $a-tags-hover: 'a:active, a:hover';
 
@@ -24,8 +27,3 @@ $a-tags-hover: 'a:active, a:hover';
   color: $link-dark;
   text-decoration: none;
 }
-
-/* Font sizing */
-.lg-text { font-size: 30px; }
-.md-text { font-size: 24px; }
-.sm-text { font-size: 16px; }

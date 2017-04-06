@@ -1,5 +1,4 @@
 import React from 'react';
-require('../../public/sass/Button.scss');
 require('../../public/sass/LightButton.scss');
 require('../../public/sass/Search.scss');
 
@@ -33,20 +32,18 @@ class Search extends React.Component {
    */
   render () {
     return (
-      <div className='search'>
-        <form onSubmit={this.handleSubmit} className='form'>
-          {/* The bar itself */}
-          <input type='text'
-            value={this.state.value}
-            onChange={this.handleChange}
-            placeholder={this.props.placeholder || ''}
-            className='bar' />
-          {/* Recommend button */}
-          <input type='submit'
-            value={this.props.submit}
-            className='button light-button submit' />
-        </form>
-      </div>
+      <form onSubmit={this.handleSubmit} className='search'>
+        {/* The bar itself */}
+        <input type='text'
+          value={this.state.value}
+          onChange={this.handleChange}
+          placeholder={this.props.placeholder || ''}
+          className='bar' />
+        {/* Submit button */}
+        <input type='submit'
+          value={this.props.submit}
+          className='light-button submit' />
+      </form>
     );
   }
 }

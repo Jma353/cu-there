@@ -1,0 +1,15 @@
+@import 'variables';
+
+.topper {
+  background: $color-4;
+}
+
+.briefing {
+  @extend .md-text;
+  text-align: center;
+  margin: 10px 10px 0px 10px;
+  color: $white;
+  @include respond-to(handhelds) { padding: 0% 5% 0% 5%; }
+  @include respond-to(medium-screens) { padding: 0% 10% 0% 10%; }
+  @include respond-to(wide-screens) { padding: 0% 25% 0% 25%; }
+}
