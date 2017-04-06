@@ -1,6 +1,6 @@
 import React from 'react';
-require('../../public/sass/LightButton.scss');
-require('../../public/sass/Search.scss');
+require('../../../public/sass/LightButton.scss');
+require('../../../public/sass/Search.scss');
 
 /**
  * Defines a generic Search component

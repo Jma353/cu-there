@@ -1,5 +1,5 @@
 import React from 'react';
-import Search from '../Search';
+import Search from '../search/Search';
 import NavBar from './NavBar';
 require('../../../public/sass/Topper.scss');
 

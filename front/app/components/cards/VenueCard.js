@@ -1,5 +1,5 @@
 import React from 'react';
-require('../../public/sass/VenueCard.scss');
+require('../../../public/sass/VenueCard.scss');
 
 class VenueCard extends React.Component {
 
@@ -18,7 +18,6 @@ class VenueCard extends React.Component {
       </div>
     );
   }
-
 }
 
 export default VenueCard;

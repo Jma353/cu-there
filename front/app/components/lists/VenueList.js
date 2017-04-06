@@ -1,6 +1,6 @@
 import React from 'react';
-import VenueCard from './VenueCard';
-require('../../public/sass/VenueList.scss');
+import VenueCard from '../cards/VenueCard';
+require('../../../public/sass/VenueList.scss');
 
 class VenueList extends React.Component {
 

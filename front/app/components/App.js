@@ -1,6 +1,6 @@
 import React from 'react';
 import Topper from './navigation/Topper';
-import VenueList from './VenueList';
+import VenueList from './lists/VenueList';
 import Footer from './navigation/Footer';
 require('../../public/sass/App.scss');
 

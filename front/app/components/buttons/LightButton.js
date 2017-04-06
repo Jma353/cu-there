@@ -1,6 +1,6 @@
 import React from 'react';
 import Button from './Button';
-require('../../public/sass/LightButton.scss');
+require('../../../public/sass/LightButton.scss');
 
 let LightButton = (props) => {
   return (
