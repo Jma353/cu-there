@@ -19,11 +19,19 @@ class Search extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
+  /**
+   * Handle a change to text input
+   */
   handleChange (event) {
+    // TODO
     this.setState({ value: event.target.value });
   }
 
+  /**
+   * Handel submission of search query
+   */
   handleSubmit (event) {
+    // TODO
     console.log('A search was made ' + this.state.value);
   }
 

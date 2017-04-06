@@ -9,6 +9,21 @@ require('../../public/sass/App.scss');
  */
 class App extends React.Component {
 
+  constructor (props) {
+    super(props);
+    this.state = {};
+    this.setDetail = this.setDetail.bind(this);
+  }
+
+  /**
+   * Set the detail view of the app
+   */
+  setDetail (detail) {
+    this.setState({
+      detail: detail
+    });
+  }
+
   /**
    * Render
    */
@@ -39,8 +54,9 @@ class App extends React.Component {
     return (
       <div>
         <Topper />
-        <VenueList venues={venues} />
+        <VenueList venues={venues} setDetail={this.setDetail} />
         <Footer />
+        {this.state.detail || ''}
       </div>
     );
   }

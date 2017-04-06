@@ -1,0 +1,28 @@
+@import 'variables';
+
+/* Detail view */
+.detail {
+  position: absolute;
+  left: 0;
+  right: 0;
+  background: $color-4;
+  padding: 5%;
+  margin: 2rem 0;
+}
+
+/* Detail view pointer */
+.detail-pointer {
+  position: absolute;
+  top: -0.4rem;
+  width: 3rem;
+  height: 3rem;
+  transform: rotate(45deg);
+  background: $color-4;
+}
+
+/* Detail contents flex-container */
+.detail-contents-container {
+  display: flex;
+  background: $color-3;
+  padding: 10px;
+}

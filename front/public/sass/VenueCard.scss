@@ -1,7 +1,9 @@
 @import 'variables';
 
 .venue-card-container {
-  display: flex;
+  cursor: pointer;
+  position: relative;
+  display: inline-flex;
   justify-content: flex-end;
   height: 100px;
   background: $white;
