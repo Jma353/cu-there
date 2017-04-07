@@ -25,7 +25,7 @@ class VenueCard extends React.Component {
   handleMouseEnter (e) {
     let rect = e.currentTarget.getBoundingClientRect();
     let left = (rect.left + rect.right) * 0.5;
-    let top = (rect.top + rect.bottom) * 0.5;
+    let top = window.pageYOffset + (rect.top + rect.bottom) * 0.5;
     let detail = <Detail owner={this.props.id} left={left} top={top} />;
     this.props.dispatch(actionCreators.didShowDetail(detail));
   }

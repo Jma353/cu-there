@@ -13,10 +13,7 @@ class Detail extends React.Component {
    * Render
    */
   render () {
-    let position = {
-      left: this.props.left,
-      top: this.props.top
-    };
+    let position = { left: this.props.left, top: this.props.top };
     return (
       <div
         className='detail'
