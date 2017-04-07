@@ -1,6 +1,9 @@
 import React from 'react';
 require('../../../public/sass/Detail.scss');
 
+/* Redux */
+import { connect } from 'react-redux';
+
 /**
  * Reusable detail view (events, venues, etc.)
  */
@@ -10,12 +13,15 @@ class Detail extends React.Component {
    * Render
    */
   render () {
-    // All positioning info
-    let detailStyle = { top: this.props.y };
-    let pointerStyle = { left: this.props.x };
+    let position = {
+      left: this.props.left,
+      top: this.props.top
+    };
     return (
-      <div className='detail' style={detailStyle}>
-        <div className='detail-pointer' style={pointerStyle} />
+      <div
+        className='detail'
+        style={position} >
+        <div className='top-line' />
         <div className='detail-contents-container'>
           {this.props.contents}
         </div>
@@ -25,4 +31,5 @@ class Detail extends React.Component {
 
 }
 
-export default Detail;
+const ConnectedDetail = connect()(Detail);
+export default ConnectedDetail;

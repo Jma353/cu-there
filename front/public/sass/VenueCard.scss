@@ -7,9 +7,9 @@
   justify-content: flex-end;
   height: 100px;
   background: $white;
-  @include respond-to(handhelds) { margin: 0px 0px 40px 0px; width: 100%; }
-  @include respond-to(medium-screens) { margin: 0px 0px 40px 0px; width: 100%; }
-  @include respond-to(wide-screens) { margin: 0px 40px 40px 40px; }
+  @include respond-to(handhelds) { margin: 20px 0px; width: 100%; }
+  @include respond-to(medium-screens) { margin: 20px 0px; width: 100%; }
+  @include respond-to(wide-screens) { margin: 20px; }
 }
 
 .venue-info-item {

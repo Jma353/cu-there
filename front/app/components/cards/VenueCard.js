@@ -2,6 +2,10 @@ import React from 'react';
 import Detail from '../details/Detail';
 require('../../../public/sass/VenueCard.scss');
 
+/* Redux */
+import * as actionCreators from '../redux/ActionCreators';
+import { connect } from 'react-redux';
+
 /**
  * A card to display basic info about a venue
  */
@@ -12,19 +16,18 @@ class VenueCard extends React.Component {
    */
   constructor (props) {
     super(props);
-    this.handleClick = this.handleClick.bind(this);
+    this.handleMouseEnter = this.handleMouseEnter.bind(this);
   }
 
   /**
-   * Handle clicking card and displaying
-   * venue details
+   * Handle mouse over
    */
-  handleClick (event) {
-    event.preventDefault();
-    console.log(event.currentTarget.getBoundingClientRect());
-    let rect = event.currentTarget.getBoundingClientRect();
-    let detail = <Detail x={(rect.left + rect.right) / 2} y={rect.bottom} />;
-    this.props.setDetail(detail);
+  handleMouseEnter (e) {
+    let rect = e.currentTarget.getBoundingClientRect();
+    let left = (rect.left + rect.right) * 0.5;
+    let top = (rect.top + rect.bottom) * 0.5;
+    let detail = <Detail owner={this.props.id} left={left} top={top} />;
+    this.props.dispatch(actionCreators.didShowDetail(detail));
   }
 
   /**
@@ -32,7 +35,9 @@ class VenueCard extends React.Component {
    */
   render () {
     return (
-      <div className='venue-card-container' onClick={this.handleClick}>
+      <div
+        className='venue-card-container'
+        onMouseEnter={this.handleMouseEnter} >
         <div className='venue-info-item'>
           {this.props.data.name}
         </div>
@@ -44,4 +49,5 @@ class VenueCard extends React.Component {
   }
 }
 
-export default VenueCard;
+const ConnectedVenueCard = connect()(VenueCard);
+export default ConnectedVenueCard;

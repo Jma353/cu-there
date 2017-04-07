@@ -1,10 +1,17 @@
 import React from 'react';
 import { render } from 'react-dom';
 import { Router, browserHistory } from 'react-router';
-import routes from './app/routes';
+import { syncHistoryWithStore } from 'react-router-redux';
+import { Provider } from 'react-redux';
+import createStore from './app/components/redux/CreateStore';
 
-/* Render the router */
+import routes from './app/routes';
+const store = createStore();
+const history = syncHistoryWithStore(browserHistory, store);
+
 render(
-  <Router history={browserHistory} routes={routes} />,
+  <Provider store={store}>
+    <Router history={history} routes={routes} />
+  </Provider>,
   document.getElementById('root')
 );

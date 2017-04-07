@@ -13,10 +13,17 @@ class VenueList extends React.Component {
   }
 
   /**
+   * Set the detail view of the venue list
+   */
+  setDetail (detail) {
+    this.setState({ detail: detail });
+  }
+
+  /**
    * Generate a venue card
    */
   generateCard (venue, i) {
-    return <VenueCard data={venue} key={i} setDetail={this.props.setDetail} />;
+    return <VenueCard data={venue} key={i} id={i} />;
   }
 
   /**
@@ -25,8 +32,10 @@ class VenueList extends React.Component {
   render () {
     let venues = this.props.venues.map(this.generateCard);
     return (
-      <div className='venue-list'>
-        {venues}
+      <div>
+        <div className='venue-list'>
+          {venues}
+        </div>
       </div>
     );
   }

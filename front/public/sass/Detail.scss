@@ -3,26 +3,21 @@
 /* Detail view */
 .detail {
   position: absolute;
-  left: 0;
-  right: 0;
+  min-width: 200px;
+  min-height: 200px;
   background: $color-4;
-  padding: 5%;
-  margin: 2rem 0;
+  opacity: 1;
+  transition: opacity 1s ease-in;
 }
 
-/* Detail view pointer */
-.detail-pointer {
-  position: absolute;
-  top: -0.4rem;
-  width: 3rem;
-  height: 3rem;
-  transform: rotate(45deg);
-  background: $color-4;
+.top-line {
+  width: 100%;
+  height: 10px;
+  background: $color-3;
 }
 
 /* Detail contents flex-container */
 .detail-contents-container {
   display: flex;
-  background: $color-3;
   padding: 10px;
 }
