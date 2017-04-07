@@ -17,7 +17,7 @@ class Detail extends React.Component {
         style={position} >
         <div className='top-line' />
         <div className='detail-contents-container'>
-          {this.props.contents}
+          {this.props.children}
         </div>
       </div>
     );

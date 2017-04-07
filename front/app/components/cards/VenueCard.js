@@ -1,5 +1,5 @@
 import React from 'react';
-import Detail from '../details/Detail';
+import VenueDetail from '../details/VenueDetail';
 require('../../../public/sass/VenueCard.scss');
 
 /**
@@ -23,7 +23,11 @@ class VenueCard extends React.Component {
   handleMouseEnter (e) {
     let height = e.currentTarget.clientHeight;
     let width = e.currentTarget.clientWidth;
-    this.setState({ detail: <Detail left={width / 2} top={height / 2} /> });
+    let detail = <VenueDetail
+      left={width / 2}
+      top={height / 2}
+      data={this.props.data} />;
+    this.setState({ detail: detail });
   }
 
   /**
@@ -44,6 +48,7 @@ class VenueCard extends React.Component {
         onMouseLeave={this.handleMouseLeave}>
         <div className='venue-info-item'>
           {this.props.data.name}
+          <p>{this.props.data.location.city + ', ' + this.props.data.location.state }</p>
         </div>
         <div className='venue-img-item'>
           <img src={this.props.data.profile_picture} />

@@ -1,38 +1,42 @@
 import React from 'react';
+import axios from 'axios';
 import Topper from './navigation/Topper';
 import VenueList from './lists/VenueList';
 import Footer from './navigation/Footer';
 require('../../public/sass/App.scss');
-
-/* Redux */
-import { connect } from 'react-redux';
 
 /**
  * Main application component.
  */
 class App extends React.Component {
 
+  constructor (props) {
+    super(props);
+    this.state = { venues: [] };
+  }
+
+  componentDidMount () {
+    let self = this;
+    axios.get('/events/venues/')
+    .then(resp => {
+      self.setState({ venues: resp.data });
+    }).catch(err => {
+      console.log(err);
+    });
+  }
+
   /**
    * Render
    */
   render () {
-    // Test venues
-    let venues = [
-      { name: 'First Title', 'profile_picture': 'https://goo.gl/vy9h8P' },
-      { name: 'Hello World', profile_picture: 'https://goo.gl/vy9h8P' },
-      { name: 'Varying Sized Cards', profile_picture: 'https://goo.gl/vy9h8P' },
-      { name: 'Herbert F. Johnson Museum of Art', profile_picture: 'https://goo.gl/vy9h8P' },
-      { name: 'Herbert F. Johnson Museum of Art Plus Long Title Extension', profile_picture: 'https://goo.gl/vy9h8P' }
-    ];
     return (
       <div>
         <Topper />
-        <VenueList venues={venues} setDetail={this.setDetail} />
+        <VenueList venues={this.state.venues} />
         <Footer />
       </div>
     );
   }
-
 }
 
 export default App;

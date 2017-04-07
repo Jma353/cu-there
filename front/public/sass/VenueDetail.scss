@@ -1,1 +1,46 @@
 @import 'variables';
+
+.cover-picture {
+  flex-basis: auto;
+  left: 0;
+  top: 0;
+  img { width: 100%; }
+}
+
+.venue-detail-container {
+  display: flex;
+  flex-basis: auto;
+  padding: 10px;
+  color: $white;
+}
+
+.venue-detail-info {
+  flex-basis: auto;
+}
+
+.venue-detail-visuals-container {
+  flex-direction: column;
+}
+
+.venue-picture {
+  padding: 10px;
+  img { width: 100%; }
+}
+
+.venue-map {
+  padding: 10px;
+  height: 125px;
+  width: 125px;
+}
+
+.map-marker {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  left: 5;
+  top: 5;
+  border: 2px solid $color-3;
+  border-radius: 10px;
+  background-color: $color-4;
+  text-align: center;
+}

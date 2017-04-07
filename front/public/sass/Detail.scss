@@ -4,21 +4,20 @@
 .detail {
   position: absolute;
   z-index: 1;
-  min-width: 200px;
-  min-height: 200px;
-  background: $color-4;
-  opacity: 1;
-  transition: opacity 1s ease-in;
+  width: 400px;
+  height: 400px;
+  background: $color-3;
+  overflow: scroll;
 }
 
 .top-line {
   width: 100%;
   height: 10px;
-  background: $color-3;
+  background: $color-4;
 }
 
 /* Detail contents flex-container */
 .detail-contents-container {
   display: flex;
-  padding: 10px;
+  flex-wrap: wrap;
 }
