@@ -2,10 +2,6 @@ import React from 'react';
 import Detail from '../details/Detail';
 require('../../../public/sass/VenueCard.scss');
 
-/* Redux */
-import * as actionCreators from '../redux/ActionCreators';
-import { connect } from 'react-redux';
-
 /**
  * A card to display basic info about a venue
  */
@@ -16,6 +12,7 @@ class VenueCard extends React.Component {
    */
   constructor (props) {
     super(props);
+    this.state = {};
     this.handleMouseEnter = this.handleMouseEnter.bind(this);
     this.handleMouseLeave = this.handleMouseLeave.bind(this);
   }
@@ -24,18 +21,16 @@ class VenueCard extends React.Component {
    * Handle mouse over
    */
   handleMouseEnter (e) {
-    let rect = e.currentTarget.getBoundingClientRect();
-    let left = (rect.left + rect.right) * 0.5;
-    let top = window.pageYOffset + (rect.top + rect.bottom) * 0.5;
-    let detail = <Detail left={left} top={top} />;
-    this.props.dispatch(actionCreators.didShowDetail(detail));
+    let height = e.currentTarget.clientHeight;
+    let width = e.currentTarget.clientWidth;
+    this.setState({ detail: <Detail left={width / 2} top={height / 2} /> });
   }
 
   /**
    * Handle mouse leave
    */
   handleMouseLeave (e) {
-    this.props.dispatch(actionCreators.didHideDetail());
+    this.setState({ detail: null });
   }
 
   /**
@@ -53,10 +48,10 @@ class VenueCard extends React.Component {
         <div className='venue-img-item'>
           <img src={this.props.data.profile_picture} />
         </div>
+        { this.state.detail || '' }
       </div>
     );
   }
 }
 
-const ConnectedVenueCard = connect()(VenueCard);
-export default ConnectedVenueCard;
+export default VenueCard;

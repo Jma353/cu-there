@@ -29,16 +29,10 @@ class App extends React.Component {
         <Topper />
         <VenueList venues={venues} setDetail={this.setDetail} />
         <Footer />
-        { this.props.detail || '' }
       </div>
     );
   }
 
 }
 
-/* Redux connection */
-let mapStateToProps = (state, props) => {
-  return { ...props, detail: state._detail.detail };
-};
-
-export default connect(mapStateToProps)(App);
+export default App;

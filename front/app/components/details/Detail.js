@@ -1,9 +1,6 @@
 import React from 'react';
 require('../../../public/sass/Detail.scss');
 
-/* Redux */
-import { connect } from 'react-redux';
-
 /**
  * Reusable detail view (events, venues, etc.)
  */
@@ -25,8 +22,6 @@ class Detail extends React.Component {
       </div>
     );
   }
-
 }
 
-const ConnectedDetail = connect()(Detail);
-export default ConnectedDetail;
+export default Detail;

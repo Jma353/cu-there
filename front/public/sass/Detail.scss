@@ -3,6 +3,7 @@
 /* Detail view */
 .detail {
   position: absolute;
+  z-index: 1;
   min-width: 200px;
   min-height: 200px;
   background: $color-4;
