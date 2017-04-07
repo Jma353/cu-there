@@ -38,7 +38,7 @@ class App extends React.Component {
 
 /* Redux connection */
 let mapStateToProps = (state, props) => {
-  return { ...props, detail: state.detail.source };
+  return { ...props, detail: state._detail.detail };
 };
 
 export default connect(mapStateToProps)(App);

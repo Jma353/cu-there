@@ -1,6 +1,12 @@
 export function didShowDetail (detail) {
   return {
     type: 'DID_SHOW_DETAIL',
-    source: detail
+    detail: detail
+  };
+}
+
+export function didHideDetail () {
+  return {
+    type: 'DID_HIDE_DETAIL'
   };
 }

@@ -17,6 +17,7 @@ class VenueCard extends React.Component {
   constructor (props) {
     super(props);
     this.handleMouseEnter = this.handleMouseEnter.bind(this);
+    this.handleMouseLeave = this.handleMouseLeave.bind(this);
   }
 
   /**
@@ -26,8 +27,15 @@ class VenueCard extends React.Component {
     let rect = e.currentTarget.getBoundingClientRect();
     let left = (rect.left + rect.right) * 0.5;
     let top = window.pageYOffset + (rect.top + rect.bottom) * 0.5;
-    let detail = <Detail owner={this.props.id} left={left} top={top} />;
+    let detail = <Detail left={left} top={top} />;
     this.props.dispatch(actionCreators.didShowDetail(detail));
+  }
+
+  /**
+   * Handle mouse leave
+   */
+  handleMouseLeave (e) {
+    this.props.dispatch(actionCreators.didHideDetail());
   }
 
   /**
@@ -37,7 +45,8 @@ class VenueCard extends React.Component {
     return (
       <div
         className='venue-card-container'
-        onMouseEnter={this.handleMouseEnter} >
+        onMouseEnter={this.handleMouseEnter}
+        onMouseLeave={this.handleMouseLeave}>
         <div className='venue-info-item'>
           {this.props.data.name}
         </div>
