@@ -3,4 +3,7 @@ LONGITUDE = -76.4820578
 DAY       = 24 * 60 * 60
 WEEK      = 7 * DAY
 MONTH     = 31 * DAY
-YEAR      = 12 * MONTH 
+YEAR      = 12 * MONTH
+
+DEFAULT_YEARS = 7
+RADIUS = 2000
