@@ -3,6 +3,7 @@ from app.constants import *
 import time
 import json
 import os
+import sys
 
 DIRECTORY = '../results'
 
@@ -24,7 +25,7 @@ def get_events_since(since):
   for s in spans:
 
     search = EventSearch(
-      distance=2000,
+      distance=RADIUS,
       lat=LATITUDE,
       lng=LONGITUDE,
       since=s[0],
@@ -50,5 +51,7 @@ def get_events_since(since):
     json.dump(results, outfile)
 
 
-# Get events from specific duration
-get_events_since(int(round(time.time())) - 7 * YEAR)
+if __name__ == "__main__":
+  years = float(sys.argv[1]) if len(sys.argv) > 1 else DEFAULT_YEARS
+  # Get events from specific duration
+  get_events_since(int(round(time.time())) - years * YEAR)
