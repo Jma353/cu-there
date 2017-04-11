@@ -7,5 +7,4 @@ npm-debug.log
 results
 migrations
 secret
-app/static/js/*
-app/static/css/*
+static
