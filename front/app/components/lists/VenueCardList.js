@@ -1,8 +1,8 @@
 import React from 'react';
 import VenueCard from '../cards/VenueCard';
-require('../../../public/sass/VenueList.scss');
+require('../../../public/sass/VenueCardList.scss');
 
-class VenueList extends React.Component {
+class VenueCardList extends React.Component {
 
   /**
    * Constructor
@@ -33,7 +33,10 @@ class VenueList extends React.Component {
     let venues = this.props.venues.map(this.generateCard);
     return (
       <div>
-        <div className='venue-list'>
+        <div className='venue-card-list-title'>
+          {this.props.title}
+        </div>
+        <div className='venue-card-list'>
           {venues}
         </div>
       </div>
@@ -41,4 +44,4 @@ class VenueList extends React.Component {
   }
 }
 
-export default VenueList;
+export default VenueCardList;

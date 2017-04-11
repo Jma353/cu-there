@@ -1,36 +1,24 @@
 @import 'variables';
 
-.cover-picture {
-  flex-basis: auto;
-  left: 0;
-  top: 0;
-  img { width: 100%; }
-}
-
 .venue-detail-container {
   display: flex;
-  flex-basis: auto;
   padding: 10px;
   color: $white;
 }
 
-.venue-detail-info {
+.venue-detail-info-container {
   flex-basis: auto;
+  padding: 10px;
 }
 
 .venue-detail-visuals-container {
   flex-direction: column;
-}
-
-.venue-picture {
   padding: 10px;
-  img { width: 100%; }
 }
 
 .venue-map {
-  padding: 10px;
-  height: 125px;
-  width: 125px;
+  width: 150px;
+  height: 150px;
 }
 
 .map-marker {

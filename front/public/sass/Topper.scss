@@ -1,15 +1,50 @@
 @import 'variables';
 
 .topper {
-  background: $color-4;
+  background: url('../images/cornell.jpg');
+  height: auto;
+  background-size: cover;
+}
+
+.filter {
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.topper-links {
+  display: flex;
+  list-style: none;
+  justify-content: flex-end;
+  align-self: stretch;
+}
+
+.topper-link-item {
+  @extend .sm-text;
+  display: flex;
+  margin-right: 20px;
+}
+
+.topper-search {
+  display: flex;
+  height: 80px;
+  padding: 20px;
+  @include respond-to(handhelds) { width: 80%; }
+  @include respond-to(medium-screens) { width: 80%; }
+  @include respond-to(wide-screens) { width: 60%; }
+}
+
+.title {
+  @extend .xl-text;
+  display: flex;
+  padding: 100px 0px 40px 0px;
+  color: $white;
 }
 
 .briefing {
   @extend .md-text;
+  display: flex;
   text-align: center;
-  margin: 10px 10px 0px 10px;
   color: $white;
-  @include respond-to(handhelds) { padding: 0% 5% 0% 5%; }
-  @include respond-to(medium-screens) { padding: 0% 10% 0% 10%; }
-  @include respond-to(wide-screens) { padding: 0% 25% 0% 25%; }
 }

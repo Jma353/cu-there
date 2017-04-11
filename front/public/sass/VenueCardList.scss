@@ -1,0 +1,21 @@
+@import 'variables';
+
+.venue-card-list-title {
+  @extend .lg-text;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  padding: 40px 0px;
+  background: $off-white;
+  color: $black;
+}
+
+.venue-card-list {
+  left: 0;
+  right: 0;
+  padding: 20px 5%;
+  display: flex;
+  flex-wrap: wrap;
+  background: $off-white;
+}

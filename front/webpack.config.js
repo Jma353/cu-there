@@ -1,16 +1,14 @@
 const path = require('path');
-const staticDIR = path.join(__dirname, '../app/static/') // where we put everything
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const extractSASS = new ExtractTextPlugin('css/styles.css');
-
+const extractSass = new ExtractTextPlugin('css/styles.css');
 
 module.exports = {
   entry: [
     './browser.js'
   ],
   output: {
-    path: staticDIR,
-    publicPath: 'static/',
+    path: path.join(__dirname, '../app/static/'),
+    publicPath: '/static/',
     filename: 'js/bundle.js'
   },
   devServer: {
@@ -23,17 +21,28 @@ module.exports = {
       {
         test: /\.jsx?$/,
         loader: 'babel-loader',
-        query: {
-          presets: ['es2015', 'react']
-        }
+        query: { presets: ['es2015', 'react', 'stage-2'] }
       },
       {
         test: /\.scss$/,
-        use: extractSASS.extract({ use: 'css-loader!sass-loader' })
+        use: extractSass.extract({
+          use: [
+            {
+              loader: 'css-loader'
+            },
+            {
+              loader: 'sass-loader'
+            }
+          ]
+        })
+      },
+      {
+        test: /\.jpe?g$|\.gif$|\.png$/i,
+        loader: 'file-loader?name=images/[name].[ext]'
       }
     ]
   },
   plugins: [
-    extractSASS
+    extractSass
   ]
 };
