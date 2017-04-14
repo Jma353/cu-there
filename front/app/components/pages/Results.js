@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import NavBar from '../navigation/NavBar';
+import TextCard from '../cards/TextCard';
 import Footer from '../navigation/Footer';
 require('../../../public/sass/Results.scss');
 
@@ -16,6 +17,7 @@ class Results extends React.Component {
     return (
       <div className='results'>
         <NavBar />
+        <TextCard text='yolo-swag' />
         <Footer />
       </div>
     );
