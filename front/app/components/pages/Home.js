@@ -3,7 +3,7 @@ import axios from 'axios';
 import Topper from '../navigation/Topper';
 import VenueCardList from '../lists/VenueCardList';
 import Footer from '../navigation/Footer';
-require('../../../public/sass/App.scss');
+require('../../../public/sass/Home.scss');
 
 /**
  * Home page of the application
