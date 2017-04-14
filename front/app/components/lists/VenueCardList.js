@@ -13,17 +13,10 @@ class VenueCardList extends React.Component {
   }
 
   /**
-   * Set the detail view of the venue list
-   */
-  setDetail (detail) {
-    this.setState({ detail: detail });
-  }
-
-  /**
    * Generate a venue card
    */
   generateCard (venue, i) {
-    return <VenueCard data={venue} key={i} id={i} />;
+    return <VenueCard data={venue} key={i} />;
   }
 
   /**
