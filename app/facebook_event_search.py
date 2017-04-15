@@ -1,6 +1,5 @@
 import requests as r
 import urllib
-import os
 import utils
 import time
 import haversine
