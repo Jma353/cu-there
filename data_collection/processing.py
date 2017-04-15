@@ -1,40 +1,37 @@
 # Data processing tools
-# This file contains two classes:
-# (1) TrainTestSplit: an object containing training and testing data
-# (2) JsonLoader: an object that yields TrainTestSplit instances for various ML models using data from a JSON file
+# This file contains JsonLoader: an object that yields data for various ML models using data from a JSON file
 
-class TrainTestSplit(object):
-    """ Class containing training and testing data (acts like a struct) """
-    _train = None
-    _test = None
-
-    def __init__(self, train, test):
-        self._train = train
-        self._test = test
-
-    def get_train(self):
-        return self._train
-
-    def get_test(self):
-        return self._test
+from datetime import datetime
+import json
+import numpy as np
 
 class JsonLoader(object):
     """ Class for loading consolidated event data
-    (JSON) into a format easily usable by the models in predictive_models.py """
+    (JSON array) into a format easily usable by the models in predictive_models.py """
 
-    _dict = {}
+    _events = []
 
     def __init__(self):
-        self._dict = {}
+        self._events = []
 
     def __init__(self, filename):
-        self.load_data(self, filename)
+        self.load_data(filename)
 
     def load_data(self, filename):
-        self._dict = json.loads(filename)
+        with open(filename, 'r') as f:
+            self._events = json.loads(f.read())
 
     def time_model_data(self):
-        """ Returns a TrainTestSplit for TimeModel. """
-        train = []
-        test = []
-        return TrainTestSplit(train, test)
+        """ Returns a training set for TimeModel. """
+
+        def _get_hour(time_string):
+            date_time = datetime.strptime(time_string[:-5], "%Y-%m-%dT%H:%M:%S")
+            return date_time.hour + (date_time.minute / 60.0)
+
+        attendance = [event["stats"]["attending"] for event in self._events]
+        time = [_get_hour(event["start_time"]) for event in self._events]
+        attendance_time = zip(time, attendance)
+        return np.asarray(attendance_time)
+
+#j = JsonLoader("../results/1491923869-consolidation.json")
+#print j.time_model_data()
