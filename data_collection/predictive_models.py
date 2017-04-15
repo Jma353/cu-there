@@ -62,4 +62,24 @@ class DescriptionModel(Model):
 class EventModel(Model):
     """ Model that combines outputs of DescriptionModel, TimeModel,
     and LatLongModel into a single attendance number. """
-    pass
+
+    def __init__(self):
+        self.time_model = None
+        self.lat_long_model = None
+        self.description_model = None
+
+    def train(self, time_train_set, lat_long_train_set, description_train_set):
+        self.time_model = TimeModel()
+        time_model.train(time_train_set)
+        self.lat_long_model = LatLongModel()
+        lat_long_model.train(lat_long_train_set)
+        self.description_model = DescriptionModel()
+        description_model.train(description_train_set)
+
+    def test(self, time_test_set, lat_long_test_set, description_test_set):
+        time_result = self.time_model.test(time_test_set)
+        lat_long_result = self.lat_long_model.test(lat_long_test_set)
+        description_result = self.description_model.test(description_test_set)
+        return np.multiply(1.0/3.0, np.add(time_result,
+                                        lat_long_result,
+                                        description_result))
