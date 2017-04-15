@@ -6,10 +6,11 @@
   justify-content: center;
   align-items: center;
   border-right: 4px solid $color-4;
-  background: $white;
+  background: $color-2;
   box-shadow: 1px 1px 1px #888888;
   margin: 10px 20px 10px 0px;
-  padding: 5px;
+  padding: 10px;
+  color: $color-4;
   @include respond-to(handhelds) {
     width: 100%;
     margin-right: 0px;

@@ -1,0 +1,18 @@
+@import 'variables';
+
+.results {
+  margin: 0% 10%;
+}
+
+.result-text-card-lists {
+  display: flex;
+  flex-direction: row;
+}
+
+.result-tags {
+  flex-basis: 50%;
+}
+
+.result-times {
+  flex-basis: 50%;
+}
