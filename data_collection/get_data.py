@@ -1,4 +1,4 @@
-from app.event_search import EventSearch
+from app.facebook_event_search import FacebookEventSearch
 from app.constants import *
 import time
 import json
@@ -24,7 +24,7 @@ def get_events_since(since):
   results = dict()
   for s in spans:
 
-    search = EventSearch(
+    search = FacebookEventSearch(
       distance=RADIUS,
       lat=LATITUDE,
       lng=LONGITUDE,

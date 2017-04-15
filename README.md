@@ -54,7 +54,7 @@ When running `get_data.py`, you may encounter an error such as this one:
 ````
 Traceback (most recent call last):
   File "data_collection/get_data.py", line 1, in <module>
-    from app import EventSearch
+    from app import FacebookEventSearch
 ImportError: No module named app
 ````
 

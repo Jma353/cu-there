@@ -7,9 +7,9 @@ import haversine
 import constants
 from dateutil import parser
 
-class EventSearch(object):
+class FacebookEventSearch(object):
   """
-  Event search driver by name, location, etc.
+  Facebook event search driver by name, location, etc.
 
   Based heavily off tobilg's 'facebook-events-by-location-core' node.js
   driver, found here: https://goo.gl/zVA8F5
