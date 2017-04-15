@@ -18,6 +18,12 @@
   @extend .item;
   display: flex;
   flex-basis: 10%;
+  @include respond-to(handhelds) {
+    flex-basis: 40%;
+  }
+  @include respond-to(medium-screens) {
+    flex-basis: 20%;
+  }
 }
 
 .search-item {
@@ -26,6 +32,12 @@
   height: 60%;
   flex-basis: 80%;
   justify-content: flex-start;
+  @include respond-to(handhelds) {
+    flex-basis: 50%;
+  }
+  @include respond-to(medium-screens) {
+    flex-basis: 70%;
+  }
 }
 
 .navbar-links-container {

@@ -23,7 +23,7 @@
   flex-basis: 65%;
   margin-left: 5%;
   @include respond-to(handhelds) {
-    flex-basis: 50%;
+    flex-basis: 80%;
     font-size: 16px;
   }
 }
@@ -31,7 +31,10 @@
 .venue-detail-address {
   @extend .sm-text;
   flex-basis: 15%;
-  @include respond-to(handhelds) { flex-basis: 30%; }
+  @include respond-to(handhelds) {
+    flex-basis: 0%;
+    display: none;
+  }
   flex-direction: column;
   align-content: flex-start;
   p {
