@@ -4,29 +4,34 @@
   display: flex;
   margin: 10px 10px 0px 10px;
   padding: 15px;
-  flex-basis: 100%;
   flex-direction: row;
   flex-wrap: wrap;
   border-top: 1px solid $border-gray;
 }
 
 .venue-detail-img {
-  flex-basis: 20%;
+  flex-basis: 15%;
   overflow: hidden;
   img {
-    border: 1px solid $border-gray;
-    border-radius: 3px;
+    width: 100%;
+    height: auto;
   }
 }
 
 .venue-detail-title {
   @extend .md-text;
-  flex-basis: 50%;
+  flex-basis: 65%;
+  margin-left: 5%;
+  @include respond-to(handhelds) {
+    flex-basis: 50%;
+    font-size: 16px;
+  }
 }
 
 .venue-detail-address {
   @extend .sm-text;
-  flex-basis: 30%;
+  flex-basis: 15%;
+  @include respond-to(handhelds) { flex-basis: 30%; }
   flex-direction: column;
   align-content: flex-start;
   p {

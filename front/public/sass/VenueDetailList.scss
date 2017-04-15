@@ -1,0 +1,33 @@
+@import 'variables';
+
+.venue-detail-list-container {
+  padding: 20px;
+}
+
+.venue-detail-list-title {
+  @extend .lg-text;
+}
+
+.venue-detail-list-content {
+  display: flex;
+  flex-direction: row;
+}
+
+.venue-detail-list-elements {
+  display: flex;
+  flex-direction: column;
+}
+
+.venue-detail-list-map {
+  display: flex;
+  flex-basis: 70%;
+  justify-content: center;
+  @include respond-to(handhelds) { flex-basis: 0%; }
+  @include respond-to(medium-screens) { flex-basis: 0%; }
+  .map {
+    min-width: 250px;
+    height: 400px;
+    @include respond-to(handhelds) { display: none; }
+    @include respond-to(medium-screens) { display: none; }
+  }
+}

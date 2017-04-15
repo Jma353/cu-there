@@ -1,4 +1,7 @@
 import React from 'react';
+import Map from '../map/Map';
+import VenueDetail from '../details/VenueDetail';
+require('../../../public/sass/VenueDetailList.scss');
 
 /**
  * Displays information about venues, including geographical mappings
@@ -12,21 +15,13 @@ class VenueDetailList extends React.Component {
   constructor (props) {
     super(props);
     this.generateDetail = this.generateDetail.bind(this);
-    this.generateMapMarker = this.generateMapMarker.bind(this);
   }
 
   /**
    * Generate a venue detail view
    */
-  generateDetail (venue) {
-    // TODO
-  }
-
-  /**
-   * Generate a map marker
-   */
-  generateMapMarker (venue) {
-    // TODO
+  generateDetail (venue, i) {
+    return <VenueDetail data={venue} key={i} />;
   }
 
   /**
@@ -34,10 +29,20 @@ class VenueDetailList extends React.Component {
    */
   render () {
     let details = this.props.data.map(this.generateDetail);
-    let markers = this.props.data.map(d => { return this.generateMapMarker(d.location); });
-    // TODO
+    let locations = this.props.data.map(d => { return d.location; });
     return (
-      <div />
+      <div className='venue-detail-list-container'>
+        <div className='venue-detail-list-title'>{this.props.title}</div>
+        <div className='venue-detail-list-content'>
+          <div className='venue-detail-list-elements'>
+            {details}
+          </div>
+          <div className='venue-detail-list-map'>
+            <Map locations={locations} zoom={11} />
+          </div>
+        </div>
+      </div>
+
     );
   }
 }

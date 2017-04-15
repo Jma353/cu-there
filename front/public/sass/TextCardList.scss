@@ -2,15 +2,14 @@
 
 .text-card-list-container {
   display: flex;
-  background: $off-white;
+  background: $white;
   padding: 20px;
   flex-direction: column;
   flex-basis: 100%;
-  border-bottom: 1px solid $border-gray;
 }
 
 .text-card-list-title {
-  @extend .md-text;
+  @extend .lg-text;
   display: flex;
   justify-content: flex-start;
   color: $black;
