@@ -1,6 +1,5 @@
 # Predictive models for event attendance
 
-from app.constants import *
 import numpy as np
 
 from sklearn.linear_model import Ridge
@@ -33,15 +32,20 @@ class TimeModel(Model):
 
     def train(self, train_set):
         """ Polynomial interpolation of degree 2 (quadratic regression). """
-        self.sklearn_model = make_pipeline(PolynomialFeatures(QUADRATIC), Ridge())
-        (X, y) = train_set
-        self.sklearn_model.fit(X, y)
+        self.sklearn_model = make_pipeline(PolynomialFeatures(2), Ridge())
+        X, y = train_set[:, 0], train_set[:, 1]
+        X = X.reshape(-1, 1)
+        results = self.sklearn_model.fit(X, y)
+        return results
 
     def test(self, test_set):
         """ Output of quadratic regression model. """
         if not self.sklearn_model:
             raise Exception("Model has not been trained yet.")
         return self.sklearn_model.predict(test_set)
+
+    def summary(self):
+        return self.sklearn_model.summary()
 
     def __init__(self):
         self.sklearn_model = None

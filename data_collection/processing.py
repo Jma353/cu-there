@@ -32,6 +32,3 @@ class JsonLoader(object):
         time = [_get_hour(event["start_time"]) for event in self._events]
         attendance_time = zip(time, attendance)
         return np.asarray(attendance_time)
-
-#j = JsonLoader("../results/1491923869-consolidation.json")
-#print j.time_model_data()
