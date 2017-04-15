@@ -1,9 +1,24 @@
 @import 'variables';
 
-.text-card-list-title {
-  // TODO
+.text-card-list-container {
+  display: flex;
+  background: $off-white;
+  padding: 20px;
+  flex-direction: column;
+  flex-basis: 100%;
+  border-bottom: 1px solid $border-gray;
 }
 
-.text-card-list {
-  // TODO
+.text-card-list-title {
+  @extend .md-text;
+  display: flex;
+  justify-content: flex-start;
+  color: $black;
+}
+
+.text-card-list-content {
+  display: flex;
+  left: 0;
+  right: 0;
+  flex-wrap: wrap;
 }

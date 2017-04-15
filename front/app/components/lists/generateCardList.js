@@ -1,7 +1,7 @@
 import React from 'react';
 
 /**
- * Generate a Card List
+ * Generate a card list
  */
 export default function generateCardList (WrappedList, WrappedCard) {
   return class extends React.Component {

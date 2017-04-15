@@ -10,11 +10,11 @@ class TextCardList extends React.Component {
    */
   render () {
     return (
-      <div>
+      <div className='text-card-list-container'>
         <div className='text-card-list-title'>
           {this.props.title}
         </div>
-        <div className='text-card-list'>
+        <div className='text-card-list-content'>
           {this.props.cards}
         </div>
       </div>

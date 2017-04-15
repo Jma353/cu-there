@@ -28,7 +28,7 @@ class Search extends React.Component {
   }
 
   /**
-   * Handel submission of search query
+   * Handle submission of search query
    */
   handleSubmit (event) {
     // TODO
