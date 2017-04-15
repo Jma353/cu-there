@@ -1,0 +1,13 @@
+@import 'variables';
+
+.map-marker {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  left: 5;
+  top: 5;
+  border: 2px solid $color-3;
+  border-radius: 10px;
+  background-color: $color-4;
+  text-align: center;
+}
