@@ -33,6 +33,37 @@ pip install -r requirements.txt
 At this point, if you run `pip freeze`, **only** packages in `requirements.txt` should be shown.
 
 
+### Data Collection
+
+To collect event JSON data, use the following:
+
+````bash
+$ python data_collection/get_data.py <num_years>
+````
+
+where `<num_years>` is an optional argument representing the number of years of data you wish to obtain (for example, 3 or 0.67). If no `<num_years>` argument is provided, the script will obtain 7 years of data. The script processes data at a rate of approximately 3 seconds per day of data (which is about 18 minutes per data-year).
+
+This will store events in a collection of JSON files. To combine these files, run
+
+````bash
+$ python data_collection/consolidate.py
+````
+
+When running `get_data.py`, you may encounter an error such as this one:
+
+````
+Traceback (most recent call last):
+  File "data_collection/get_data.py", line 1, in <module>
+    from app import EventSearch
+ImportError: No module named app
+````
+
+To fix this, run the following:
+
+````bash
+$ export PYTHONPATH=${PYTHONPATH}:/path/to/cu-there
+````
+
 ### Database Setup
 This app uses `PostgreSQL` (or `Postgres`). `Postgres` can be installed a multitude of ways, but if you’re on `OSX` I recommend utilizing the [`Postgres App`](https://postgresapp.com/).
 
