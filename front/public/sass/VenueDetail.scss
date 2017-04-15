@@ -22,7 +22,10 @@
   @extend .md-text;
   flex-basis: 65%;
   margin-left: 5%;
-  @include respond-to(handhelds) { flex-basis: 50%; }
+  @include respond-to(handhelds) {
+    flex-basis: 50%;
+    font-size: 16px;
+  }
 }
 
 .venue-detail-address {

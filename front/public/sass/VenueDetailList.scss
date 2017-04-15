@@ -23,9 +23,11 @@
   flex-basis: 70%;
   justify-content: center;
   @include respond-to(handhelds) { flex-basis: 0%; }
+  @include respond-to(medium-screens) { flex-basis: 0%; }
   .map {
     min-width: 250px;
     height: 400px;
     @include respond-to(handhelds) { display: none; }
+    @include respond-to(medium-screens) { display: none; }
   }
 }
