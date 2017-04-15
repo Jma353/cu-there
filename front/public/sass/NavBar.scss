@@ -5,9 +5,11 @@
   display: flex;
   width: 100%;
   background: $color-4;
-  align-items: baseline;
+  align-items: center;
+  height: 50px;
 }
 
+/* Parent of all items on navbar */
 .item {
   margin-left: 20px;
   margin-right: 20px;
@@ -17,15 +19,24 @@
 .brand-item {
   @extend .md-text;
   @extend .item;
-  display: block;
-  width: 30%;
+  display: flex;
+  flex-basis: 10%;
+}
+
+/* Search item */
+.search-item {
+  @extend .item;
+  display: flex;
+  height: 60%;
+  flex-basis: 80%;
+  justify-content: flex-start;
 }
 
 /* Navbar links flex-container */
 .navbar-links-container {
   display: flex;
   list-style: none;
-  flex-basis: 70%;
+  flex-basis: 10%;
   justify-content: flex-end;
 }
 

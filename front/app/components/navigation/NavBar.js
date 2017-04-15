@@ -1,4 +1,5 @@
 import React from 'react';
+import Search from '../search/Search';
 require('../../../public/sass/NavBar.scss');
 
 /**
@@ -12,7 +13,12 @@ class NavBar extends React.Component {
   render () {
     return (
       <div className='navbar-container'>
-        <div className='brand-item'><a href='/'>CU There</a></div>
+        <div className='brand-item'>
+          <a href='/'>CU There</a>
+        </div>
+        <div className='search-item'>
+          <Search />
+        </div>
         <ul className='navbar-links-container'>
           <li className='link-item'><a href='/about'>About</a></li>
         </ul>

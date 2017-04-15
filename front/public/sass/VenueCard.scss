@@ -7,6 +7,7 @@
   height: 60px;
   background: $white;
   margin: 20px;
+  box-shadow: 1px 1px 1px #888888;
   @include respond-to(handhelds) { width: 100%; }
   @include respond-to(medium-screens) { width: 100%; }
 }
