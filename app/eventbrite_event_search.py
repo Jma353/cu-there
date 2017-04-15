@@ -28,5 +28,26 @@ class EventbriteEventSearch(object):
     self.until = datetime.datetime.fromtimestamp(kwargs.get('until', int(round(time.time())))).strftime(datetime_str)
 
   def search(self):
-    """Search workhorse function"""
-    pass
+    """Overall search workhorse function"""
+
+    # Parameters according to:
+    # https://www.eventbrite.com/developer/v3/endpoints/events/
+    params = {
+      'q': self.query,
+      'sort_by': self.sort,
+      'location': {
+        'within': self.distance,
+        'latitude': self.latitude,
+        'longitude': self.longitude
+      },
+      'start_date': {
+        'range_start': self.since,
+        'range_end': self.until
+      }
+    }
+
+    query_url = '/events/search/?' + urllib.urlencode(params)
+    return self.api.get(query_url)
+
+
+# TODO - hand-testing
