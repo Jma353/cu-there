@@ -17,7 +17,7 @@ class Results extends React.Component {
     return (
       <div className='results'>
         <NavBar />
-        <TextCard text='yolo-swag' />
+        <TextCard data='yolo-swag' />
         <Footer />
       </div>
     );

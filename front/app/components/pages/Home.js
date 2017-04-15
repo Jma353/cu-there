@@ -97,7 +97,7 @@ class Home extends React.Component {
       <div className='home'>
         <Topper />
         <VenueCardList
-          venues={venues}
+          data={venues}
           title='Popular Venues' />
         <Footer />
       </div>

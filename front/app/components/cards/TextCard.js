@@ -12,7 +12,7 @@ class TextCard extends React.Component {
   render () {
     return (
       <div className='text-card'>
-        {this.props.text}
+        {this.props.data}
       </div>
     );
   }
