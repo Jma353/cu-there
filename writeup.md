@@ -2,7 +2,7 @@
 
 This document outlines the machine learning system for CU There.
 
-The goal of the system is to provide recommendations of times and locations (given as latitude and longitude) for an event on the Cornell campus given a textual description of the event.
+The goal of the system is to provide recommendations of times and locations for an event on the Cornell campus given a textual description of the event.
 
 ## Data Pipeline
 
@@ -26,7 +26,9 @@ Using the `JsonLoader` class, we load the event data and convert it into a set o
 
 ### Machine Learning Model: Testing Phase
 
-The user enters the description of their event into the frontend. The description is then fed into the pre-trained model via the backsolver, which yields pairs of times and locations that (when combined with the description) yield the highest attendance. More details on this in the "backsolver" section.
+The user enters the description of their event into the frontend. The description is then fed into the pre-trained model via the "backsolver", which yields pairs of times and locations that (when combined with the description) yield the highest attendance. These pairs are returned to the user.
+
+More details on this in the "Backsolver" section.
 
 ## Regression Models
 
