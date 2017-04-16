@@ -25,7 +25,7 @@ def get_events_since(since):
   for s in spans:
 
     search = FacebookEventSearch(
-      distance=RADIUS,
+      distance=FB_RADIUS,
       lat=LATITUDE,
       lng=LONGITUDE,
       since=s[0],
