@@ -1,5 +1,7 @@
 # Predictive models for event attendance
 
+from datetime import datetime
+import json
 import math
 import numpy as np
 
@@ -71,12 +73,8 @@ class VenueModel(object):
 
     """
 
-    def __init__(self):
+    def __init__(self, events):
         self._venues_to_avgs = {}
-        self._events = []
-
-    def add_venues(self, events):
-        """ Adds venue data (for computing top venues) """
         self._events = events
         venues_to_sums = {}
         venues_to_lens = {}
@@ -106,7 +104,7 @@ class VenueModel(object):
             ]}
         ]
         """
-        top_venues = sorted(venues_to_sums.keys(), key=venues_to_sums.get, reverse=True)
+        top_venues = sorted(self._venues_to_avgs.keys(), key=self._venues_to_avgs.get, reverse=True)
         result = []
         for venue_id in top_venues:
             entry = []
@@ -128,16 +126,29 @@ class Recommender(Model):
          """
     def __init__(self, events):
         v = VenueModel(events)
-        top_k = v.get_top_k(20)
+        top_k = v.top_k(20)
         self.peaks = []
-        for venue in top_k:
+        for venue_entry in top_k:
+            venue_info = venue_entry[venue_entry.keys()[0]]
             t = TimeModel()
-            t.train(top_k[venue])
-            peak_time, peak_value = t.find_peak()
+            t.train(self.time_model_data(venue_info))
+            peak_time, peak_value = t.find_peak(t.test([i/4 for i in xrange(0, 24*4)]))
             self.peaks.append(((venue, peak_time), peak_value))
         self.peaks = sorted(self.peaks, key=lambda t: t[1], reverse=True)
 
-    def top_k_recommendations(self, k):
+    def time_model_data(self, events):
+        """ Returns a training set for TimeModel. """
+
+        def _get_hour(time_string):
+            date_time = datetime.strptime(time_string[:-5], "%Y-%m-%dT%H:%M:%S")
+            return date_time.hour + (date_time.minute / 60.0)
+
+        attendance = [event["stats"]["attending"] for event in events]
+        time = [_get_hour(event["start_time"]) for event in events if _get_hour(event["start_time"]) >= 8]
+        attendance_time = zip(time, attendance)
+        return np.asarray(attendance_time)
+
+    def top_k_recommendations(self, k=10):
         """ Output format:
 
         [{"venue": ..., "time": ..., "attendance": ...}]
@@ -148,6 +159,5 @@ class Recommender(Model):
             "attendance": t[1]
         } for t in self.peaks[:k]]
 
-class DescriptionModel(Model):
-    """ Predicts event attendance based on textual description features."""
-    pass
+r = Recommender(json.loads(open("../results/1491923869-consolidation.json", "r").read()))
+print r.top_k_recommendations()
