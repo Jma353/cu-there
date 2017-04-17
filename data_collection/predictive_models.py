@@ -44,6 +44,11 @@ class TimeModel(Model):
             raise Exception("Model has not been trained yet.")
         return self.sklearn_model.predict(test_set)
 
+    def find_peak(self):
+        """ Finds peak using gradient ascent method.
+            Returns tuple (t, v) representing the peak time and peak value."""
+        pass
+
     def summary(self):
         return self.sklearn_model.summary()
 
@@ -106,6 +111,37 @@ class VenueModel(object):
             result.append({venue_id: entry})
         return result
 
+
+class Recommender(Model):
+    """ Iterates through each venue and finds the peak of the attendance-time parabola.
+        Then takes the k highest peaks and returns these location-time pairs.
+
+        Usage:
+        events = <get events from IR system>
+        r = Recommender(events)
+        recs = r.top_k_recommendations()
+         """
+    def __init__(self, events):
+        v = VenueModel(events)
+        top_k = v.get_top_k(20)
+        self.peaks = []
+        for venue in top_k:
+            t = TimeModel()
+            t.train(top_k[venue])
+            peak_time, peak_value = t.find_peak()
+            self.peaks.append(((venue, peak_time), peak_value))
+        self.peaks = sorted(self.peaks, key=lambda t: t[1], reverse=True)
+
+    def top_k_recommendations(self, k):
+        """ Output format:
+
+        [{"venue": ..., "time": ..., "attendance": ...}]
+        """
+        return [{
+            "venue": t[0][0],
+            "time": t[0][1],
+            "attendance": t[1]
+        } for t in self.peaks[:k]]
 
 class DescriptionModel(Model):
     """ Predicts event attendance based on textual description features."""
