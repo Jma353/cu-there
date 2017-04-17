@@ -1,5 +1,6 @@
 # Predictive models for event attendance
 
+import math
 import numpy as np
 
 from sklearn.linear_model import Ridge
@@ -44,10 +45,14 @@ class TimeModel(Model):
             raise Exception("Model has not been trained yet.")
         return self.sklearn_model.predict(test_set)
 
-    def find_peak(self):
-        """ Finds peak using gradient ascent method.
+    def find_peak(self, test_set):
+        """ Finds peak using first derivative test.
             Returns tuple (t, v) representing the peak time and peak value."""
-        pass
+        test_values = self.test(test_set)
+        derivs = [(i, test_values[i] - test_values[i-1]) for i in xrange(1, len(test_values))]
+        sorted_derivs = sorted(derivs, key=lambda t:math.fabs(t[1])) # This yields derivatives with smallest absolute value
+        index_of_peak = sorted_derivs[0][0]
+        return (index_of_peak, test_values[index_of_peak])
 
     def summary(self):
         return self.sklearn_model.summary()
