@@ -32,7 +32,7 @@ class TimeModel(Model):
 
     def train(self, train_set):
         """ Polynomial interpolation of degree 2 (quadratic regression). """
-        self.sklearn_model = make_pipeline(PolynomialFeatures(2), Ridge())
+        self.sklearn_model = make_pipeline(PolynomialFeatures(3), Ridge())
         X, y = train_set[:, 0], train_set[:, 1]
         X = X.reshape(-1, 1)
         results = self.sklearn_model.fit(X, y)
@@ -50,36 +50,63 @@ class TimeModel(Model):
     def __init__(self):
         self.sklearn_model = None
 
-class LatLongModel(Model):
-    """ Predicts event attendance based on latitude and longitude.
-    See `latlong_regression.md` for a detailed description of this model. """
-    pass
+class VenueModel(object):
+    """ Ranks the venues by highest average attendance.
+        Usage:
+
+        v = VenueModel()
+        v.add_venues(events)
+        venues_to_events = v.top_k(20)
+        # Do stuff with events in venues_to_events
+
+    """
+
+    def __init__(self):
+        self._venues_to_avgs = {}
+        self._events = []
+
+    def add_venues(self, events):
+        """ Adds venue data (for computing top venues) """
+        self._events = events
+        venues_to_sums = {}
+        venues_to_lens = {}
+        for event in events:
+            venue_id = event["venue"]["id"]
+            if venue_id in venues_to_sums:
+                venues_to_sums[event["venue"]["id"]] += event["stats"]["attending"]
+                venues_to_lens[event["venue"]["id"]] += 1
+            else:
+                venues_to_sums[event["venue"]["id"]] = event["stats"]["attending"]
+                venues_to_lens[event["venue"]["id"]] = 1
+        for venue_id in venues_to_sums:
+            self._venues_to_avgs[venue_id] = (venues_to_sums[venue_id]*1.0)/venues_to_lens[venue_id]
+
+    def top_k(self, k=10):
+        """ Returns the top k venues with the events present at them. Format:
+
+        [
+            {"venue id 1": [ /* highest-attendance venue */
+                <event 1>,
+                <event 2>,
+                ...
+            ]},
+            {"venue id 2": [ /* second-highest-attendance venue */
+                <event 1>,
+                <event 2>
+            ]}
+        ]
+        """
+        top_venues = sorted(venues_to_sums.keys(), key=venues_to_sums.get, reverse=True)
+        result = []
+        for venue_id in top_venues:
+            entry = []
+            for event in self._events:
+                if event["venue"]["id"] == venue_id:
+                    entry.append(event)
+            result.append({venue_id: entry})
+        return result
+
 
 class DescriptionModel(Model):
     """ Predicts event attendance based on textual description features."""
     pass
-
-class EventModel(Model):
-    """ Model that combines outputs of DescriptionModel, TimeModel,
-    and LatLongModel into a single attendance number. """
-
-    def __init__(self):
-        self.time_model = None
-        self.lat_long_model = None
-        self.description_model = None
-
-    def train(self, time_train_set, lat_long_train_set, description_train_set):
-        self.time_model = TimeModel()
-        time_model.train(time_train_set)
-        self.lat_long_model = LatLongModel()
-        lat_long_model.train(lat_long_train_set)
-        self.description_model = DescriptionModel()
-        description_model.train(description_train_set)
-
-    def test(self, time_test_set, lat_long_test_set, description_test_set):
-        time_result = self.time_model.test(time_test_set)
-        lat_long_result = self.lat_long_model.test(lat_long_test_set)
-        description_result = self.description_model.test(description_test_set)
-        return np.multiply(1.0/3.0, np.add(time_result,
-                                        lat_long_result,
-                                        description_result))

@@ -29,6 +29,6 @@ class JsonLoader(object):
             return date_time.hour + (date_time.minute / 60.0)
 
         attendance = [event["stats"]["attending"] for event in self._events]
-        time = [_get_hour(event["start_time"]) for event in self._events]
+        time = [_get_hour(event["start_time"]) for event in self._events if _get_hour(event["start_time"]) >= 8]
         attendance_time = zip(time, attendance)
         return np.asarray(attendance_time)
