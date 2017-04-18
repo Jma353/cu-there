@@ -9,6 +9,8 @@ from sklearn.linear_model import Ridge
 from sklearn.preprocessing import PolynomialFeatures
 from sklearn.pipeline import make_pipeline
 
+from app.events.models.event import Event
+
 class Model(object):
   """
   Base (abstract) class for a machine learning model.
@@ -90,13 +92,13 @@ class VenueModel(object):
     venues_to_sums = {}
     venues_to_lens = {}
     for event in events:
-      venue_id = event['venue']['id']
+      venue_id = event.venue.id
       if venue_id in venues_to_sums:
-        venues_to_sums[event['venue']['id']] += event['attending']
-        venues_to_lens[event['venue']['id']] += 1
+        venues_to_sums[venue_id] += event.attending
+        venues_to_lens[venue_id] += 1
       else:
-        venues_to_sums[event['venue']['id']] = event['attending']
-        venues_to_lens[event['venue']['id']] = 1
+        venues_to_sums[venue_id] = event.attending
+        venues_to_lens[venue_id] = 1
     for venue_id in venues_to_sums:
       self._venues_to_avgs[venue_id] = (venues_to_sums[venue_id]*1.0)/venues_to_lens[venue_id]
 
@@ -121,7 +123,7 @@ class VenueModel(object):
       for venue_id in top_venues:
         entry = []
         for event in self._events:
-          if event['venue']['id'] == venue_id:
+          if event.venue.id == venue_id:
             entry.append(event)
         result.append({venue_id: entry})
       return result
@@ -156,8 +158,8 @@ class Recommender(Model):
       date_time = datetime.strptime(time_string[:-5], '%Y-%m-%dT%H:%M:%S')
       return date_time.hour + (date_time.minute / 60.0)
 
-    attendance = [event['attending'] for event in events]
-    time = [_get_hour(event['start_time']) for event in events if _get_hour(event['start_time']) >= 8]
+    attendance = [event.attending for event in events]
+    time = [_get_hour(event.start_time) for event in events if _get_hour(event.start_time) >= 8]
     attendance_time = zip(time, attendance)
     return np.asarray(attendance_time)
 
@@ -173,5 +175,5 @@ class Recommender(Model):
       'attendance': t[1]
     } for t in self.peaks[:k]]
 
-r = Recommender(json.loads(open('../results/1491923869-consolidation.json', 'r').read()))
+r = Recommender(Event.query.all())
 print r.top_k_recommendations()
