@@ -10,7 +10,7 @@ class VenueCardList extends React.Component {
    */
   render () {
     return (
-      <div>
+      <div className='venue-card-list-container'>
         <div className='venue-card-list-title'>
           {this.props.title}
         </div>

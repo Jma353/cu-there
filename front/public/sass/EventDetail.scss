@@ -3,16 +3,19 @@
 .event-detail-container {
   position: relative;
   display: flex;
-  margin: 10px 10px 0px 10px;
+  margin: 0px 10px 0px 10px;
   padding: 15px;
   flex-direction: row;
   flex-wrap: wrap;
   border-top: 1px solid $border-gray;
   flex-basis: 80%;
+  transition: $transition-duration;
   &:hover {
     .event-detail-description {
       max-height: none;
     }
+
+    background-color: $ultra-light-gray;
   }
 }
 
@@ -57,5 +60,5 @@
   height: 32px;
   border: none;
   background-color: transparent;
-  @include button-hover(white, black, white, $light-gray);
+  @include button-hover(transparent, black, transparent, $light-gray);
 }
