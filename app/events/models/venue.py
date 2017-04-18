@@ -33,3 +33,7 @@ class Venue(Base):
     self.state           = fb_json['location']['state']
     self.street          = fb_json['location']['street']
     self.emails          = '' if fb_json['emails'] is None else ';'.join(fb_json['emails'])
+
+class VenueSchema(ModelSchema):
+  class Meta:
+    model = Venue 

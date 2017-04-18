@@ -40,3 +40,8 @@ class Event(Base):
     self.time_from_now   = fb_json['time_from_now']
     self.type            = fb_json['type']
     self.venue_id        = fb_json['venue']['id']
+
+
+class EventSchema(ModelSchema):
+  class Meta:
+    model = Event
