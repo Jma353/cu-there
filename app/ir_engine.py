@@ -46,6 +46,10 @@ class IREngine(object):
     rocchio_ranked_events = self.get_rocchio_rankings(ranked_events, [])
     self.print_top_events(rocchio_ranked_events, 10)
 
+    event_ids = [self.events[doc_id]["id"] for cs, doc_id in rocchio_ranked_events]
+
+    return event_ids
+
   def tokenize(self, text):
     """
     Tokenize text into list of words and stem words
@@ -299,4 +303,4 @@ if __name__ == '__main__':
   query = args[1]
 
   ir_engine = IREngine(query)
-  ir_engine.get_ranked_results()
+  ranked_results = ir_engine.get_ranked_results()
