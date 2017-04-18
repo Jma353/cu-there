@@ -76,7 +76,21 @@ def top_k_recommendations(events, k=10):
         attendance = [event.attending for event in events]
         time = [_get_hour(event.start_time) for event in events if _get_hour(event.start_time) >= 8]
         attendance_time = zip(time, attendance)
-        return np.asarray(attendance_time)
+
+        buckets = defaultdict(list)
+        for i in xrange(8, 24):
+            for pair in attendance_time:
+                if pair[0] == i:
+                    buckets[i].append(pair[1])
+        max_buckets = defaultdict(int)
+        for i in xrange(8, 24):
+            if len(buckets[i]) > 0:
+                max_buckets[i] = max(buckets[i])
+        # We now have the max attendance for each time
+
+        max_attendance_time = zip(max_buckets.keys(), max_buckets.values())
+        print max_attendance_time
+        return np.asarray(max_attendance_time)
 
     # Step 1: Group events by venue
 
@@ -89,8 +103,10 @@ def top_k_recommendations(events, k=10):
     venues_to_models = {}
     for venue_id in venues_to_events:
         t = TimeModel()
-        t.train(time_model_data(venues_to_events[venue_id]))
-        venues_to_models[venue_id] = t
+        train_data = time_model_data(venues_to_events[venue_id])
+        if train_data != []:
+            t.train(train_data)
+            venues_to_models[venue_id] = t
 
     # Step 3: Find peaks of models (yielding time-location pairs)
 
