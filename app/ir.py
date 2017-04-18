@@ -76,17 +76,24 @@ def main():
 
 ### Helper Functions ###
 
-# Tokenize text into list of words and stem words
+
 def tokenize(text):
+    """
+    Tokenize text into list of words and stem words
+    """
     return stem(re.findall(r'[a-z]+', text.lower()) if text else [])
 
-# Stem each word in word list using Porter Stemming Algorithm
 def stem(words):
+    """
+    Stem each word in word list using Porter Stemming Algorithm
+    """
     stemmer = PorterStemmer()
     return [stemmer.stem(word) for word in words]
 
-# Build inverted index dictionary
 def build_inverted_index(events):
+    """
+    Build inverted index dictionary
+    """
     inv_idx = defaultdict(list)
 
     for idx, event in enumerate(events):
@@ -99,8 +106,13 @@ def build_inverted_index(events):
 
     return inv_idx
 
-# Compute IDF using inverted index
 def compute_idf(inv_idx, n_events, min_df=5, max_df_ratio=0.95):
+    """
+    Compute IDFs using inverted index
+
+    min_df: Min number of docs a term must occur in
+    max_df_ratio: Max ratio of docs a term can occur in
+    """
     idf_dict = {}
 
     # Ignore too specific and too common words
@@ -116,8 +128,10 @@ def compute_idf(inv_idx, n_events, min_df=5, max_df_ratio=0.95):
 
     return idf_dict
 
-# Compute norm of each event using inverted index
 def compute_doc_norms(inv_idx, idf, n_events):
+    """
+    Compute norm of each event using inverted index
+    """
     norms = np.zeros(n_events)
 
     # Compute norm of each event
@@ -127,8 +141,10 @@ def compute_doc_norms(inv_idx, idf, n_events):
 
     return np.sqrt(norms)
 
-# Get most similar events using cosine similarity
 def get_cos_sim_list(query, inv_idx, idf, doc_norms):
+    """
+    Get most similar events using cosine similarity
+    """
     # Dict format: {event_id: unnormalized_score}
     scores = defaultdict(int)
 
@@ -162,8 +178,10 @@ def get_cos_sim_list(query, inv_idx, idf, doc_norms):
 
     return results
 
-# Get ranked list of events
 def get_cos_sim_ranked_events(query, events):
+    """
+    Get ranked list of events based on cosine similarity
+    """
     inv_idx = build_inverted_index(events)
     idf = compute_idf(inv_idx, len(events))
     inv_idx = {k:v for k, v in inv_idx.items() if k in idf}
@@ -171,8 +189,10 @@ def get_cos_sim_ranked_events(query, events):
 
     return get_cos_sim_list(query, inv_idx, idf, doc_norms)
 
-# Print out ranked list
 def print_top_events(query, ranked_events, events_dict, top_k):
+    """
+    Print out top_k ranked list of events
+    """
     print("#" * len(query))
     print(query)
     print("#" * len(query))
@@ -188,8 +208,10 @@ def print_top_events(query, ranked_events, events_dict, top_k):
             events_dict[event_id]['name'].encode('utf-8'),
             category.encode('utf-8')))
 
-# Get cosine similarity between two vectors
 def get_cos_sim(vec1, vec2):
+    """
+    Get cosine similarity between two vectors
+    """
     vec_prod = np.dot(vec1, vec2)
     vec_norm_prod = np.linalg.norm(vec1) * np.linalg.norm(vec2)
 
