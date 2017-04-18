@@ -22,10 +22,7 @@ class Topper extends React.Component {
             Help us help you plan your next event at Cornell.
           </div>
           <div className='topper-search'>
-            <Search
-              submit='Recommend'
-              placeholder='e.g. A tech talk hosted by ACSU'
-            />
+            <Search />
           </div>
         </div>
       </div>

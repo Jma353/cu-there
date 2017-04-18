@@ -34,7 +34,7 @@ class Search extends React.Component {
    */
   handleSubmit (event) {
     console.log('A search was made ' + this.state.value);
-    window.location.href = `/results?query=${this.state.value}`
+    window.location.href = `/results?query=${this.state.value}`;
   }
 
   /**
@@ -47,7 +47,7 @@ class Search extends React.Component {
         <input type='text'
           value={this.state.value}
           onChange={this.handleChange}
-          placeholder={this.props.placeholder || ''}
+          placeholder={'e.g. A tech talk hosted by ACSU'}
           className='bar' />
         {/* Submit button */}
         <LightButton className='submit' onClick={this.handleSubmit}>
