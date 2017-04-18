@@ -2,11 +2,15 @@
 
 .venue-detail-container {
   display: flex;
-  margin: 10px 10px 0px 10px;
+  margin: 0px 10px 0px 10px;
   padding: 15px;
   flex-direction: row;
   flex-wrap: wrap;
   border-top: 1px solid $border-gray;
+  transition: $transition-duration;
+  &:hover {
+    background-color: $ultra-light-gray;
+  }
 }
 
 .venue-detail-img {
