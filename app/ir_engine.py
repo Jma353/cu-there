@@ -26,29 +26,40 @@ class IREngine(object):
                        for event in events_dict]
       self.n_events = len(self.events)
 
-    self.query = query
-
     tfidf_vec = TfidfVectorizer(min_df=5, max_df=0.95, max_features=3000, stop_words='english')
     event_descs = [event["description"] for event in self.events]
 
+    self.query = query
     self.doc_by_term = tfidf_vec.fit_transform(event_descs).toarray()
     self.term_to_idx = {v:i for i, v in enumerate(tfidf_vec.get_feature_names())}
     self.categ_sim_matrix = self.get_categ_sim_matrix()
 
-  def get_ranked_results(self):
-    event_descs = [event["description"] for event in self.events]
 
-    # Print top events based on cosine similarity
+  def get_ranked_results(self):
+    """
+    Return a ranked list of event_ids given query using cosine similarity
+    """
     ranked_events = self.get_cos_sim_ranked_events()
+
+    # For testing purposes
+    print("Cosine Similarity Results:")
     self.print_top_events(ranked_events, 10)
+
+    return [self.events[doc_id]["id"] for _, doc_id in ranked_events]
+
+  def get_rocchio_ranked_results(self):
+    """
+    Return a ranked list of event_ids given query using cosine similarity with Rocchio
+    """
+    ranked_events = self.get_cos_sim_ranked_events()
     ranked_events = [doc_id for _, doc_id in ranked_events]
 
+    # For testing purposes
+    print("Rocchio Cosine Similarity Results:")
     rocchio_ranked_events = self.get_rocchio_rankings(ranked_events, [])
-    self.print_top_events(rocchio_ranked_events, 10)
+    self.print_top_events(rocchio_ranked_events, 10) # For testing purposes
 
-    event_ids = [self.events[doc_id]["id"] for cs, doc_id in rocchio_ranked_events]
-
-    return event_ids
+    return [self.events[doc_id]["id"] for cs, doc_id in rocchio_ranked_events]
 
   def tokenize(self, text):
     """
@@ -186,6 +197,7 @@ class IREngine(object):
             score,
             self.events[doc_id]['name'].encode('utf-8'),
             category.encode('utf-8')))
+    print
 
   def get_cos_sim(self, vec1, vec2):
     """
@@ -304,3 +316,4 @@ if __name__ == '__main__':
 
   ir_engine = IREngine(query)
   ranked_results = ir_engine.get_ranked_results()
+  rocchio_ranked_results = ir_engine.get_rocchio_ranked_results()
