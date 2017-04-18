@@ -1,6 +1,8 @@
 from app.events.models.event import Event
 from app.events.models.venue import Venue
 from app import db
+import json
+import sys
 
 def store_venues(f):
   """
@@ -18,15 +20,20 @@ def store_venues(f):
   for v in venues:
     try:
       db.session.add(Venue(v))
-      db.commit()
-    except Exception e:
-      print e
+      db.session.commit()
+    except Exception as e:
+      db.session.rollback()
 
 
   # Add all events
   for e in events:
     try:
       db.session.add(Event(e))
-      db.commit()
-    except Exception e:
-      print e
+      db.session.commit()
+    except Exception as e:
+      db.session.rollback()
+
+
+if __name__ == '__main__':
+  if len(sys.argv) < 2: raise
+  store_venues(sys.argv[1])
