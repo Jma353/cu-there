@@ -56,14 +56,19 @@ def get_events_since(**kwargs):
 
 
 if __name__ == "__main__":
-  # Grab arguments
-  years = float(sys.argv[1]) if len(sys.argv) > 1 else DEFAULT_YEARS
-  lat   = float(sys.argv[2]) if len(sys.argv) > 2 else LATITUDE
-  lng   = float(sys.argv[3]) if len(sys.argv) > 3 else LONGITUDE
-  # Get events from specific duration
+  # RN
   now = int(round(time.time()))
+
+  # Grab arguments
+  from_years = float(sys.argv[1]) if len(sys.argv) > 1 else DEFAULT_YEARS
+  to_years   = float(sys.argv[2]) if len(sys.argv) > 2 else now
+  lat        = float(sys.argv[2]) if len(sys.argv) > 3 else LATITUDE
+  lng        = float(sys.argv[3]) if len(sys.argv) > 4 else LONGITUDE
+
+  # Run it
   get_events_since(
-    since=now-years*YEAR,
+    since=now-from_years*YEAR,
+    until=now-to_years*YEAR,
     interval=DAY,
     lat=lat,
     lng=lng
