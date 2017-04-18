@@ -14,7 +14,6 @@
   display: flex;
   border-radius: $border-radius 0px 0px $border-radius;
   padding: 0px 5px 0px 5px;
-  @include respond-to(handhelds) { width: 60%; }
 }
 
 .submit {
@@ -23,5 +22,4 @@
   display: flex;
   justify-content: center;
   border-radius: 0px $border-radius $border-radius 0px;
-  @include respond-to(handhelds) { width: 40%; }
 }
