@@ -1,5 +1,7 @@
 import React from 'react';
 
+require('../../../public/sass/EventDetail.scss');
+
 class EventDetail extends React.Component {
   render () {
     return (
@@ -23,6 +25,7 @@ class EventDetail extends React.Component {
         <div className='event-detail-description'>
           {this.props.data.description}
         </div>
+        <button className='event-detail-dismiss fa fa-times' />
       </div>
     );
   }

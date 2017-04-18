@@ -18,10 +18,14 @@
   }
 }
 
+.venue-detail-text-container {
+  flex-basis: 70%;
+  margin-left: 5%;
+}
+
 .venue-detail-title {
   @extend .md-text;
-  flex-basis: 65%;
-  margin-left: 5%;
+  flex-basis: 100%;
   @include respond-to(handhelds) {
     flex-basis: 80%;
     font-size: 16px;
@@ -30,13 +34,11 @@
 
 .venue-detail-address {
   @extend .sm-text;
-  flex-basis: 15%;
+  flex-basis: 100%;
+  color: gray;
   @include respond-to(handhelds) {
-    flex-basis: 0%;
-    display: none;
+
   }
-  flex-direction: column;
-  align-content: flex-start;
   p {
     padding: 1px;
     margin: 0px;

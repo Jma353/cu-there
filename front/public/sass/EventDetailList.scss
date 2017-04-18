@@ -1,0 +1,21 @@
+@import 'variables';
+
+.event-detail-list-container {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.event-detail-list-title {
+  @extend .lg-text;
+}
+
+.event-detail-list-content {
+  display: flex;
+  flex-direction: row;
+}
+
+.event-detail-list-elements {
+  display: flex;
+  flex-direction: column;
+}

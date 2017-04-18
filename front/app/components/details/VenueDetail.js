@@ -18,18 +18,20 @@ class VenueDetail extends React.Component {
         <div className='venue-detail-img'>
           <img src={this.props.data.profile_picture} />
         </div>
-        {/* Title */}
-        <div className='venue-detail-title'>
-          {this.props.data.name}
-        </div>
-        {/* Address */}
-        <div className='venue-detail-address'>
-          <p>{location.street}</p>
-          <p>{location.city}, {location.state} {location.zip}</p>
-        </div>
-        {/* Description */}
-        <div className='venue-detail-description'>
-          {this.props.data.about}
+        <div className='venue-detail-text-container'>
+          {/* Title */}
+          <div className='venue-detail-title'>
+            {this.props.data.name}
+          </div>
+          {/* Address */}
+          <div className='venue-detail-address'>
+            <p>{location.street}</p>
+            <p>{location.city}, {location.state} {location.zip}</p>
+          </div>
+          {/* Description */}
+          <div className='venue-detail-description'>
+            {this.props.data.about}
+          </div>
         </div>
       </div>
     );
