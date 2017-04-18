@@ -56,15 +56,14 @@ class TimeLocationPair:
         self.venue_id = venue_id
         self.attendance = attendance
 
-    def to_json(self):
-        return json.dumps({
+    def to_dict(self):
+        return {
             "venue_id": self.venue_id,
             "time": self.time,
             "attendance": self.attendance
-        })
+        }
 
 def top_k_recommendations(events, k=10):
-
     # Helper function
 
     def time_model_data(events):
@@ -97,9 +96,9 @@ def top_k_recommendations(events, k=10):
 
     time_location_pairs = []
     for venue_id in venues_to_models:
-        model = venues_to_models[venue_id]
-        synthetic_test_data = np.asarray([i/4 for i in xrange(0, 24*4)])
-        peak_time, peak_value = t.find_peak(t.test(synthetic_test_data))
+        t = venues_to_models[venue_id]
+        synthetic_test_data = np.asarray([i for i in xrange(0, 24)])
+        peak_time, peak_value = t.find_peak(synthetic_test_data)
         time_location_pairs.append(TimeLocationPair(
             venue_id=venue_id,
             time=peak_time,
@@ -109,8 +108,17 @@ def top_k_recommendations(events, k=10):
     # Step 4: Output top time-location pairs
 
     sorted_pairs = sorted(time_location_pairs, key=lambda t: t.attendance, reverse=True)
-    return [pair.to_json() for pair in sorted_pairs[:k]]
+    return [pair.to_dict() for pair in sorted_pairs[:k]]
 
 
 if __name__ == "__main__":
-    print top_k_recommendations(Event.query.all())
+    # Testing
+    from app.events.models.venue import Venue
+
+    recs = top_k_recommendations(Event.query.all())
+    print recs
+    for rec in recs:
+        print "{} at {}:00".format(
+            Venue.query.filter_by(id=rec["venue_id"]).first().name,
+            rec["time"]
+        )
