@@ -32,50 +32,11 @@ def main():
     events = [event["description"] for event in events_dict if event["description"]]
     categs = [event["category"].replace("_EVENT","") for event in events_dict if event["category"]]
 
-    # Make doc-term matrix
-    n_feats = 5000
-
-    tfidf_vec = TfidfVectorizer(min_df=5,
-                            max_df=0.95,
-                            max_features=n_feats,
-                            stop_words='english')
-
-    doc_by_term = tfidf_vec.fit_transform(events)
-
-    # Category information
-    categ_to_event = defaultdict(list)
-
-    for idx, categ in enumerate(categs):
-        categ_to_event.setdefault(categ,[]).append(idx)
-
-    categ_pop_lst = [(c, len(e)) for c, e in categ_to_event.items()]
-
-    uniq_categs = [c for c in categ_to_event.keys()]
-    categ_name_to_idx = {name:idx for idx, name in enumerate(uniq_categs)}
-    categ_idx_to_name = {v:k for k,v in categ_name_to_idx.items()}
-    categ_by_term = np.empty([len(uniq_categs), doc_by_term.shape[1]])
-
-    # TODO: Make norm work
-    # Build category_by_words matrix
-    # for idx, _ in enumerate(categ_by_term):
-    #     # Get event vectors for category
-    #     categ = categ_idx_to_name[idx]
-    #     event_vecs = [doc_by_term[event] for event in categ_to_event[categ]]
-    #
-    #     # Calculate category average vector
-    #     vec_sum = np.sum(event_vecs, axis=0).flatten()
-    #     norm = np.linalg.norm(vec_sum)
-    #     avg_tfidf_vec = vec_sum / float(norm)
-    #     categ_by_term[idx,:] = avg_tfidf_vec
-    #
-    # categ_sim_matrix = np.dot(categ_by_term, categ_by_term.T)
-
     # Print top events based on cosine similarity
     ranked_events = get_cos_sim_ranked_events(event_desc, events)
     print_top_events(event_desc, ranked_events, events_dict, 10)
 
 ### Helper Functions ###
-
 
 def tokenize(text):
     """
@@ -136,8 +97,8 @@ def compute_doc_norms(inv_idx, idf, n_events):
 
     # Compute norm of each event
     for word, doc_tf in inv_idx.items():
-        for event_id, tf in doc_tf:
-            norms[event_id] += pow((tf * idf[word]), 2)
+        for doc_id, tf in doc_tf:
+            norms[doc_id] += pow((tf * idf[word]), 2)
 
     return np.sqrt(norms)
 
@@ -216,6 +177,44 @@ def get_cos_sim(vec1, vec2):
     vec_norm_prod = np.linalg.norm(vec1) * np.linalg.norm(vec2)
 
     return vec_prod / float(vec_norm_prod)
+
+def get_categ_sim(events, categs):
+    """
+    Get category cosine similarity matrix
+    """
+    # Make doc-term matrix
+    tfidf_vec = TfidfVectorizer(min_df=5,
+                            max_df=0.95,
+                            max_features=3000,
+                            stop_words='english')
+
+    doc_by_term = tfidf_vec.fit_transform(events).toarray()
+
+    # Dict format: {category: [events marked as category]}
+    categ_to_event = defaultdict(list)
+
+    for idx, categ in enumerate(categs):
+        categ_to_event.setdefault(categ,[]).append(idx)
+
+    uniq_categs = [c for c in categ_to_event.keys()]
+    categ_name_to_idx = {name:idx for idx, name in enumerate(uniq_categs)}
+    categ_idx_to_name = {v:k for k,v in categ_name_to_idx.items()}
+    categ_by_term = np.empty([len(uniq_categs), doc_by_term.shape[1]])
+
+    # Build category_by_words matrix
+    for idx, _ in enumerate(categ_by_term):
+        # Get event vectors for category
+        categ = categ_idx_to_name[idx]
+        event_vecs = [doc_by_term[event] for event in categ_to_event[categ]]
+
+        # Calculate category average vector
+        vec_sum = np.sum(event_vecs, axis=0)
+        norm = np.linalg.norm(vec_sum)
+        avg_tfidf_vec = vec_sum / float(norm)
+        categ_by_term[idx,:] = np.asarray(avg_tfidf_vec)
+
+    return np.dot(categ_by_term, categ_by_term.T)
+
 
 if __name__ == '__main__':
     main()
