@@ -154,7 +154,7 @@ class Results extends React.Component {
       <div>
         <NavBar query={this.props.location.query.q} />
         <div className='results-header'>
-          <p>Showing results for 'query'</p>
+          <p>Showing 42 results</p>
         </div>
         <div className='results'>
           <div className='result-text-card-lists'>
