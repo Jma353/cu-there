@@ -14,7 +14,6 @@ class Venue(Base):
   latitude        = db.Column(db.String())
   state           = db.Column(db.String())
   street          = db.Column(db.String())
-  cover_picture   = db.Column(db.String(2000))
   emails          = db.Column(db.Text())
 
   def __init__(self, fb_json):
@@ -26,12 +25,11 @@ class Venue(Base):
     self.name            = fb_json['name']
     self.profile_picture = fb_json['profile_picture']
     self.cover_picture   = fb_json['cover_picture']
-    self.city            = fb_json['city']
-    self.zip             = fb_json['zip']
-    self.country         = fb_json['country']
-    self.longitude       = fb_json['longitude']
-    self.latitude        = fb_json['latitude']
-    self.state           = fb_json['state']
-    self.street          = fb_json['street']
-    self.cover_picture   = fb_json['cover_picture']
+    self.city            = fb_json['location']['city']
+    self.zip             = fb_json['location']['zip']
+    self.country         = fb_json['location']['country']
+    self.longitude       = fb_json['location']['longitude']
+    self.latitude        = fb_json['location']['latitude']
+    self.state           = fb_json['location']['state']
+    self.street          = fb_json['location']['street']
     self.emails          = '' if fb_json['emails'] is None else ';'.join(fb_json['emails'])
