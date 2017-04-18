@@ -5,6 +5,7 @@ import math
 import numpy as np
 from collections import Counter
 from collections import defaultdict
+from nltk.stem.porter import PorterStemmer
 
 ### Global variables ###
 events = []
@@ -32,9 +33,14 @@ def main():
 
 ### Helper Functions ###
 
-# Tokenize text into list of words
+# Tokenize text into list of words and stem words
 def tokenize(text):
-    return re.findall(r'[a-z]+', text.lower()) if text else ""
+    return stem(re.findall(r'[a-z]+', text.lower()) if text else [])
+
+# Stem each word in word list using Porter Stemming Algorithm
+def stem(words):
+    stemmer = PorterStemmer()
+    return [stemmer.stem(word) for word in words]
 
 # Build inverted index dictionary
 def build_inverted_index(events):
