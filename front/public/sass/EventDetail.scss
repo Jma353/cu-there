@@ -11,10 +11,6 @@
   flex-basis: 80%;
   transition: $transition-duration;
   &:hover {
-    .event-detail-description {
-      max-height: none;
-    }
-
     background-color: $ultra-light-gray;
   }
 }

@@ -1,9 +1,10 @@
 @import 'variables';
 
 .topper {
-  background: url('../images/cornell.jpg') center;
+  background: url('../images/cornell.jpg');
   height: 75vh;
   background-size: cover;
+  background-position: center;
 }
 
 .filter {
