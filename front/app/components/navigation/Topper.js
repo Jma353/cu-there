@@ -19,7 +19,7 @@ class Topper extends React.Component {
           </ul>
           <div className='title'>CU There</div>
           <div className='briefing'>
-            Help us help you plan your next event at Cornell.
+            Plan your next event at Cornell.
           </div>
           <div className='topper-search'>
             <Search />
