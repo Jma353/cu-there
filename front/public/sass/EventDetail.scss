@@ -3,19 +3,23 @@
 .event-detail-container {
   position: relative;
   display: flex;
-  margin: 10px 10px 0px 10px;
+  margin: 0px 10px 0px 10px;
   padding: 15px;
   flex-direction: row;
   flex-wrap: wrap;
   border-top: 1px solid $border-gray;
   flex-basis: 80%;
+  transition: $transition-duration;
+  &:hover {
+    background-color: $ultra-light-gray;
+  }
 }
 
 .event-detail-title {
   @extend .md-text;
-  flex-basis: 100%;
+  flex-basis: 90%;
   @include respond-to(handhelds) {
-    flex-basis: 100%;
+    flex-basis: 80%;
   }
 }
 
@@ -52,5 +56,5 @@
   height: 32px;
   border: none;
   background-color: transparent;
-  @include button-hover(white, red, white, gray);
+  @include button-hover(transparent, black, transparent, $light-gray);
 }

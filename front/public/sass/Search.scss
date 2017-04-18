@@ -4,25 +4,22 @@
   display: flex;
   width: 100%;
   height: 100%;
-  border-radius: 8px;
 }
 
 .bar {
-  @extend .md-text;
+  @extend .sm-text;
   height: 100%;
   width: 90%;
   border: none;
   display: flex;
-  border-radius: 0px;
+  border-radius: $border-radius 0px 0px $border-radius;
   padding: 0px 5px 0px 5px;
-  @include respond-to(handhelds) { width: 60%; }
 }
 
 .submit {
-  @extend .md-text;
   height: 100%;
-  width: 10%;
+  width: 60px;
   display: flex;
   justify-content: center;
-  @include respond-to(handhelds) { width: 40%; }
+  border-radius: 0px $border-radius $border-radius 0px;
 }

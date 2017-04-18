@@ -8,14 +8,10 @@
 
 .event-detail-list-title {
   @extend .lg-text;
+  padding: 10px 0px;
 }
 
 .event-detail-list-content {
-  display: flex;
-  flex-direction: row;
-}
-
-.event-detail-list-elements {
   display: flex;
   flex-direction: column;
 }

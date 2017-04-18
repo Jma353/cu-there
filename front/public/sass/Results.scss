@@ -1,7 +1,14 @@
 @import 'variables';
 
-.results {
+.results-header {
   margin: 0% 10%;
+  padding: 0px 20px;
+  color: gray;
+}
+
+.results {
+  padding: 0% 10%;
+  background-color: white;
 }
 
 .result-text-card-lists {

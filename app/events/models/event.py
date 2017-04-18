@@ -27,7 +27,7 @@ class Event(Base):
     self.noreply         = fb_json['stats']['noreply']
     self.declined        = fb_json['stats']['declined']
     self.maybe           = fb_json['stats']['maybe']
-    self.description     = fb_json['stats']['description']
+    self.description     = fb_json['description']
     self.start_time      = fb_json['start_time']
     self.end_time        = fb_json['end_time']
     self.profile_picture = fb_json['profile_picture']

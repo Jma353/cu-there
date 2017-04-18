@@ -22,11 +22,11 @@ let initialSearchState = {
  */
 export function _search (state = initialSearchState, action) {
   switch (action.type) {
-    case 'DID_SEARCH':
+    case 'DID_SEARCH_SUCCESS':
       return {
         ...state
       };
-    case 'DID_CHANGE_RELEVANCE':
+    case 'DID_CHANGE_RELEVANCE_SUCCESS':
       return {
         ...state
       };

@@ -23,7 +23,7 @@ class Home extends React.Component {
    */
   componentDidMount () {
     let self = this;
-    axios.get('/events/venues/popular')
+    axios.get('/venues')
     .then(resp => {
       self.setState({ venues: resp.data.venues });
     })

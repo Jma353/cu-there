@@ -16,10 +16,11 @@ class Search extends React.Component {
    */
   constructor (props) {
     super(props);
-    this.state = { value: '' };
+    this.state = { value: this.props.initialValue };
     // Placeholders for now
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleKeyPress = this.handleKeyPress.bind(this);
   }
 
   /**
@@ -33,8 +34,16 @@ class Search extends React.Component {
    * Handle submission of search query
    */
   handleSubmit (event) {
-    console.log('A search was made ' + this.state.value);
-    window.location.href = `/results?query=${this.state.value}`;
+    window.location.href = `/results?q=${this.state.value}`;
+  }
+
+  /**
+   * Handle key press for enter
+   */
+  handleKeyPress (event) {
+    if (event.key === 'Enter') {
+      this.handleSubmit(event);
+    }
   }
 
   /**
@@ -48,11 +57,10 @@ class Search extends React.Component {
           value={this.state.value}
           onChange={this.handleChange}
           placeholder={'e.g. A tech talk hosted by ACSU'}
-          className='bar' />
+          className='bar'
+          onKeyPress={this.handleKeyPress} />
         {/* Submit button */}
-        <LightButton className='submit' onClick={this.handleSubmit}>
-          GO
-        </LightButton>
+        <LightButton className='submit fa fa-search' onClick={this.handleSubmit} />
       </div>
     );
   }

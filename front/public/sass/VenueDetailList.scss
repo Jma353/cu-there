@@ -6,6 +6,7 @@
 
 .venue-detail-list-title {
   @extend .lg-text;
+  padding: 10px 0px;
 }
 
 .venue-detail-list-content {
@@ -21,11 +22,12 @@
 .venue-detail-list-map {
   display: flex;
   flex-basis: 70%;
-  justify-content: center;
+  justify-content: flex-end;
+  padding-left: 40px;
   @include respond-to(handhelds) { flex-basis: 0%; }
   @include respond-to(medium-screens) { flex-basis: 0%; }
   .map {
-    min-width: 250px;
+    min-width: 350px;
     height: 400px;
     @include respond-to(handhelds) { display: none; }
     @include respond-to(medium-screens) { display: none; }

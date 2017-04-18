@@ -7,11 +7,15 @@ $color-5: rgb(177, 217, 227);
 $off-white: rgb(239, 239, 239);
 $white: white;
 $black: black;
+$light-gray: #BFBFBF;
+$ultra-light-gray: #F6F6F6;
 $border-gray: #ccc;
 
 /* Link colors */
 $link-dark: rgb(250, 250, 250);
 $link-light: rgb(255, 255, 255);
+
+$transition-duration: 0.25s;
 
 /* Easy media queries */
 $break-small: 767px;
@@ -49,7 +53,7 @@ $border-radius: 3px;
 }
 
 /* Font sizing */
-.xl-text { font-size: 40px; }
-.lg-text { font-size: 30px; }
-.md-text { font-size: 24px; }
+.xl-text { font-size: 48px; font-weight: 500; }
+.lg-text { font-size: 32px; font-weight: 400; }
+.md-text { font-size: 24px; font-weight: 500; }
 .sm-text { font-size: 16px; }

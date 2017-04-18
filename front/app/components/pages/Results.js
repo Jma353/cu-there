@@ -1,5 +1,4 @@
 import React from 'react';
-import axios from 'axios';
 import NavBar from '../navigation/NavBar';
 import TextCardList from '../lists/TextCardList';
 import VenueDetailList from '../lists/VenueDetailList';
@@ -7,10 +6,21 @@ import EventDetailList from '../lists/EventDetailList';
 import Footer from '../navigation/Footer';
 require('../../../public/sass/Results.scss');
 
+/* Redux */
+import { connect } from 'react-redux';
+import * as actionCreators from '../redux/actionCreators';
+
 /**
  * Results page of the application
  */
 class Results extends React.Component {
+
+  /**
+   * When the component mounts, do stuff
+   */
+  componentDidMount () {
+    this.props.dispatch(actionCreators.didSearch(this.props.location.query.q));
+  }
 
   /**
    * Render
@@ -142,7 +152,10 @@ class Results extends React.Component {
     ];
     return (
       <div>
-        <NavBar />
+        <NavBar query={this.props.location.query.q} />
+        <div className='results-header'>
+          <p>Showing 42 results</p>
+        </div>
         <div className='results'>
           <div className='result-text-card-lists'>
             <div className='result-tags'>
@@ -162,4 +175,11 @@ class Results extends React.Component {
 
 }
 
-export default Results;
+/** Map the redux state to this component's props */
+const mapStateToProps = (state) => {
+  return {
+    results: state._search.results
+  };
+};
+
+export default connect(mapStateToProps)(Results);

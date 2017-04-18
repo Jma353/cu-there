@@ -5,11 +5,12 @@ namespace = '/venues'
 
 @events.route(namespace + '/', methods=['GET'])
 def get_venues():
-  """Grab a list of venues"""
-
-  # Read file 
+  """
+  Grab a sample list of venues
+  """
+  # Read file
   results = []
-  with open('./app/1491102320.json') as f:
+  with open('./1491102320.json') as f:
     results.extend(json.load(f))
 
   # Get unique venues
@@ -20,4 +21,11 @@ def get_venues():
       ids.add(venue['id'])
       venues.append(venue)
 
-  return jsonify(venues)
+  result = {
+    'success': True,
+    'data': {
+      'venues': venues
+    }
+  }
+
+  return jsonify(result)
