@@ -5,15 +5,19 @@ import json
 import os
 import sys
 
-DIRECTORY = '../results'
+DIRECTORY = './results'
 
-def get_events_since(since):
+def get_events_since(**kwargs):
+  # Grab arguments
+  since    = kwargs.get('since')
+  interval = kwargs.get('interval')
+  lat      = kwargs.get('lat')
+  lng      = kwargs.get('lng')
 
   # Get all the spans of time we're querying on
   now = int(round(time.time()))
   then = since
   spans = []
-  interval = DAY
   while then < now-interval:
     spans.append((then, then+WEEK))
     then += interval
@@ -26,8 +30,8 @@ def get_events_since(since):
 
     search = FacebookEventSearch(
       distance=FB_RADIUS,
-      lat=LATITUDE,
-      lng=LONGITUDE,
+      lat=lat,
+      lng=lng,
       since=s[0],
       until=s[1]).search()
 
@@ -52,6 +56,15 @@ def get_events_since(since):
 
 
 if __name__ == "__main__":
+  # Grab arguments
   years = float(sys.argv[1]) if len(sys.argv) > 1 else DEFAULT_YEARS
+  lat   = float(sys.argv[2]) if len(sys.argv) > 2 else LATITUDE
+  lng   = float(sys.argv[3]) if len(sys.argv) > 3 else LONGITUDE
   # Get events from specific duration
-  get_events_since(int(round(time.time())) - years * YEAR)
+  now = int(round(time.time()))
+  get_events_since(
+    since=now-years*YEAR,
+    interval=DAY,
+    lat=lat,
+    lng=lng
+  )
