@@ -23,8 +23,8 @@ def search_rocchio():
   """
   # Grab the parameters
   q          = request.args.get('q')
-  relevant   = request.args.get('relevant')
-  irrelevant = request.args.get('irrelevant')
+  relevant   = request.args.get('relevant') # ids
+  irrelevant = request.args.get('irrelevant') # ids 
 
   # TODO
 

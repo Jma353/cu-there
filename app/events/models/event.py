@@ -2,21 +2,26 @@ from . import *
 
 class Event(Base):
   __tablename__ = 'events'
-  id              = db.Column(db.String(), primary_key=True)
-  name            = db.Column(db.String())
-  category        = db.Column(db.String())
-  distance        = db.Column(db.Float())
-  attending       = db.Column(db.Integer())
-  noreply         = db.Column(db.Integer())
-  declined        = db.Column(db.Integer())
-  maybe           = db.Column(db.Integer())
-  description     = db.Column(db.Text())
-  start_time      = db.Column(db.String())
-  end_time        = db.Column(db.String())
-  profile_picture = db.Column(db.String())
-  cover_picture   = db.Column(db.String())
-  time_from_now   = db.Column(db.Integer())
-  type            = db.Column(db.String())
+  id              = db.Column(db.String, primary_key=True)
+  name            = db.Column(db.String)
+  category        = db.Column(db.String)
+  distance        = db.Column(db.Float)
+  attending       = db.Column(db.Integer)
+  noreply         = db.Column(db.Integer)
+  declined        = db.Column(db.Integer)
+  maybe           = db.Column(db.Integer)
+  description     = db.Column(db.Text)
+  start_time      = db.Column(db.String)
+  end_time        = db.Column(db.String)
+  profile_picture = db.Column(db.String)
+  cover_picture   = db.Column(db.String)
+  time_from_now   = db.Column(db.Integer)
+  type            = db.Column(db.String)
+
+  # Relationship to venue
+  venue_id  = db.Column(db.String, db.ForeignKey('venues.id'))
+  venue = db.relationship('Venue')
+
 
   def __init__(self, fb_json):
     self.id              = fb_json['id']
@@ -34,3 +39,4 @@ class Event(Base):
     self.cover_picture   = fb_json['cover_picture']
     self.time_from_now   = fb_json['time_from_now']
     self.type            = fb_json['type']
+    self.venue_id        = fb_json['venue']['id']
