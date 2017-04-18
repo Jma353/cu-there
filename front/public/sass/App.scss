@@ -1,6 +1,6 @@
 @import 'variables';
-@import url(https://fonts.googleapis.com/css?family=Roboto+Condensed);
-$roboto-cond: 'Roboto Condensed', serif;
+@import url(https://fonts.googleapis.com/css?family=Quicksand:400,500,700);
+$quicksand: 'Quicksand', sans-serif;
 
 /* Over-all */
 html, body {
@@ -9,7 +9,7 @@ html, body {
 
 /* Overall styling */
 * {
-  font-family: $roboto-cond;
+  font-family: $quicksand;
   font-weight: normal;
   outline: none;
 }
