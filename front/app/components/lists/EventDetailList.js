@@ -13,7 +13,7 @@ class EventDetailList extends React.Component {
   }
 
   render () {
-    const events = this.props.data.map(this.generateDetail);
+    const events = this.props.data.map(this.generateDetailList);
 
     return (
       <div className='event-detail-list-container'>

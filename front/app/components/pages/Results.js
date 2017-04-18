@@ -3,6 +3,7 @@ import axios from 'axios';
 import NavBar from '../navigation/NavBar';
 import TextCardList from '../lists/TextCardList';
 import VenueDetailList from '../lists/VenueDetailList';
+import EventDetailList from '../lists/EventDetailList';
 import Footer from '../navigation/Footer';
 require('../../../public/sass/Results.scss');
 
@@ -74,6 +75,71 @@ class Results extends React.Component {
         'profile_picture': 'https://scontent.xx.fbcdn.net/v/t1.0-1/p200x200/17155465_440619976313113_4275122384457243958_n.jpg?oh=9048760834ee2c175461fc89efebbc74&oe=596473A3'
       }
     ];
+    let events = [
+      {
+        "description": "Come out to a virtual session with Squarespace product designer Danni Fisher! Learn about the Design team at Squarespace, what makes a \"good\" design portfolio, the product development cycle,  how design collaborates with engineering, and Q&A.\n\nAnyone with interest in design/engineering is welcome!\n\nP.S. There will be Squarespace swag and food provided for attendees. :)",
+        "end_time": "2017-03-27T18:30:00-0400",
+        "name": "Squarespace Design Session",
+        "place": {
+          "name": "Gates G01"
+        },
+        "start_time": "2017-03-27T17:30:00-0400",
+        "id": "1225606194202189",
+        "rsvp_status": "attending"
+      },
+      {
+        "description": "not a hackathon\n\nREPEAT. NOT A HACKATHON.\n\ncome get shwifty with some of your coolest CS buddies in a venue that's not Gates\n\nhttps://s-media-cache-ak0.pinimg.com/736x/a6/cc/30/a6cc30bbe524537d9763636f9cacc638.jpg",
+        "name": "CS Party",
+        "place": {
+          "name": "131 N Quarry St"
+        },
+        "start_time": "2016-11-12T22:00:00-0500",
+        "id": "531920573677056",
+        "rsvp_status": "attending"
+      },
+      {
+        "description": "The McGraw Clocktower. Cornell's most famous erection has stood at attention atop Libe Slope for generations. Now, something terrible has happened, and the Clocktower is believed to be dead and gone. Authorities have tracked the culprit down to the Men of Last Call All-Male a Cappella group. But of course! One Callboy, Colton Haney '17, has always felt upstaged by the enormous tower! Yet, Colton denies any wrongdoing, and some believe his accusers may have mistook him as any one of the other fifteen devilishly handsome Callboys. Everyone is a suspect. To get to the bottom of this nefarious act and see it all played out live, be at Statler Auditorium on Saturday, November 5th at 8pm.\n\nTalk to any suspect for tickets to the main event, or visit www.menoflastcall.com to order online. Get those tickets while they're still available!\nFor more, check out our online content!\nFacebook: The Men of Last Call\nTwitter, Insta, Snapchat: menoflastcall",
+        "end_time": "2016-11-05T21:30:00-0400",
+        "name": "Last Call - Save the Clocktower XXI: Who Killed the Clocktower?",
+        "place": {
+          "name": "Statler Auditorium",
+          "location": {
+            "city": "Ithaca",
+            "country": "United States",
+            "latitude": 42.445488757135,
+            "located_in": "305683741868",
+            "longitude": -76.482200056817,
+            "state": "NY",
+            "zip": "14853"
+          },
+          "id": "207854055902890"
+        },
+        "start_time": "2016-11-05T20:00:00-0400",
+        "id": "1027906797338740",
+        "rsvp_status": "attending"
+      },
+      {
+        "description": "Dan Smalls Presents Regina Spektor at the State Theatre of Ithaca on 10/14!\n\n7:00PM Doors\n8:00PM Show\n\nRegina Spektor\nMoscow-born alternative singer/songwriter who began in New York's anti-folk scene before making her commercial breakthrough in 2004. All Ages.",
+        "end_time": "2016-10-14T23:00:00-0400",
+        "name": "Regina Spektor",
+        "place": {
+          "name": "State Theatre of Ithaca",
+          "location": {
+            "city": "Ithaca",
+            "country": "United States",
+            "latitude": 42.439299287036,
+            "longitude": -76.499444786181,
+            "state": "NY",
+            "street": "107 W State St",
+            "zip": "14850"
+          },
+          "id": "11128345140"
+        },
+        "start_time": "2016-10-14T20:00:00-0400",
+        "id": "1752017265087065",
+        "rsvp_status": "unsure"
+      }
+    ];
     return (
       <div>
         <NavBar />
@@ -87,6 +153,7 @@ class Results extends React.Component {
             </div>
           </div>
           <VenueDetailList data={venues} title='Venues' />
+          <EventDetailList data={events} title='Related Events' />
         </div>
         <Footer />
       </div>

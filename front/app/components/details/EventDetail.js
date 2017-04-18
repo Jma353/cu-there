@@ -13,7 +13,7 @@ class EventDetail extends React.Component {
         </div>
         {/* Venue */}
         <div className='event-detail-venue'>
-          <p>{this.props.data.venue}</p>
+          <p>{this.props.data.place.name}</p>
         </div>
         {/* Date */}
         <div className='event-detail-date'>
@@ -21,7 +21,7 @@ class EventDetail extends React.Component {
         </div>
         {/* Description */}
         <div className='event-detail-description'>
-          {this.props.data.about}
+          {this.props.data.description}
         </div>
       </div>
     );
