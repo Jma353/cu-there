@@ -21,5 +21,16 @@ let initialSearchState = {
  * Search reducer
  */
 export function _search (state = initialSearchState, action) {
-  // TODO - handle various types of events
+  switch (action.type) {
+    case 'DID_SEARCH':
+      return {
+        ...state
+      };
+    case 'DID_CHANGE_RELEVANCE':
+      return {
+        ...state
+      };
+    default:
+      return state;
+  }
 }
