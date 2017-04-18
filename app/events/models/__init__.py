@@ -1,1 +1,1 @@
-import app.base
+from app.base import * 
