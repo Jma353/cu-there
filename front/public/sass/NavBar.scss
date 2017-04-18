@@ -17,7 +17,7 @@
   @extend .md-text;
   @extend .item;
   display: flex;
-  flex-basis: 10%;
+  flex-basis: 15%;
   @include respond-to(handhelds) {
     flex-basis: 40%;
   }
