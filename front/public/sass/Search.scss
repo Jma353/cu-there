@@ -4,12 +4,13 @@
   display: flex;
   width: 100%;
   height: 100%;
+  border-radius: 8px;
 }
 
 .bar {
-  @extend .sm-text;
+  @extend .md-text;
   height: 100%;
-  width: 80%;
+  width: 90%;
   border: none;
   display: flex;
   border-radius: 0px;
@@ -18,9 +19,9 @@
 }
 
 .submit {
-  @extend .sm-text;
+  @extend .md-text;
   height: 100%;
-  width: 20%;
+  width: 10%;
   display: flex;
   justify-content: center;
   @include respond-to(handhelds) { width: 40%; }

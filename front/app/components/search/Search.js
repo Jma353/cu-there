@@ -1,6 +1,9 @@
 import React from 'react';
-require('../../../public/sass/LightButton.scss');
+
 require('../../../public/sass/Search.scss');
+
+import LightButton from '../buttons/LightButton.js';
+require('../../../public/sass/LightButton.scss');
 
 /**
  * Defines a generic Search component
@@ -23,7 +26,6 @@ class Search extends React.Component {
    * Handle a change to text input
    */
   handleChange (event) {
-    // TODO
     this.setState({ value: event.target.value });
   }
 
@@ -31,8 +33,8 @@ class Search extends React.Component {
    * Handle submission of search query
    */
   handleSubmit (event) {
-    // TODO
     console.log('A search was made ' + this.state.value);
+    window.location.href = `/results?query=${this.state.value}`
   }
 
   /**
@@ -40,7 +42,7 @@ class Search extends React.Component {
    */
   render () {
     return (
-      <form onSubmit={this.handleSubmit} className='search'>
+      <div className='search'>
         {/* The bar itself */}
         <input type='text'
           value={this.state.value}
@@ -48,10 +50,10 @@ class Search extends React.Component {
           placeholder={this.props.placeholder || ''}
           className='bar' />
         {/* Submit button */}
-        <input type='submit'
-          value={this.props.submit}
-          className='light-button submit' />
-      </form>
+        <LightButton className='submit' onClick={this.handleSubmit}>
+          GO
+        </LightButton>
+      </div>
     );
   }
 }

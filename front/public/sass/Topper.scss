@@ -28,8 +28,8 @@
 
 .topper-search {
   display: flex;
-  height: 80px;
-  padding: 20px;
+  height: 50px;
+  padding: 40px;
   @include respond-to(handhelds) { width: 80%; }
   @include respond-to(medium-screens) { width: 80%; }
   @include respond-to(wide-screens) { width: 60%; }
