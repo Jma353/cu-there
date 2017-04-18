@@ -82,15 +82,14 @@ def top_k_recommendations(events, k=10):
             for pair in attendance_time:
                 if pair[0] == i:
                     buckets[i].append(pair[1])
-        max_buckets = defaultdict(int)
+        mean_buckets = defaultdict(int)
         for i in xrange(8, 24):
             if len(buckets[i]) > 0:
-                max_buckets[i] = max(buckets[i])
+                mean_buckets[i] = sum(buckets[i])/len(buckets[i])
         # We now have the max attendance for each time
 
-        max_attendance_time = zip(max_buckets.keys(), max_buckets.values())
-        print max_attendance_time
-        return np.asarray(max_attendance_time)
+        mean_attendance_time = zip(mean_buckets.keys(), mean_buckets.values())
+        return np.asarray(mean_attendance_time)
 
     # Step 1: Group events by venue
 
@@ -131,10 +130,23 @@ if __name__ == "__main__":
     # Testing
     from app.events.models.venue import Venue
 
-    recs = top_k_recommendations(Event.query.all())
-    print recs
-    for rec in recs:
-        print "{} at {}:00".format(
-            Venue.query.filter_by(id=rec["venue_id"]).first().name,
-            rec["time"]
-        )
+    while True:
+        print "Enter query:"
+        print
+        query = str(raw_input(">>> "))
+        print
+
+        events = Event.query.all()
+        events = [event for event in events if query in event.name.lower()]
+        recs = top_k_recommendations(events)
+
+        # print recs
+        print "Top location-time pairs for the {} events retrieved:".format(len(events))
+        print
+        for rec in recs:
+            print "{} at {}:00. Predicted attendance: {}".format(
+                Venue.query.filter_by(id=rec["venue_id"]).first().name,
+                rec["time"],
+                rec["attendance"]
+            )
+        print
