@@ -6,8 +6,10 @@ import numpy as np
 from collections import Counter
 from collections import defaultdict
 from nltk.stem.porter import PorterStemmer
+from sklearn.feature_extraction.text import TfidfVectorizer
 
 ### Global variables ###
+events_dict = {}
 events = []
 
 def main():
@@ -25,7 +27,48 @@ def main():
     # Load events from events json file
     with open("events.json") as events_json:
         events_dict = json.load(events_json)
-        events = [event["description"] for event in events_dict if event["description"]]
+
+    # Get useful data from events dictionary
+    events = [event["description"] for event in events_dict if event["description"]]
+    categs = [event["category"].replace("_EVENT","") for event in events_dict if event["category"]]
+
+    # Make doc-term matrix
+    n_feats = 5000
+
+    tfidf_vec = TfidfVectorizer(min_df=5,
+                            max_df=0.95,
+                            max_features=n_feats,
+                            stop_words='english')
+
+    doc_by_term = tfidf_vec.fit_transform(events)
+
+    # Category information
+    categ_to_event = defaultdict(list)
+
+    for idx, categ in enumerate(categs):
+        categ_to_event.setdefault(categ,[]).append(idx)
+
+    categ_pop_lst = [(c, len(e)) for c, e in categ_to_event.items()]
+
+    uniq_categs = [c for c in categ_to_event.keys()]
+    categ_name_to_idx = {name:idx for idx, name in enumerate(uniq_categs)}
+    categ_idx_to_name = {v:k for k,v in categ_name_to_idx.items()}
+    categ_by_term = np.empty([len(uniq_categs), doc_by_term.shape[1]])
+
+    # TODO: Make norm work
+    # Build category_by_words matrix
+    # for idx, _ in enumerate(categ_by_term):
+    #     # Get event vectors for category
+    #     categ = categ_idx_to_name[idx]
+    #     event_vecs = [doc_by_term[event] for event in categ_to_event[categ]]
+    #
+    #     # Calculate category average vector
+    #     vec_sum = np.sum(event_vecs, axis=0).flatten()
+    #     norm = np.linalg.norm(vec_sum)
+    #     avg_tfidf_vec = vec_sum / float(norm)
+    #     categ_by_term[idx,:] = avg_tfidf_vec
+    #
+    # categ_sim_matrix = np.dot(categ_by_term, categ_by_term.T)
 
     # Print top events based on cosine similarity
     ranked_events = get_cos_sim_ranked_events(event_desc, events)
@@ -135,9 +178,15 @@ def print_top_events(query, ranked_events, events_dict, top_k):
     print("#" * len(query))
 
     for score, event_id in ranked_events[:top_k]:
-        print("[{:.2f}] {}".format(
+        category = "N/A"
+
+        if events_dict[event_id]['category']:
+            category = events_dict[event_id]['category']
+
+        print("[{:.2f}] {}: {}".format(
             score,
-            events_dict[event_id]['name'].encode('utf-8')))
+            events_dict[event_id]['name'].encode('utf-8'),
+            category.encode('utf-8')))
 
 # Get cosine similarity between two vectors
 def get_cos_sim(vec1, vec2):
