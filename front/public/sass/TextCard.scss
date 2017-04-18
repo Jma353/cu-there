@@ -5,14 +5,19 @@
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  border-right: 4px solid $color-4;
-  background: $color-2;
-  box-shadow: 1px 1px 1px #888888;
+  border: 1px solid $color-3;
+  border-radius: 4px;
   margin: 10px 20px 10px 0px;
-  padding: 10px;
+  padding: 4px 10px;
   color: $color-4;
+  background-color: white;
   @include respond-to(handhelds) {
     width: 100%;
     margin-right: 0px;
+  }
+
+  &:hover {
+    color: white;
+    background-color: $color-3;
   }
 }

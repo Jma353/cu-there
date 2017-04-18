@@ -50,9 +50,7 @@ class Search extends React.Component {
           placeholder={'e.g. A tech talk hosted by ACSU'}
           className='bar' />
         {/* Submit button */}
-        <LightButton className='submit' onClick={this.handleSubmit}>
-          GO
-        </LightButton>
+        <LightButton className='submit fa fa-search' onClick={this.handleSubmit} />
       </div>
     );
   }

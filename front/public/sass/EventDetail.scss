@@ -9,13 +9,19 @@
   flex-wrap: wrap;
   border-top: 1px solid $border-gray;
   flex-basis: 80%;
+
+  &:hover {
+    .event-detail-description {
+      max-height: none;
+    }
+  }
 }
 
 .event-detail-title {
   @extend .md-text;
-  flex-basis: 100%;
+  flex-basis: 90%;
   @include respond-to(handhelds) {
-    flex-basis: 100%;
+    flex-basis: 80%;
   }
 }
 
@@ -42,6 +48,7 @@
   flex-basis: 100%;
   max-height: 40px;
   overflow: hidden;
+  transition: max-height 1s;
 }
 
 .event-detail-dismiss {
