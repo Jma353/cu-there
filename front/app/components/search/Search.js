@@ -16,7 +16,7 @@ class Search extends React.Component {
    */
   constructor (props) {
     super(props);
-    this.state = { value: '' };
+    this.state = { value: this.props.initialValue };
     // Placeholders for now
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -34,7 +34,7 @@ class Search extends React.Component {
    */
   handleSubmit (event) {
     console.log('A search was made ' + this.state.value);
-    window.location.href = `/results?query=${this.state.value}`;
+    window.location.href = `/results?q=${this.state.value}`;
   }
 
   /**

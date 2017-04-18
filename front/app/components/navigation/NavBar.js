@@ -17,7 +17,7 @@ class NavBar extends React.Component {
           <a href='/'>CU There</a>
         </div>
         <div className='search-item'>
-          <Search />
+          <Search initialValue={this.props.query} />
         </div>
         <ul className='navbar-links-container'>
           <li className='link-item'><a href='/about'>About</a></li>

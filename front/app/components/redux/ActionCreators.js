@@ -1,13 +1,13 @@
 import util from 'util';
 import axios from 'axios';
-import Promise from 'bluebird'
+import Promise from 'bluebird';
 
 /**
  * Did search for results with query `query
  */
 export function didSearch (query) {
   return {
-    type: 'DID_SEARCH',
+    types: ['DID_SEARCH_REQUEST', 'DID_SEARCH_SUCCESS', 'DID_SEARCH_FAILURE'],
     promise: () => {
       return axios.get('/search?q=' + encodeURIComponent(query))
         .then(resp => {
@@ -18,15 +18,14 @@ export function didSearch (query) {
                 venues: resp.data.venues,
                 tags: resp.data.tags,
                 times: resp.data.times
-              }
+              },
               events: {
                 relevant: resp.data.relevant,
                 irrelevant: resp.data.irrelevant
               }
             }
-            });
           });
-        });
+      });
     }
   };
 }
@@ -37,7 +36,7 @@ export function didSearch (query) {
  */
 export function didChangeRelevance (query, relevant, irrelevant) {
   return {
-    type: 'DID_CHANGE_RELEVANCE',
+    types: ['DID_CHANGE_RELEVANCE_REQUEST', 'DID_CHANGE_RELEVANCE_SUCCESS', 'DID_CHANGE_RELEVANCE_FAILURE'],
     promise: () => {
       return axios.get(util.format(
         '/search/rocchio?q=%s&relevant=%s&irrelevant=%s',
@@ -59,7 +58,7 @@ export function didChangeRelevance (query, relevant, irrelevant) {
               }
             }
           });
-        });
+      });
     }
   };
 }
