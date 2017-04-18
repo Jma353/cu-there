@@ -23,6 +23,7 @@ def test_time_model():
 
     fig = plt.figure()
     plt.plot([i/4.0 for i in xrange(0, 24*4)], predictions)
+    plt.scatter(data[:,0], data[:, 1], )
     fig.suptitle("Event Attendance vs. Time")
     plt.xlabel("Time of Day (Hours)")
     plt.ylabel("Predicted Attendance")
