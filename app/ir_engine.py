@@ -6,7 +6,6 @@ import numpy as np
 from collections import Counter
 from collections import defaultdict
 from nltk.stem.porter import PorterStemmer
-from sklearn.feature_extraction.text import TfidfVectorizer
 
 class IREngine(object):
   """"
@@ -20,6 +19,7 @@ class IREngine(object):
     irrel = kwargs.get('irrel', [])
     events = kwargs.get('events', [])
     doc_by_term = kwargs.get('doc_by_term', [])
+    tfidf_vec = kwargs.get('tfidf_vec', None)
 
     self.query = query
     self.rel = rel
@@ -184,9 +184,9 @@ class IREngine(object):
     """
     Print out top_k ranked list of events
     """
-    print("#" * len(query))
+    print("#" * len(self.query))
     print(self.query)
-    print("#" * len(query))
+    print("#" * len(self.query))
 
     for score, doc_id in ranked_events[:top_k]:
       category = "N/A"
@@ -305,34 +305,34 @@ class IREngine(object):
 
     return ranking
 
-if __name__ == '__main__':
-  # Get command-line arguments
-  args = sys.argv
-
-  if len(args) < 2:
-    print("Please provide event description.")
-    quit()
-
-  query = args[1]
-
-  # Testing
-  events = {}
-
-  with open("events.json") as events_json:
-    events_dict = json.load(events_json)
-
-    # List of event dicts containing id, name, description, category
-    events = [{"id": event["id"], "name": event["name"],
-                    "description": event["description"] if event["description"] else "",
-                    "category": event["category"] if event["category"] else ""}
-                     for event in events_dict]
-
-  # Create doc-term matrix
-  tfidf_vec = TfidfVectorizer(min_df=5, max_df=0.95, max_features=5000, stop_words='english')
-  event_descs = [event["description"] for event in events]
-  doc_by_term = tfidf_vec.fit_transform(event_descs).toarray()
-
-  # Create IR Engine
-  ir_engine = IREngine(query=query, events=events, doc_by_term=doc_by_term)
-  ranked_results = ir_engine.get_ranked_results()
-  rocchio_ranked_results = ir_engine.get_rocchio_ranked_results()
+# if __name__ == '__main__':
+#   # Get command-line arguments
+#   args = sys.argv
+#
+#   if len(args) < 2:
+#     print("Please provide event description.")
+#     quit()
+#
+#   query = args[1]
+#
+#   # Testing
+#   events = {}
+#
+#   with open("events.json") as events_json:
+#     events_dict = json.load(events_json)
+#
+#     # List of event dicts containing id, name, description, category
+#     events = [{"id": event["id"], "name": event["name"],
+#                     "description": event["description"] if event["description"] else "",
+#                     "category": event["category"] if event["category"] else ""}
+#                      for event in events_dict]
+#
+#   # Create doc-term matrix
+#   tfidf_vec = TfidfVectorizer(min_df=5, max_df=0.95, max_features=5000, stop_words='english')
+#   event_descs = [event["description"] for event in events]
+#   doc_by_term = tfidf_vec.fit_transform(event_descs).toarray()
+#
+#   # Create IR Engine
+#   ir_engine = IREngine(query=query, events=events, doc_by_term=doc_by_term)
+#   ranked_results = ir_engine.get_ranked_results()
+#   rocchio_ranked_results = ir_engine.get_rocchio_ranked_results()

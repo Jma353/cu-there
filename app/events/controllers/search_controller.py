@@ -21,12 +21,18 @@ def search():
   q = '' if request.args.get('q') is None else request.args.get('q')
 
   # IR, get events
-  ir_engine = IREngine(q)
+  ir_engine = IREngine(
+    query=q,
+    events=app.OUR_EVENTS,
+    doc_by_term=app.doc_by_term,
+    tfidf_vec=app.tfidf_vec
+  )
+
   event_ids = ir_engine.get_ranked_results()
-  events = queries.get_events(event_ids)
+  es = queries.get_events(event_ids)
 
   # ML, get recs
-  recs = top_k_recommendations(events)
+  recs = top_k_recommendations(es)
 
   # Endpoint information
   times = [r['time'] for r in recs]
@@ -39,7 +45,7 @@ def search():
       'venues': [venue_schema.dump(v).data for v in venues],
       'times': times,
       'tags': [],
-      'events': [event_schema.dump(e).data for e in events]
+      'events': [event_schema.dump(e).data for e in es]
     }
   }
 
@@ -56,23 +62,30 @@ def search_rocchio():
   irrelevant = request.args.get('irrelevant') # ids
 
   # IR, get events
-  # ir_engine = IREngine(q, relevant, irrelevant)
-  # event_ids = ir_engine.get_rocchio_rankings()
-  # events = queries.get_events(event_ids)
-  #
+  ir_engine = IREngineIREngine(
+    query=q,
+    events=app.OUR_EVENTS,
+    doc_by_term=app.doc_by_term,
+    relevant=relevant,
+    irrelevant=irrelevant,
+    tfidf_vec=app.tfidf_vec
+  )
+  event_ids = ir_engine.get_rocchio_rankings()
+  es = queries.get_events(event_ids)
+
   # ML, get recs
-  # times = [r['time'] for r in recs]
-  # venues = queries.get_venues([r['venue_id'] for r in recs])
-  #
+  times = [r['time'] for r in recs]
+  venues = queries.get_venues([r['venue_id'] for r in recs])
+
   # Prepare response
-  # response = {
-  #   'success': True,
-  #   'data': {
-  #     'venues': [venue_schema.dump(v).data for v in venues],
-  #     'times': times,
-  #     'tags': [],
-  #     'events': [event_schema.dump(e).data for e in events]
-  #   }
-  # }
+  response = {
+    'success': True,
+    'data': {
+      'venues': [venue_schema.dump(v).data for v in venues],
+      'times': times,
+      'tags': [],
+      'events': [event_schema.dump(e).data for e in es]
+    }
+  }
 
   return jsonify({})
