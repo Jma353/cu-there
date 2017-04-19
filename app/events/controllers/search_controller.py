@@ -61,6 +61,9 @@ def search_rocchio():
   relevant   = request.args.get('relevant') # ids
   irrelevant = request.args.get('irrelevant') # ids
 
+  print relevant
+  print irrelevant
+
   # IR, get events
   ir_engine = IREngine(
     query=q,
@@ -91,4 +94,4 @@ def search_rocchio():
     }
   }
 
-  return jsonify({})
+  return jsonify(response)

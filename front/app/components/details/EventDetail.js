@@ -35,7 +35,6 @@ class EventDetail extends React.Component {
     irrelevant.push(this.props.data.id);
 
     // Remove this event in general
-    console.log(all.length);
 
     let ids = all.map(a => { return a.id; });
     console.log(ids);
@@ -44,7 +43,6 @@ class EventDetail extends React.Component {
     console.log(i);
     let removed = all.splice(i, 1);
     console.log(removed);
-    console.log(all.length);
 
     // Dispatch this event b/c relevance changed
     this.props.dispatch(
