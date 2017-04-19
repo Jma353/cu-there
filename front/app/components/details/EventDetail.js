@@ -25,7 +25,7 @@ class EventDetail extends React.Component {
         <div className='event-detail-description'>
           {this.props.data.description}
         </div>
-        <button className='event-detail-dismiss fa fa-times' />
+        <button className='button event-detail-dismiss fa fa-times' />
       </div>
     );
   }

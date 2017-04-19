@@ -1,14 +1,14 @@
 /* Primary colors of app */
 $color-1: rgb(222, 244, 239);
-$color-2: rgb(186, 221, 223);
-$color-3: rgb(136, 189, 194);
-$color-4: rgb(71, 125, 126);
+$color-2: #70B9BD;
+$color-3: #66A8AC;
+$color-4: #568E91;
 $color-5: rgb(177, 217, 227);
-$off-white: rgb(239, 239, 239);
+$off-white: #F5F5F5;
 $white: white;
 $black: black;
 $light-gray: #E6E6E6;
-$ultra-light-gray: #F6F6F6;
+$dark-gray: #656565;
 $border-gray: $light-gray;
 
 /* Link colors */
@@ -35,7 +35,7 @@ $break-large: 1024px;
 }
 
 /* Overall box border radius */
-$border-radius: 3px;
+$border-radius: 4px;
 
 /* Hover / leave over button */
 @mixin button-hover($enters-bg, $enters-color, $leaves-bg, $leaves-color) {
