@@ -27,19 +27,27 @@ class Results extends React.Component {
    */
   render () {
     const response = this.props.results.response;
+    const times = response.times.map((time, i) => {
+      return time + ':00';
+    }).filter((time) => {
+      return time !== '1:00';
+    });
+    console.log(this.props);
     return (
       <div>
         <NavBar query={this.props.location.query.q} />
         <div className='results-header'>
-          <p>Showing 42 results</p>
+          <p>{`Showing ${Object.keys(response.venues).length} venues`}</p>
         </div>
         <div className='results'>
           <div className='result-text-card-lists'>
+            {/*
             <div className='result-tags'>
               <TextCardList data={response.tags} title='Tags' />
             </div>
+            */}
             <div className='result-times'>
-              <TextCardList data={response.times} title='Times' />
+              <TextCardList data={times} title='Times' />
             </div>
           </div>
           <VenueDetailList data={response.venues} title='Venues' />

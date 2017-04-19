@@ -8,7 +8,20 @@
   flex-direction: row;
   flex-wrap: wrap;
   border-top: 1px solid $border-gray;
-  flex-basis: 80%;
+}
+
+.event-detail-img {
+  flex-basis: 10%;
+  overflow: hidden;
+  img {
+    width: 100%;
+    height: auto;
+  }
+}
+
+.event-detail-text-container {
+  flex-basis: 85%;
+  margin-left: 5%;
 }
 
 .event-detail-title {
