@@ -52,7 +52,20 @@ class Results extends React.Component {
         <div className='results-header'>
           <p>Showing 42 results</p>
         </div>
-        
+        {/* BECAUSE GOOGLE MAPS WILL THROW ERROR
+        <div className='results'>
+          <div className='result-text-card-lists'>
+            <div className='result-tags'>
+              <TextCardList data={response.tags} title='Tags' />
+            </div>
+            <div className='result-times'>
+              <TextCardList data={response.times} title='Times' />
+            </div>
+          </div>
+          <VenueDetailList data={response.venues} title='Venues' />
+          <EventDetailList data={this.state.results.events} title='Related Events' />
+        </div>
+        */}
         <Footer />
       </div>
     );
