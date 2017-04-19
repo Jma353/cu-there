@@ -24,22 +24,22 @@ class Event(Base):
 
 
   def __init__(self, fb_json):
-    self.id              = fb_json['id']
-    self.name            = fb_json['name']
-    self.category        = fb_json['category']
-    self.distance        = fb_json['distance']
-    self.attending       = fb_json['stats']['attending']
-    self.noreply         = fb_json['stats']['noreply']
-    self.declined        = fb_json['stats']['declined']
-    self.maybe           = fb_json['stats']['maybe']
-    self.description     = fb_json['description']
-    self.start_time      = fb_json['start_time']
-    self.end_time        = fb_json['end_time']
-    self.profile_picture = fb_json['profile_picture']
-    self.cover_picture   = fb_json['cover_picture']
-    self.time_from_now   = fb_json['time_from_now']
-    self.type            = fb_json['type']
-    self.venue_id        = fb_json['venue']['id']
+    self.id              = fb_json.get('id')
+    self.name            = fb_json.get('name')
+    self.category        = fb_json.get('category')
+    self.distance        = fb_json.get('distance')
+    self.attending       = fb_json.get('stats', {}).get('attending')
+    self.noreply         = fb_json.get('stats', {}).get('noreply')
+    self.declined        = fb_json.get('stats', {}).get('declined')
+    self.maybe           = fb_json.get('stats', {}).get('maybe')
+    self.description     = fb_json.get('description')
+    self.start_time      = fb_json.get('start_time')
+    self.end_time        = fb_json.get('end_time')
+    self.profile_picture = fb_json.get('profile_picture')
+    self.cover_picture   = fb_json.get('cover_picture')
+    self.time_from_now   = fb_json.get('time_from_now')
+    self.type            = fb_json.get('type')
+    self.venue_id        = fb_json.get('venue', {}).get('id')
 
 
 class EventSchema(ModelSchema):

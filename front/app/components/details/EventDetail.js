@@ -28,21 +28,18 @@ class EventDetail extends React.Component {
 
     // Relevant / irrelevant listingss
     let relevant = this.props.relevant;
+    console.log(relevant);
     let irrelevant = this.props.irrelevant;
 
     // Remove this event from relevant + add it to irrelevant
     relevant.splice(relevant.indexOf(this.props.data.id), 1);
     irrelevant.push(this.props.data.id);
+    console.log(irrelevant);
 
     // Remove this event in general
-
     let ids = all.map(a => { return a.id; });
-    console.log(ids);
-    console.log(this.props.data.id);
     let i = ids.indexOf(this.props.data.id);
-    console.log(i);
-    let removed = all.splice(i, 1);
-    console.log(removed);
+    all.splice(i, 1);
 
     // Dispatch this event b/c relevance changed
     this.props.dispatch(

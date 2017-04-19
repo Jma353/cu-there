@@ -17,20 +17,21 @@ def store_venues(f, db):
 
   # Add all venues
   for v in venues:
-    try:
-      db.session.add(Venue(v))
-      db.session.commit()
-    except Exception as e:
-      db.session.rollback()
-
+    the_venue = Venue(v)
+    result = Venue.query.get(the_venue.id)
+    if result is None: db.session.add(the_venue)
 
   # Add all events
   for e in events:
-    try:
-      db.session.add(Event(e))
-      db.session.commit()
-    except Exception as e:
-      db.session.rollback()
+    the_event = Event(e)
+    result = Event.query.get(the_event.id)
+    if result is None: db.session.add(the_event)
+
+  try:
+    db.session.commit()
+  except Exception as e:
+    db.session.rollback()
+    print e
 
 
 if __name__ == '__main__':

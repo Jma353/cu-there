@@ -20,20 +20,20 @@ class Venue(Base):
     """
     Constructor from FB JSON
     """
-    self.id              = fb_json['id']
-    self.about           = fb_json['about']
-    self.name            = fb_json['name']
-    self.profile_picture = fb_json['profile_picture']
-    self.cover_picture   = fb_json['cover_picture']
-    self.city            = fb_json['location']['city']
-    self.zip             = fb_json['location']['zip']
-    self.country         = fb_json['location']['country']
-    self.longitude       = fb_json['location']['longitude']
-    self.latitude        = fb_json['location']['latitude']
-    self.state           = fb_json['location']['state']
-    self.street          = fb_json['location']['street']
-    self.emails          = '' if fb_json['emails'] is None else ';'.join(fb_json['emails'])
+    self.id              = fb_json.get('id')
+    self.about           = fb_json.get('about')
+    self.name            = fb_json.get('name')
+    self.profile_picture = fb_json.get('profile_picture')
+    self.cover_picture   = fb_json.get('cover_picture')
+    self.city            = fb_json.get('location', {}).get('city')
+    self.zip             = fb_json.get('location', {}).get('zip')
+    self.country         = fb_json.get('location', {}).get('country')
+    self.longitude       = fb_json.get('location', {}).get('longitude')
+    self.latitude        = fb_json.get('location', {}).get('latitude')
+    self.state           = fb_json.get('location', {}).get('state')
+    self.street          = fb_json.get('location', {}).get('street')
+    self.emails          = ';'.join((fb_json.get('emails') or []))
 
 class VenueSchema(ModelSchema):
   class Meta:
-    model = Venue 
+    model = Venue
