@@ -44,7 +44,7 @@ class Results extends React.Component {
             </div>
           </div>
           <VenueDetailList data={response.venues} title='Venues' />
-          <EventDetailList data={this.props.results.events.relevant} title='Related Events' />
+          <EventDetailList data={this.props.results.events.all} title='Related Events' />
         </div>
         <Footer />
       </div>

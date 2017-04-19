@@ -62,7 +62,7 @@ def search_rocchio():
   irrelevant = request.args.get('irrelevant') # ids
 
   # IR, get events
-  ir_engine = IREngineIREngine(
+  ir_engine = IREngine(
     query=q,
     events=app.OUR_EVENTS,
     doc_by_term=app.doc_by_term,

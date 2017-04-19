@@ -6,15 +6,15 @@ require('../../../public/sass/EventDetailList.scss');
 class EventDetailList extends React.Component {
   constructor (props) {
     super(props);
-    this.generateDetailList = this.generateDetailList.bind(this);
+    this.generateDetail = this.generateDetail.bind(this);
   }
 
-  generateDetailList (event, i) {
+  generateDetail (event, i) {
     return <EventDetail data={event} key={i} />;
   }
 
   render () {
-    const events = this.props.data.map(this.generateDetailList);
+    const events = this.props.data.map(this.generateDetail);
 
     return (
       <div className='event-detail-list-container'>

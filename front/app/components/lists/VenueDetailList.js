@@ -40,7 +40,7 @@ class VenueDetailList extends React.Component {
             {details}
           </div>
           <div className='venue-detail-list-map'>
-            // <Map locations={locations} zoom={11} />
+            {/* <Map locations={locations} zoom={11} /> */}
           </div>
         </div>
       </div>

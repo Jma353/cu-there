@@ -11,6 +11,7 @@ let initialSearchState = {
       times: []
     },
     events: {
+      all: [],
       relevant: [],
       irrelevant: []
     }
