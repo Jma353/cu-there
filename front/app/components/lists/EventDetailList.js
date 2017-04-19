@@ -14,9 +14,7 @@ class EventDetailList extends React.Component {
   }
 
   render () {
-    console.log('We got here');
     const events = this.props.data.map(this.generateDetail);
-
     return (
       <div className='event-detail-list-container'>
         <div className='event-detail-list-title'>{this.props.title}</div>

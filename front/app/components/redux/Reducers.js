@@ -22,7 +22,6 @@ let initialSearchState = {
  * Search reducer
  */
 export function _search (state = initialSearchState, action) {
-  console.log(action);
   switch (action.type) {
     case 'DID_SEARCH_SUCCESS':
       return action.result;

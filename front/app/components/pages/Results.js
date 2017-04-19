@@ -27,12 +27,13 @@ class Results extends React.Component {
    */
   render () {
     const response = this.props.results.response;
+    // Quick time formatting
     const times = response.times.map((time, i) => {
       return time + ':00';
     }).filter((time) => {
       return time !== '1:00';
     });
-    console.log(this.props);
+
     return (
       <div>
         <NavBar query={this.props.location.query.q} />

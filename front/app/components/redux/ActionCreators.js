@@ -39,8 +39,8 @@ export function didChangeRelevance (query, relevant, irrelevant, all) {
   return {
     types: ['DID_CHANGE_RELEVANCE_REQUEST', 'DID_CHANGE_RELEVANCE_SUCCESS', 'DID_CHANGE_RELEVANCE_FAILURE'],
     promise: () => {
-      let relS = relevant.map(r => { return '&relevent=' + r; });
-      let irrelS = irrelevant.map(ir => { return '&irrelevant=' + ir; });
+      let relS = relevant.map((r, i) => { return '&relevant=' + r; });
+      let irrelS = irrelevant.map((ir, i) => { return '&irrelevant=' + ir; });
       return axios.get(util.format(
         '/search/rocchio?q=%s%s%s',
         encodeURIComponent(query), relS, irrelS))
