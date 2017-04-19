@@ -3,28 +3,33 @@
 .venue-card {
   cursor: pointer;
   max-width: 270px;
-  min-width: 180px;
+  min-width: 270px;
   height: auto;
   flex: 1;
   margin: 40px;
-  border-radius: 4px;
+  border-radius: $border-radius;
   border: 1px solid $light-gray;
   background: $white;
 }
 
 .venue-info-item {
+  @extend .md-text;
+  font-weight: 500;
+  padding-bottom: 20px;
+  margin: 20px;
+  border-bottom: 1px solid $light-gray;
+}
+
+.venue-info-address {
   @extend .sm-text;
   color: $dark-gray;
-  font-weight: 500;
-  padding: 10px;
-  flex-grow: 1;
-  min-height: 40px;
+  margin: 20px;
 }
 
 .venue-img-item {
   overflow: hidden;
   flex-basis: auto;
-  border-top: 1px solid $light-gray;
+  border-radius: $border-radius;
   img {
     width: 100%;
   }

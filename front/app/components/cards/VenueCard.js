@@ -12,11 +12,14 @@ class VenueCard extends React.Component {
   render () {
     return (
       <div className='venue-card'>
+        <div className='venue-img-item'>
+          <img src={this.props.data.profile_picture} />
+        </div>
         <div className='venue-info-item'>
           {this.props.data.name}
         </div>
-        <div className='venue-img-item'>
-          <img src={this.props.data.profile_picture} />
+        <div className='venue-info-address'>
+          {this.props.data.location.street}
         </div>
       </div>
     );

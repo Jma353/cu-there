@@ -3,6 +3,7 @@
 .venue-card-list-container {
   min-height: 25vh;
   background: $white;
+  padding: 40px;
 }
 
 .venue-card-list-title {
@@ -11,7 +12,6 @@
   right: 0;
   display: flex;
   justify-content: center;
-  padding-top: 40px;
   color: $color-3;
   font-weight: 500;
 }
@@ -19,7 +19,6 @@
 .venue-card-list {
   left: 0;
   right: 0;
-  padding: 20px 5%;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
