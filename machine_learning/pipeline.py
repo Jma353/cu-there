@@ -49,104 +49,104 @@ class TimeModel(object):
     self.sklearn_model = None
 
 class TimeLocationPair:
-    """ Struct containing time, location, attendance """
+  """ Struct containing time, location, attendance """
 
-    def __init__(self, time, venue_id, attendance):
-        self.time = time
-        self.venue_id = venue_id
-        self.attendance = attendance
+  def __init__(self, time, venue_id, attendance):
+    self.time = time
+    self.venue_id = venue_id
+    self.attendance = attendance
 
-    def to_dict(self):
-        return {
-            "venue_id": self.venue_id,
-            "time": self.time,
-            "attendance": self.attendance
-        }
+  def to_dict(self):
+    return {
+      "venue_id": self.venue_id,
+      "time": self.time,
+      "attendance": self.attendance
+    }
 
 def top_k_recommendations(events, k=10):
-    # Helper function
+  # Helper function
 
-    def time_model_data(events):
-        """Returns a training set for TimeModel."""
+  def time_model_data(events):
+    """Returns a training set for TimeModel."""
 
-        def _get_hour(time_string):
-          date_time = datetime.strptime(time_string[:-5], '%Y-%m-%dT%H:%M:%S')
-          return date_time.hour + (date_time.minute / 60.0)
+    def _get_hour(time_string):
+      date_time = datetime.strptime(time_string[:-5], '%Y-%m-%dT%H:%M:%S')
+      return date_time.hour + (date_time.minute / 60.0)
 
-        attendance = [event.attending for event in events]
-        time = [_get_hour(event.start_time) for event in events if _get_hour(event.start_time) >= 8]
-        attendance_time = zip(time, attendance)
+    attendance = [event.attending for event in events]
+    time = [_get_hour(event.start_time) for event in events if _get_hour(event.start_time) >= 8]
+    attendance_time = zip(time, attendance)
 
-        buckets = defaultdict(list)
-        for i in xrange(8, 24):
-            for pair in attendance_time:
-                if pair[0] == i:
-                    buckets[i].append(pair[1])
-        mean_buckets = defaultdict(int)
-        for i in xrange(8, 24):
-            if len(buckets[i]) > 0:
-                mean_buckets[i] = sum(buckets[i])/len(buckets[i])
-        # We now have the max attendance for each time
+    buckets = defaultdict(list)
+    for i in xrange(8, 24):
+      for pair in attendance_time:
+        if pair[0] == i:
+          buckets[i].append(pair[1])
+    mean_buckets = defaultdict(int)
+    for i in xrange(8, 24):
+      if len(buckets[i]) > 0:
+        mean_buckets[i] = sum(buckets[i])/len(buckets[i])
+    # We now have the max attendance for each time
 
-        mean_attendance_time = zip(mean_buckets.keys(), mean_buckets.values())
-        return np.asarray(mean_attendance_time)
+    mean_attendance_time = zip(mean_buckets.keys(), mean_buckets.values())
+    return np.asarray(mean_attendance_time)
 
-    # Step 1: Group events by venue
+  # Step 1: Group events by venue
 
-    venues_to_events = defaultdict(list)
-    for event in events:
-        venues_to_events[event.venue.id].append(event)
+  venues_to_events = defaultdict(list)
+  for event in events:
+    venues_to_events[event.venue.id].append(event)
 
-    # Step 2: Create time models for each event group
+  # Step 2: Create time models for each event group
 
-    venues_to_models = {}
-    for venue_id in venues_to_events:
-        t = TimeModel()
-        train_data = time_model_data(venues_to_events[venue_id])
-        if train_data != []:
-            t.train(train_data)
-            venues_to_models[venue_id] = t
+  venues_to_models = {}
+  for venue_id in venues_to_events:
+    t = TimeModel()
+    train_data = time_model_data(venues_to_events[venue_id])
+    if train_data != []:
+      t.train(train_data)
+      venues_to_models[venue_id] = t
 
-    # Step 3: Find peaks of models (yielding time-location pairs)
+  # Step 3: Find peaks of models (yielding time-location pairs)
 
-    time_location_pairs = []
-    for venue_id in venues_to_models:
-        t = venues_to_models[venue_id]
-        synthetic_test_data = np.asarray([i for i in xrange(0, 24)])
-        peak_time, peak_value = t.find_peak(synthetic_test_data)
-        time_location_pairs.append(TimeLocationPair(
-            venue_id=venue_id,
-            time=peak_time,
-            attendance=peak_value
-        ))
+  time_location_pairs = []
+  for venue_id in venues_to_models:
+    t = venues_to_models[venue_id]
+    synthetic_test_data = np.asarray([i for i in xrange(0, 24)])
+    peak_time, peak_value = t.find_peak(synthetic_test_data)
+    time_location_pairs.append(TimeLocationPair(
+      venue_id=venue_id,
+      time=peak_time,
+      attendance=peak_value
+    ))
 
-    # Step 4: Output top time-location pairs
+  # Step 4: Output top time-location pairs
 
-    sorted_pairs = sorted(time_location_pairs, key=lambda t: t.attendance, reverse=True)
-    return [pair.to_dict() for pair in sorted_pairs[:k]]
+  sorted_pairs = sorted(time_location_pairs, key=lambda t: t.attendance, reverse=True)
+  return [pair.to_dict() for pair in sorted_pairs[:k]]
 
 
 if __name__ == "__main__":
-    # Testing
-    from app.events.models.venue import Venue
+  # Testing
+  from app.events.models.venue import Venue
 
-    while True:
-        print "Enter query:"
-        print
-        query = str(raw_input(">>> "))
-        print
+  while True:
+    print "Enter query:"
+    print
+    query = str(raw_input(">>> "))
+    print
 
-        events = Event.query.all()
-        events = [event for event in events if query in event.name.lower()]
-        recs = top_k_recommendations(events)
+    events = Event.query.all()
+    events = [event for event in events if query in event.name.lower()]
+    recs = top_k_recommendations(events)
 
-        # print recs
-        print "Top location-time pairs for the {} events retrieved:".format(len(events))
-        print
-        for rec in recs:
-            print "{} at {}:00. Predicted attendance: {}".format(
-                Venue.query.filter_by(id=rec["venue_id"]).first().name,
-                rec["time"],
-                rec["attendance"]
-            )
-        print
+    # print recs
+    print "Top location-time pairs for the {} events retrieved:".format(len(events))
+    print
+    for rec in recs:
+      print "{} at {}:00. Predicted attendance: {}".format(
+        Venue.query.filter_by(id=rec["venue_id"]).first().name,
+        rec["time"],
+        rec["attendance"]
+      )
+    print
