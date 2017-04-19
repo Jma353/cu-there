@@ -43,6 +43,9 @@ class IREngine(object):
     print("Cosine Similarity Results:")
     self.print_top_events(ranked_events, 10)
 
+    if not ranked_events:
+        print("No relevant events")
+
     return [self.events[doc_id]["id"] for _, doc_id in ranked_events]
 
   def get_rocchio_ranked_results(self):
@@ -53,6 +56,9 @@ class IREngine(object):
 
     print("Rocchio Cosine Similarity Results:")
     self.print_top_events(rocchio_ranked_events, 10) # For testing purposes
+
+    if not rocchio_ranked_events:
+        print("No relevant events")
 
     return [self.events[doc_id]["id"] for cs, doc_id in rocchio_ranked_events]
 

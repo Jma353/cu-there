@@ -26,6 +26,7 @@ with open("events.json") as events_json:
 
 # Load in TF-IDF matrix (or compute if it's first time)
 tfidf_vec = TfidfVectorizer(min_df=5, max_df=0.95, max_features=5000, stop_words='english')
+event_descs = [event["description"] for event in events]
 doc_by_term = tfidf_vec.fit_transform(event_descs).toarray()
 
 # Import + Register Blueprints
