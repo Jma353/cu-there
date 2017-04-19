@@ -38,10 +38,10 @@ At this point, if you run `pip freeze`, **only** packages in `requirements.txt` 
 To collect event JSON data, use the following:
 
 ````bash
-$ python data_collection/get_data.py <num_years>
+$ python data_collection/get_data.py <initial_year> <end_year>
 ````
 
-where `<num_years>` is an optional argument representing the number of years of data you wish to obtain (for example, 3 or 0.67). If no `<num_years>` argument is provided, the script will obtain 7 years of data. The script processes data at a rate of approximately 3 seconds per day of data (which is about 18 minutes per data-year).
+where `<initial_year>` is an argument representing the start date of data collection in number of years into the past, and `<end_year>` is an argument representing the end date of data collection in number of years into the past. For example, calling `$ python data_collection/get_data.py 4 0` will start collecting data from four years ago up until now. The script processes data at a rate of approximately 3 seconds per day of data (which is about 18 minutes per data-year).
 
 This will store events in a collection of JSON files. To combine these files, run
 
