@@ -37,7 +37,7 @@ class Search extends React.Component {
    * Handle submission of search query
    */
   handleSubmit (event) {
-    window.location.href = `/results?q=${this.state.value}`;
+    if (this.state.value) window.location.href = `/results?q=${this.state.value}`;
   }
 
   /**

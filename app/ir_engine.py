@@ -14,26 +14,24 @@ class IREngine(object):
   Output: A ranked list of event_ids based on the most relevant events to query
   """
 
-  def __init__(self, query):
-    # Load events from events json file
-    with open("events.json") as events_json:
-      events_dict = json.load(events_json)
-
-      # List of event dicts containing id, name, description, category
-      self.events = [{"id": event["id"], "name": event["name"],
-                      "description": event["description"] if event["description"] else "",
-                      "category": event["category"] if event["category"] else ""}
-                       for event in events_dict]
-      self.n_events = len(self.events)
-
-    tfidf_vec = TfidfVectorizer(min_df=5, max_df=0.95, max_features=3000, stop_words='english')
-    event_descs = [event["description"] for event in self.events]
+  def __init__(self, **kwargs):
+    query = kwargs.get('query', "")
+    rel = kwargs.get('rel', [])
+    irrel = kwargs.get('irrel', [])
+    events = kwargs.get('events', [])
+    doc_by_term = kwargs.get('doc_by_term', [])
 
     self.query = query
-    self.doc_by_term = tfidf_vec.fit_transform(event_descs).toarray()
+    self.rel = rel
+    self.irrel = irrel
+    self.events = [{"id": event["id"], "name": event["name"],
+                    "description": event["description"] if event["description"] else "",
+                    "category": event["category"] if event["category"] else ""}
+                    for event in events]
+    self.n_events = len(self.events)
+    self.doc_by_term = doc_by_term
     self.term_to_idx = {v:i for i, v in enumerate(tfidf_vec.get_feature_names())}
     self.categ_sim_matrix = self.get_categ_sim_matrix()
-
 
   def get_ranked_results(self):
     """
@@ -51,12 +49,9 @@ class IREngine(object):
     """
     Return a ranked list of event_ids given query using cosine similarity with Rocchio
     """
-    ranked_events = self.get_cos_sim_ranked_events()
-    ranked_events = [doc_id for _, doc_id in ranked_events]
+    rocchio_ranked_events = self.get_rocchio_rankings(self.rel, self.irrel)
 
-    # For testing purposes
     print("Rocchio Cosine Similarity Results:")
-    rocchio_ranked_events = self.get_rocchio_rankings(ranked_events, [])
     self.print_top_events(rocchio_ranked_events, 10) # For testing purposes
 
     return [self.events[doc_id]["id"] for cs, doc_id in rocchio_ranked_events]
@@ -314,6 +309,24 @@ if __name__ == '__main__':
 
   query = args[1]
 
-  ir_engine = IREngine(query)
+  # Testing
+  events = {}
+
+  with open("events.json") as events_json:
+    events_dict = json.load(events_json)
+
+    # List of event dicts containing id, name, description, category
+    events = [{"id": event["id"], "name": event["name"],
+                    "description": event["description"] if event["description"] else "",
+                    "category": event["category"] if event["category"] else ""}
+                     for event in events_dict]
+
+  # Create doc-term matrix
+  tfidf_vec = TfidfVectorizer(min_df=5, max_df=0.95, max_features=5000, stop_words='english')
+  event_descs = [event["description"] for event in events]
+  doc_by_term = tfidf_vec.fit_transform(event_descs).toarray()
+
+  # Create IR Engine
+  ir_engine = IREngine(query=query, events=events, doc_by_term=doc_by_term)
   ranked_results = ir_engine.get_ranked_results()
   rocchio_ranked_results = ir_engine.get_rocchio_ranked_results()

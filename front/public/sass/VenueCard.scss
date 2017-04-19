@@ -2,26 +2,30 @@
 
 .venue-card {
   cursor: pointer;
-  display: inline-flex;
-  justify-content: flex-end;
-  height: 60px;
+  max-width: 270px;
+  min-width: 180px;
+  height: auto;
+  flex: 1;
+  margin: 40px;
+  border-radius: 4px;
+  border: 1px solid $light-gray;
   background: $white;
-  margin: 20px;
-  box-shadow: 1px 1px 1px #888888;
-  @include respond-to(handhelds) { width: 100%; }
-  @include respond-to(medium-screens) { width: 100%; }
 }
 
 .venue-info-item {
   @extend .sm-text;
-  padding: 15px;
+  color: $dark-gray;
+  font-weight: 500;
+  padding: 10px;
   flex-grow: 1;
+  min-height: 40px;
 }
 
 .venue-img-item {
   overflow: hidden;
   flex-basis: auto;
+  border-top: 1px solid $light-gray;
   img {
-    height: 100%;
+    width: 100%;
   }
 }
