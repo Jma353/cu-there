@@ -14,9 +14,10 @@ class IREngine(object):
   Output: A ranked list of event_ids based on the most relevant events to query
   """
 
-  def __init__(self, query):
+  def __init__(self, query, rel=[], irrel=[]):
     # Load events from events json file
     with open("events.json") as events_json:
+      # TODO: Use garbage collection to discard unnecessary data
       events_dict = json.load(events_json)
 
       # List of event dicts containing id, name, description, category
@@ -30,10 +31,11 @@ class IREngine(object):
     event_descs = [event["description"] for event in self.events]
 
     self.query = query
+    self.rel = rel
+    self.irrel = rel
     self.doc_by_term = tfidf_vec.fit_transform(event_descs).toarray()
     self.term_to_idx = {v:i for i, v in enumerate(tfidf_vec.get_feature_names())}
     self.categ_sim_matrix = self.get_categ_sim_matrix()
-
 
   def get_ranked_results(self):
     """
