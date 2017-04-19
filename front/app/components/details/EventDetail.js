@@ -48,21 +48,23 @@ class EventDetail extends React.Component {
         <div className='event-detail-img'>
           <img src={this.props.data.profile_picture} />
         </div>
-        {/* Title */}
-        <div className='event-detail-title'>
-          {this.props.data.name}
-        </div>
-        {/* Venue */}
-        <div className='event-detail-venue'>
-          <p>{this.props.data.venue}</p>
-        </div>
-        {/* Date */}
-        <div className='event-detail-date'>
-          <p>{this.props.data.date}</p>
-        </div>
-        {/* Description */}
-        <div className='event-detail-description'>
-          {this.props.data.description}
+        <div className='event-detail-text-container'>
+          {/* Title */}
+          <div className='event-detail-title'>
+            {this.props.data.name}
+          </div>
+          {/* Venue */}
+          <div className='event-detail-venue'>
+            <p>{this.props.data.venue}</p>
+          </div>
+          {/* Date */}
+          <div className='event-detail-date'>
+            <p>{this.props.data.date}</p>
+          </div>
+          {/* Description */}
+          <div className='event-detail-description'>
+            {this.props.data.description}
+          </div>
         </div>
         <button
           className='button event-detail-dismiss fa fa-times'
