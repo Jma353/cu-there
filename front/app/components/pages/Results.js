@@ -14,24 +14,6 @@ import * as actionCreators from '../redux/actionCreators';
  * Results page of the application
  */
 class Results extends React.Component {
-  constructor (props) {
-    super(props);
-
-    this.state = {
-      query: '',
-      results: {
-        response: {
-          venues: [],
-          tags: [],
-          times: []
-        },
-        events: {
-          relevant: [],
-          irrelevant: []
-        }
-      }
-    };
-  }
 
   /**
    * When the component mounts, do stuff
@@ -44,8 +26,8 @@ class Results extends React.Component {
    * Render
    */
   render () {
-    console.log(this.state);
-    const response = this.state.results.response;
+    const response = this.props.results.response;
+    console.log(this.props);
     return (
       <div>
         <NavBar query={this.props.location.query.q} />

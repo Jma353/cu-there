@@ -23,13 +23,9 @@ let initialSearchState = {
 export function _search (state = initialSearchState, action) {
   switch (action.type) {
     case 'DID_SEARCH_SUCCESS':
-      return {
-        ...state
-      };
+      return action.result;
     case 'DID_CHANGE_RELEVANCE_SUCCESS':
-      return {
-        ...state
-      };
+      return action.result;
     default:
       return state;
   }

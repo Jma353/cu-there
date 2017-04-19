@@ -15,17 +15,17 @@ export function didSearch (query) {
             query: query,
             results: {
               response: {
-                venues: resp.data.venues,
-                tags: resp.data.tags,
-                times: resp.data.times
+                venues: resp.data.data.venues,
+                tags: resp.data.data.tags,
+                times: resp.data.data.times
               },
               events: {
-                relevant: resp.data.events.map(e => { return e.id; }),
+                relevant: resp.data.data.events.map(e => { return e.id; }),
                 irrelevant: []
               }
             }
           });
-      });
+        });
     }
   };
 }
@@ -48,9 +48,9 @@ export function didChangeRelevance (query, relevant, irrelevant) {
             query: query,
             results: {
               response: {
-                venues: resp.data.venues,
-                tags: resp.data.tags,
-                times: resp.data.times
+                venues: resp.data.data.venues,
+                tags: resp.data.data.tags,
+                times: resp.data.data.times
               },
               events: {
                 relevant: relevant,
@@ -58,7 +58,7 @@ export function didChangeRelevance (query, relevant, irrelevant) {
               }
             }
           });
-      });
+        });
     }
   };
 }
