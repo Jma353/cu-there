@@ -15,11 +15,11 @@ class IREngine(object):
   """
 
   def __init__(self, **kwargs):
-    query = kwargs.get('query', None)
+    query = kwargs.get('query', "")
     rel = kwargs.get('rel', [])
     irrel = kwargs.get('irrel', [])
-    events = kwargs.get('events', None)
-    doc_by_term = kwargs.get('doc_by_term', None)
+    events = kwargs.get('events', [])
+    doc_by_term = kwargs.get('doc_by_term', [])
 
     self.query = query
     self.rel = rel
