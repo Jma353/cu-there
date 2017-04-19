@@ -9,10 +9,6 @@
   flex-wrap: wrap;
   border-top: 1px solid $border-gray;
   flex-basis: 80%;
-  transition: $transition-duration;
-  &:hover {
-    background-color: $ultra-light-gray;
-  }
 }
 
 .event-detail-title {
@@ -56,5 +52,5 @@
   height: 32px;
   border: none;
   background-color: transparent;
-  @include button-hover(transparent, black, transparent, $light-gray);
+  @include button-hover(transparent, $dark-gray, transparent, $light-gray);
 }

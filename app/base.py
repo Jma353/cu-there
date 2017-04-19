@@ -1,7 +1,6 @@
 from marshmallow_sqlalchemy import ModelSchema
 from . import db
 
-
 class Base(db.Model):
   """Base PostgreSQL model"""
   __abstract__ = True
