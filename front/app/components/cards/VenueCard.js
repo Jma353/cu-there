@@ -19,7 +19,7 @@ class VenueCard extends React.Component {
           {this.props.data.name}
         </div>
         <div className='venue-info-address'>
-          {this.props.data.location.street}
+          {this.props.data.street}
         </div>
       </div>
     );

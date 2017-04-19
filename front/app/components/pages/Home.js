@@ -25,8 +25,8 @@ class Home extends React.Component {
     console.log('Is this getting called even');
     axios.get('/venues')
     .then(resp => {
-      console.log(resp);
-      this.setState({ venues: resp.data.venues });
+      console.log(resp.data.data);
+      this.setState({ venues: resp.data.data.venues });
     })
     .catch(err => {
       console.log(err);
