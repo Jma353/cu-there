@@ -1,10 +1,9 @@
 from app.events.models.event import Event
 from app.events.models.venue import Venue
-from app import db
 import json
 import sys
 
-def store_venues(f):
+def store_venues(f, db):
   """
   Store venues based on a file name `f`
   """
