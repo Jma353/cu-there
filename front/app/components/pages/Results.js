@@ -27,7 +27,6 @@ class Results extends React.Component {
    */
   render () {
     const response = this.props.results.response;
-    console.log(this.props);
     return (
       <div>
         <NavBar query={this.props.location.query.q} />

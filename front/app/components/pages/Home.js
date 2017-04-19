@@ -22,10 +22,8 @@ class Home extends React.Component {
    * When component mounts, make various IR requests
    */
   componentDidMount () {
-    console.log('Is this getting called even');
     axios.get('/venues')
     .then(resp => {
-      console.log(resp.data.data);
       this.setState({ venues: resp.data.data.venues });
     })
     .catch(err => {

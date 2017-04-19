@@ -34,7 +34,7 @@ def search():
   # ML, get recs
   recs = top_k_recommendations(es)
 
-  # Endpoint information
+  # Endpoint info
   times = [r['time'] for r in recs]
   venues = queries.get_venues([r['venue_id'] for r in recs])
 
@@ -70,10 +70,13 @@ def search_rocchio():
     irrelevant=irrelevant,
     tfidf_vec=app.tfidf_vec
   )
-  event_ids = ir_engine.get_rocchio_rankings()
+  event_ids = ir_engine.get_rocchio_ranked_results()
   es = queries.get_events(event_ids)
 
   # ML, get recs
+  recs = top_k_recommendations(es)
+
+  # Endpoint info
   times = [r['time'] for r in recs]
   venues = queries.get_venues([r['venue_id'] for r in recs])
 
