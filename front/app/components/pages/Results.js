@@ -34,7 +34,6 @@ class Results extends React.Component {
         <div className='results-header'>
           <p>Showing 42 results</p>
         </div>
-        {/* BECAUSE GOOGLE MAPS WILL THROW ERROR
         <div className='results'>
           <div className='result-text-card-lists'>
             <div className='result-tags'>
@@ -45,9 +44,8 @@ class Results extends React.Component {
             </div>
           </div>
           <VenueDetailList data={response.venues} title='Venues' />
-          <EventDetailList data={this.state.results.events} title='Related Events' />
+          <EventDetailList data={this.props.results.events} title='Related Events' />
         </div>
-        */}
         <Footer />
       </div>
     );

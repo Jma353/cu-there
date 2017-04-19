@@ -52,7 +52,7 @@ class EventDetail extends React.Component {
         </div>
         {/* Venue */}
         <div className='event-detail-venue'>
-          <p>{this.props.data.place.name}</p>
+          <p>{this.props.data.venue}</p>
         </div>
         {/* Date */}
         <div className='event-detail-date'>

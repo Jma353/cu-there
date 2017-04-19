@@ -29,7 +29,9 @@ class VenueDetailList extends React.Component {
    */
   render () {
     let details = this.props.data.map(this.generateDetail);
-    let locations = this.props.data.map(d => { return d.location; });
+    let locations = this.props.data.map(d => {
+      return {latitude: d.latitude, longitude: d.longitude};
+    });
     return (
       <div className='venue-detail-list-container'>
         <div className='venue-detail-list-title'>{this.props.title}</div>
@@ -38,7 +40,7 @@ class VenueDetailList extends React.Component {
             {details}
           </div>
           <div className='venue-detail-list-map'>
-            <Map locations={locations} zoom={11} />
+            // <Map locations={locations} zoom={11} />
           </div>
         </div>
       </div>

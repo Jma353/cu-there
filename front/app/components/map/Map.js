@@ -42,6 +42,9 @@ class Map extends React.Component {
       lng: this.mean(this.props.locations.map(l => { return l.longitude; }))
     };
     let markers = this.props.locations.map(this.generateMapMarker);
+    markers = markers.filter(l => {
+      return !isNaN(l.lat) && !isNaN(l.lng);
+    });
     return (
       <div className='map'>
         <GoogleMapReact

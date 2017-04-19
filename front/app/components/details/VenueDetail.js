@@ -11,7 +11,6 @@ class VenueDetail extends React.Component {
    * Render
    */
   render () {
-    let location = this.props.data.location;
     return (
       <div className='venue-detail-container'>
         {/* Image */}
@@ -25,8 +24,8 @@ class VenueDetail extends React.Component {
           </div>
           {/* Address */}
           <div className='venue-detail-address'>
-            <p>{location.street}</p>
-            <p>{location.city}, {location.state} {location.zip}</p>
+            <p>{this.props.data.street}</p>
+            <p>{this.props.data.city}, {this.props.data.state} {this.props.data.zip}</p>
           </div>
           {/* Description */}
           <div className='venue-detail-description'>
