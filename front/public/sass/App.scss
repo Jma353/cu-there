@@ -1,6 +1,6 @@
 @import 'variables';
-@import url(https://fonts.googleapis.com/css?family=Maitree:400,500,700);
-$maitree: 'Maitree', sans-serif;
+@import url(https://fonts.googleapis.com/css?family=Quicksand:400,500,700);
+$quicksand: 'Quicksand', sans-serif;
 
 /* Over-all */
 html, body {
@@ -10,7 +10,7 @@ html, body {
 
 /* Overall styling */
 * {
-  font-family: $maitree;
+  font-family: $quicksand;
   font-weight: normal;
   outline: none;
 }
