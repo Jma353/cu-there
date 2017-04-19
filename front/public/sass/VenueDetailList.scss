@@ -20,8 +20,7 @@
 }
 
 .venue-detail-list-map {
-  display: flex;
-  flex-basis: 100%;
+  display: none;
   justify-content: flex-end;
   padding-left: 40px;
   @include respond-to(handhelds) { flex-basis: 0%; }
