@@ -1,10 +1,13 @@
 from . import *
 
-
 # IR / ML
 from app.events.models import queries
 from app.ir_engine import *
 from machine_learning.pipeline import *
+
+# Serialization
+event_schema = EventSchema()
+venue_schema = VenueSchema()
 
 namespace = '/search'
 
@@ -25,9 +28,22 @@ def search():
   # ML, get recs
   recs = top_k_recommendations(events)
 
-  print recs
+  # Endpoint information
+  times = [r['time'] for r in recs]
+  venues = queries.get_venues([r['venue_id'] for r in recs])
 
-  return jsonify({})
+  # Prepare response
+  response = {
+    'success': True,
+    'data': {
+      'venues': [venue_schema.dump(v).data for v in venues],
+      'times': times,
+      'tags': [],
+      'events': [event_schema.dump(e).data for e in events]
+    }
+  }
+
+  return jsonify(response)
 
 @events.route(namespace + '/rocchio', methods=['GET'])
 def search_rocchio():
@@ -39,6 +55,24 @@ def search_rocchio():
   relevant   = request.args.get('relevant') # ids
   irrelevant = request.args.get('irrelevant') # ids
 
-  # IR, get events 
+  # IR, get events
+  # ir_engine = IREngine(q, relevant, irrelevant)
+  # event_ids = ir_engine.get_rocchio_rankings()
+  # events = queries.get_events(event_ids)
+  #
+  # ML, get recs
+  # times = [r['time'] for r in recs]
+  # venues = queries.get_venues([r['venue_id'] for r in recs])
+  #
+  # Prepare response
+  # response = {
+  #   'success': True,
+  #   'data': {
+  #     'venues': [venue_schema.dump(v).data for v in venues],
+  #     'times': times,
+  #     'tags': [],
+  #     'events': [event_schema.dump(e).data for e in events]
+  #   }
+  # }
 
   return jsonify({})
