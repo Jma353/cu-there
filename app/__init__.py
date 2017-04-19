@@ -11,6 +11,8 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 # DB
 db = SQLAlchemy(app)
 
+# TODO - Load in TFIDF matrix (or compute if it's first time)
+
 # Import + Register Blueprints
 from app.events import events as events
 app.register_blueprint(events)
