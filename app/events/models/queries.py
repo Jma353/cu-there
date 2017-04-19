@@ -21,3 +21,10 @@ def get_venues(venue_ids):
   """
   vals = [Venue.query.get(i) for i in venue_ids]
   return [v for v in vals if v is not None]
+
+
+def random_venues(k):
+  """
+  Returns a list of k random venues
+  """
+  return Venue.query.all()[:k]
