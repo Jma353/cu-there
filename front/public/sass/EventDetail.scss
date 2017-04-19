@@ -9,10 +9,6 @@
   flex-wrap: wrap;
   border-top: 1px solid $border-gray;
   flex-basis: 80%;
-  transition: $transition-duration;
-  &:hover {
-    background-color: $off-white;
-  }
 }
 
 .event-detail-title {

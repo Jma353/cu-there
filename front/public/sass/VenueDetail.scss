@@ -7,10 +7,6 @@
   flex-direction: row;
   flex-wrap: wrap;
   border-top: 1px solid $border-gray;
-  transition: $transition-duration;
-  &:hover {
-    background-color: $off-white;
-  }
 }
 
 .venue-detail-img {

@@ -2,8 +2,11 @@ import React from 'react';
 
 require('../../../public/sass/Search.scss');
 
-import LightButton from '../buttons/LightButton.js';
+import LightButton from '../buttons/LightButton';
 require('../../../public/sass/LightButton.scss');
+
+import DarkButton from '../buttons/DarkButton';
+require('../../../public/sass/DarkButton.scss');
 
 /**
  * Defines a generic Search component
@@ -50,6 +53,9 @@ class Search extends React.Component {
    * Render
    */
   render () {
+    const submitButton = this.props.light
+      ? <LightButton className='submit fa fa-search' onClick={this.handleSubmit} />
+      : <DarkButton className='submit fa fa-search' onClick={this.handleSubmit} />;
     return (
       <div className='search'>
         {/* The bar itself */}
@@ -60,7 +66,7 @@ class Search extends React.Component {
           className='bar'
           onKeyPress={this.handleKeyPress} />
         {/* Submit button */}
-        <LightButton className='submit fa fa-search' onClick={this.handleSubmit} />
+        {submitButton}
       </div>
     );
   }
