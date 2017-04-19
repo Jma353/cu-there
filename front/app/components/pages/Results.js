@@ -32,7 +32,7 @@ class Results extends React.Component {
       <div>
         <NavBar query={this.props.location.query.q} />
         <div className='results-header'>
-          <p>Showing 42 results</p>
+          <p>`Showing  results`</p>
         </div>
         <div className='results'>
           <div className='result-text-card-lists'>
@@ -44,7 +44,7 @@ class Results extends React.Component {
             </div>
           </div>
           <VenueDetailList data={response.venues} title='Venues' />
-          <EventDetailList data={this.props.results.events} title='Related Events' />
+          <EventDetailList data={this.props.results.events.relevant} title='Related Events' />
         </div>
         <Footer />
       </div>
