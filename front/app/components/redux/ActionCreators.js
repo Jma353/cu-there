@@ -20,8 +20,8 @@ export function didSearch (query) {
                 times: resp.data.times
               },
               events: {
-                relevant: resp.data.relevant,
-                irrelevant: resp.data.irrelevant
+                relevant: resp.data.events.map(e => { return e.id; }),
+                irrelevant: []
               }
             }
           });
@@ -38,11 +38,11 @@ export function didChangeRelevance (query, relevant, irrelevant) {
   return {
     types: ['DID_CHANGE_RELEVANCE_REQUEST', 'DID_CHANGE_RELEVANCE_SUCCESS', 'DID_CHANGE_RELEVANCE_FAILURE'],
     promise: () => {
+      let relS = relevant.map(r => { return '&relevent=' + r; });
+      let irrelS = irrelevant.map(ir => { return '&irrelevant=' + ir; });
       return axios.get(util.format(
-        '/search/rocchio?q=%s&relevant=%s&irrelevant=%s',
-        encodeURIComponent(query),
-        encodeURIComponent(relevant),
-        encodeURIComponent(irrelevant)))
+        '/search/rocchio?q=%s%s%s',
+        encodeURIComponent(query), relS, irrelS))
         .then(resp => {
           return Promise.resolve({
             query: query,
@@ -53,8 +53,8 @@ export function didChangeRelevance (query, relevant, irrelevant) {
                 times: resp.data.times
               },
               events: {
-                relevant: resp.data.relevant,
-                irrelevant: resp.data.irrelevant
+                relevant: relevant,
+                irrelevant: irrelevant
               }
             }
           });
