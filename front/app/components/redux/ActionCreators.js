@@ -20,6 +20,7 @@ export function didSearch (query) {
                 times: resp.data.data.times
               },
               events: {
+                all: resp.data.data.events,
                 relevant: resp.data.data.events.map(e => { return e.id; }),
                 irrelevant: []
               }
@@ -34,7 +35,7 @@ export function didSearch (query) {
  * Did change relevance -> query again with modified
  * `relevant` / `irrelevant` information
  */
-export function didChangeRelevance (query, relevant, irrelevant) {
+export function didChangeRelevance (query, relevant, irrelevant, all) {
   return {
     types: ['DID_CHANGE_RELEVANCE_REQUEST', 'DID_CHANGE_RELEVANCE_SUCCESS', 'DID_CHANGE_RELEVANCE_FAILURE'],
     promise: () => {
@@ -53,6 +54,7 @@ export function didChangeRelevance (query, relevant, irrelevant) {
                 times: resp.data.data.times
               },
               events: {
+                all: all,
                 relevant: relevant,
                 irrelevant: irrelevant
               }

@@ -23,7 +23,9 @@ class EventDetail extends React.Component {
    * Handle click
    */
   handleClick (e) {
-    // Relevant / irrelevant listings
+    // All events
+    let all = this.props.allEvents;
+    // Relevant / irrelevant listingss
     let relevant = this.props.relevant;
     let irrelevant = this.props.irrelevant;
 
@@ -33,7 +35,7 @@ class EventDetail extends React.Component {
 
     // Dispatch this event b/c relevance changed
     this.props.dispatch(
-      actionCreators.didChangeRelevance(this.props.currentQuery, relevant, irrelevant)
+      actionCreators.didChangeRelevance(this.props.currentQuery, relevant, irrelevant, all)
     );
   }
 
@@ -73,6 +75,7 @@ class EventDetail extends React.Component {
 /** Map the redux state to this component's props */
 const mapStateToProps = (state) => {
   return {
+    allEvents: state._search.results.events.all,
     currentQuery: state._search.query,
     relevant: state._search.results.events.relevant,
     irrelevant: state._search.results.events.irrelevant
