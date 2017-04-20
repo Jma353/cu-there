@@ -25,7 +25,7 @@ def get_events_since(**kwargs):
 
   then = since
   spans = []
-  while then < now-interval:
+  while then < until:
     spans.append((then, then+interval))
     then += interval
   if then < until:
