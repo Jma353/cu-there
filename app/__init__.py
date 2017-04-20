@@ -43,7 +43,7 @@ def data_storage():
   return OUR_EVENTS, tfidf_vec, event_descs, doc_by_term
 
 # Grab info
-# OUR_EVENTS, tfidf_vec, event_descs, doc_by_term = data_storage()
+OUR_EVENTS, tfidf_vec, event_descs, doc_by_term = data_storage()
 
 # Import + Register Blueprints
 from app.events import events as events

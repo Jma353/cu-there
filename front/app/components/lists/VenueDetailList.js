@@ -32,7 +32,6 @@ class VenueDetailList extends React.Component {
     let locations = this.props.data.map(d => {
       return {latitude: d.latitude, longitude: d.longitude};
     });
-    console.log(this.props.data);
     return (
       <div className='venue-detail-list-container'>
         <div className='venue-detail-list-title'>{this.props.title}</div>
@@ -41,7 +40,7 @@ class VenueDetailList extends React.Component {
             {details}
           </div>
           <div className='venue-detail-list-map'>
-            {/* <Map locations={locations} zoom={11} /> */}
+            <Map locations={locations} zoom={11} />
           </div>
         </div>
       </div>

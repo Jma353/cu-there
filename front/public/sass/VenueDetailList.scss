@@ -20,15 +20,8 @@
 }
 
 .venue-detail-list-map {
-  display: none;
   justify-content: flex-end;
   padding-left: 40px;
   @include respond-to(handhelds) { flex-basis: 0%; }
   @include respond-to(medium-screens) { flex-basis: 0%; }
-  .map {
-    min-width: 350px;
-    height: 400px;
-    @include respond-to(handhelds) { display: none; }
-    @include respond-to(medium-screens) { display: none; }
-  }
 }

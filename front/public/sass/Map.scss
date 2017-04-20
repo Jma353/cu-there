@@ -2,4 +2,8 @@
 
 .map {
   border: 1px solid $border-gray;
+  min-width: 300px;
+  height: 400px;
+  @include respond-to(handhelds) { display: none; }
+  @include respond-to(medium-screens) { display: none; }
 }
