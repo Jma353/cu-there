@@ -12,20 +12,25 @@ def store_venues(f, db):
     data.extend(json.load(data_file))
 
   # Grab venues and events
-  venues = [d['venue'] for d in data]
+  id_to_venue = {d['venue']['id']:d['venue'] for d in data}
+  venues = [id_to_venue[k] for k in id_to_venue.keys()]
   events = data
+
+  # Grab current IDs
+  current_venue_ids = set([v.id for v in Venue.query.all()])
+  current_event_ids = set([e.id for e in Event.query.all()])
 
   # Add all venues
   for v in venues:
     the_venue = Venue(v)
-    result = Venue.query.get(the_venue.id)
-    if result is None: db.session.add(the_venue)
+    if (the_venue.id not in current_venue_ids):
+      db.session.add(the_venue)
 
   # Add all events
   for e in events:
     the_event = Event(e)
-    result = Event.query.get(the_event.id)
-    if result is None: db.session.add(the_event)
+    if (the_event.id not in current_event_ids):
+      db.session.add(the_event)
 
   try:
     db.session.commit()
