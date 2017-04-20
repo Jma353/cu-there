@@ -17,11 +17,16 @@ def get_events_since(**kwargs):
   interval = kwargs.get('interval')
   lat      = kwargs.get('lat')
   lng      = kwargs.get('lng')
+  print 'From: ' + str(since)
+  print 'Until: ' + str(until)
+  print 'Using interval: ' + str(interval)
+  print 'Latitude: ' + str(lat)
+  print 'Longitude: ' + str(lng)
 
   then = since
   spans = []
   while then < now-interval:
-    spans.append((then, then+WEEK))
+    spans.append((then, then+interval))
     then += interval
   if then < until:
     spans.append((then, now))
@@ -65,8 +70,8 @@ if __name__ == "__main__":
   # Grab arguments
   from_years = float(sys.argv[1]) if len(sys.argv) > 1 else DEFAULT_YEARS
   to_years   = float(sys.argv[2]) if len(sys.argv) > 2 else 0
-  lat        = float(sys.argv[2]) if len(sys.argv) > 3 else LATITUDE
-  lng        = float(sys.argv[3]) if len(sys.argv) > 4 else LONGITUDE
+  lat        = float(sys.argv[3]) if len(sys.argv) > 3 else LATITUDE
+  lng        = float(sys.argv[4]) if len(sys.argv) > 4 else LONGITUDE
 
   # Run it
   get_events_since(
