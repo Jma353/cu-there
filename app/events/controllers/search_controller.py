@@ -57,13 +57,14 @@ def search_rocchio():
   """
   Search with Rocchio relevance feedback
   """
-  print request.args
   # Grab the parameters
   q          = request.args.get('q')
   relevant   = request.args.getlist('relevant') # ids
   irrelevant = request.args.getlist('irrelevant') # ids
 
+  print 'Relevant IDs:'
   print relevant
+  print 'Irrelevant IDs:'
   print irrelevant
 
   # IR, get events
