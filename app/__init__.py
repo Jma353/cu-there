@@ -40,8 +40,10 @@ def data_storage():
   doc_by_term = tfidf_vec.fit_transform(event_descs).toarray()
 
   print 'Loaded data-structures and data...'
+  return OUR_EVENTS, tfidf_vec, event_descs, doc_by_term
 
-data_storage()
+# Grab info
+# OUR_EVENTS, tfidf_vec, event_descs, doc_by_term = data_storage()
 
 # Import + Register Blueprints
 from app.events import events as events

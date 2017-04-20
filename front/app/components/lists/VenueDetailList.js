@@ -32,6 +32,7 @@ class VenueDetailList extends React.Component {
     let locations = this.props.data.map(d => {
       return {latitude: d.latitude, longitude: d.longitude};
     });
+    console.log(this.props.data);
     return (
       <div className='venue-detail-list-container'>
         <div className='venue-detail-list-title'>{this.props.title}</div>
