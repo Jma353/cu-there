@@ -13,18 +13,17 @@ DIRECTORY = './results'
 def get_events_since(**kwargs):
   # Grab arguments
   since    = kwargs.get('since')
+  until    = kwargs.get('until')
   interval = kwargs.get('interval')
   lat      = kwargs.get('lat')
   lng      = kwargs.get('lng')
 
-  # Get all the spans of time we're querying on
-  now = int(round(time.time()))
   then = since
   spans = []
   while then < now-interval:
     spans.append((then, then+WEEK))
     then += interval
-  if then < now:
+  if then < until:
     spans.append((then, now))
 
   # Grab results

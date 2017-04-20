@@ -11,7 +11,7 @@
 }
 
 .event-detail-img {
-  flex-basis: 10%;
+  width: 10%;
   overflow: hidden;
   img {
     width: 100%;
@@ -20,21 +20,20 @@
 }
 
 .event-detail-text-container {
-  flex-basis: 85%;
+  width: 75%;
   margin-left: 5%;
 }
 
 .event-detail-title {
   @extend .md-text;
-  flex-basis: 90%;
   @include respond-to(handhelds) {
-    flex-basis: 80%;
+    font-size: 16px;
   }
 }
 
 .event-detail-venue {
   @extend .sm-text;
-  flex-basis: 100%;
+  width: 100%;
   @include respond-to(handhelds) {
 
   }
@@ -52,7 +51,7 @@
 .event-detail-description {
   @extend .sm-text;
   margin-top: 15px;
-  flex-basis: 100%;
+  width: 100%;
   max-height: 40px;
   overflow: hidden;
 }

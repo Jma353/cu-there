@@ -40,7 +40,7 @@ class Home extends React.Component {
         <Topper />
         <VenueCardList
           data={this.state.venues}
-          title='Popular Venues' />
+          title='Recent Venues' />
         <Footer />
       </div>
     );
