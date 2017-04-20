@@ -4,7 +4,7 @@
 
 `am2269, ac962, jma353, dl743`
 
-`CU There` utilizes historic event Cornell University event data from Facebook
+`CU There` utilizes historic Cornell University event data from Facebook
 to help users optimize their event planning efforts.  
 
 This project won the [`Cornell BOOM 2017 Statistics Award`](https://boom.cornell.edu/students-and-faculty/awards/).
