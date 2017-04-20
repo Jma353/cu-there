@@ -29,6 +29,7 @@ def search():
   )
 
   event_ids = ir_engine.get_ranked_results()
+  event_ids = event_ids[:min(len(event_ids), 12)] # Take 12 or less
   es = queries.get_events(event_ids)
 
   # ML, get recs
@@ -74,7 +75,9 @@ def search_rocchio():
     irrelevant=irrelevant,
     tfidf_vec=app.tfidf_vec
   )
+
   event_ids = ir_engine.get_rocchio_ranked_results()
+  event_ids = event_ids[:min(len(event_ids), 12)] # Take 12 or less
   es = queries.get_events(event_ids)
 
   # ML, get recs
@@ -83,6 +86,11 @@ def search_rocchio():
   # Endpoint info
   times = [r['time'] for r in recs]
   venues = queries.get_venues([r['venue_id'] for r in recs])
+
+  print
+  print 'Venues found:'
+  for v in venues:
+    print v.name
 
   # Prepare response
   response = {
