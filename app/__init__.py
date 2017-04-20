@@ -38,9 +38,7 @@ tfidf_vec = TfidfVectorizer(min_df=5, max_df=0.95, max_features=5000, stop_words
 event_descs = [event["description"] for event in OUR_EVENTS]
 doc_by_term = tfidf_vec.fit_transform(event_descs).toarray()
 
-print OUR_EVENTS
-print doc_by_term
-print tfidf_vec
+print 'Loaded data-structures and data...'
 
 # Import + Register Blueprints
 from app.events import events as events

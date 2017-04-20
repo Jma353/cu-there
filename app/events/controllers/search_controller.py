@@ -3,7 +3,7 @@ from . import *
 # IR / ML
 from app.events.models import queries
 from app.ir_engine import *
-from machine_learning.pipeline import *
+from app.machine_learning.pipeline import *
 
 # Serialization
 event_schema = EventSchema()

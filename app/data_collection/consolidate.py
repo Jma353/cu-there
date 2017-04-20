@@ -5,7 +5,7 @@ import os
 def consolidate_jsons(dirr):
   # Grab the json files
   jsons = []
-  for _, _, filenames in os.walk('../{1}'.replace('{1}', dirr)):
+  for _, _, filenames in os.walk('./{1}'.replace('{1}', dirr)):
     jsons.extend([f for f in filenames if 'json' in f])
 
   # Built resultant + book-keeping
@@ -17,7 +17,7 @@ def consolidate_jsons(dirr):
 
     # Grab the JSON info
     results = None
-    with open('../{1}/{2}'.replace('{1}', dirr).replace('{2}', j)) as infile:
+    with open('./{1}/{2}'.replace('{1}', dirr).replace('{2}', j)) as infile:
       results = json.load(infile)
 
     # Differentiates between previously consolidated
@@ -33,7 +33,7 @@ def consolidate_jsons(dirr):
   # Output our consolidation
   secs = str(int(round(time.time())))
   file_name = str(secs) + '-consolidation.json'
-  with open('../{1}/{2}'.replace('{1}', dirr).replace('{2}', file_name), 'w') as outfile:
+  with open('./{1}/{2}'.replace('{1}', dirr).replace('{2}', file_name), 'w') as outfile:
     json.dump(events, outfile)
 
 
