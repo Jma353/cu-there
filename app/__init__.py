@@ -41,7 +41,7 @@ def data_storage():
 
   print 'Loaded data-structures and data...'
 
-# data_storage()
+data_storage()
 
 # Import + Register Blueprints
 from app.events import events as events
