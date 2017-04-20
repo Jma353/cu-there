@@ -17,28 +17,31 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 # DB
 db = SQLAlchemy(app)
 
-import store
-# Store everything
-store.store_venues('events.json', db)
+def data_storage():
+  import store
+  # Store everything
+  store.store_venues('events.json', db)
 
-# Load events
-OUR_EVENTS = {}
+  # Load events
+  OUR_EVENTS = {}
 
-with open('events.json') as events_json:
-  events_dict = json.load(events_json)
+  with open('events.json') as events_json:
+    events_dict = json.load(events_json)
 
-  # List of event dicts containing id, name, description, category
-  OUR_EVENTS = [{'id': event['id'], 'name': event['name'],
-                  'description': event['description'] if event['description'] else '',
-                  'category': event['category'] if event['category'] else ''}
-                   for event in events_dict]
+    # List of event dicts containing id, name, description, category
+    OUR_EVENTS = [{'id': event['id'], 'name': event['name'],
+                    'description': event['description'] if event['description'] else '',
+                    'category': event['category'] if event['category'] else ''}
+                     for event in events_dict]
 
-# Load in TF-IDF matrix (or compute if it's first time)
-tfidf_vec = TfidfVectorizer(min_df=5, max_df=0.95, max_features=5000, stop_words='english')
-event_descs = [event["description"] for event in OUR_EVENTS]
-doc_by_term = tfidf_vec.fit_transform(event_descs).toarray()
+  # Load in TF-IDF matrix (or compute if it's first time)
+  tfidf_vec = TfidfVectorizer(min_df=5, max_df=0.95, max_features=5000, stop_words='english')
+  event_descs = [event["description"] for event in OUR_EVENTS]
+  doc_by_term = tfidf_vec.fit_transform(event_descs).toarray()
 
-print 'Loaded data-structures and data...'
+  print 'Loaded data-structures and data...'
+
+# data_storage()
 
 # Import + Register Blueprints
 from app.events import events as events
