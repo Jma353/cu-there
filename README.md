@@ -2,11 +2,16 @@
 
 `CS 4300` final project
 
-am2269, ac962, jma353, dl743
+`am2269, ac962, jma353, dl743`
+
+`CU There` utilizes historic event Cornell University event data from Facebook
+to help users optimize their event planning efforts.  
+
+This project won the [`Cornell BOOM 2017 Statistics Award`](https://boom.cornell.edu/students-and-faculty/awards/).
 
 ## Live App!
 
-[HERE!](http://cu-there.herokuapp.com/)
+Check it out [`here!`](http://cu-there.herokuapp.com/)
 
 ## Server Configuration
 
@@ -31,38 +36,6 @@ pip install -r requirements.txt
 ````
 
 At this point, if you run `pip freeze`, **only** packages in `requirements.txt` should be shown.
-
-
-### Data Collection
-
-To collect event JSON data, use the following:
-
-````bash
-$ python data_collection/get_data.py <initial_year> <end_year>
-````
-
-where `<initial_year>` is an argument representing the start date of data collection in number of years into the past, and `<end_year>` is an argument representing the end date of data collection in number of years into the past. For example, calling `$ python data_collection/get_data.py 4 0` will start collecting data from four years ago up until now. The script processes data at a rate of approximately 3 seconds per day of data (which is about 18 minutes per data-year).
-
-This will store events in a collection of JSON files. To combine these files, run
-
-````bash
-$ python data_collection/consolidate.py
-````
-
-When running `get_data.py`, you may encounter an error such as this one:
-
-````
-Traceback (most recent call last):
-  File "data_collection/get_data.py", line 1, in <module>
-    from app import FacebookEventSearch
-ImportError: No module named app
-````
-
-To fix this, run the following:
-
-````bash
-$ export PYTHONPATH=${PYTHONPATH}:/path/to/cu-there
-````
 
 ### Database Setup
 This app uses `PostgreSQL` (or `Postgres`). `Postgres` can be installed a multitude of ways, but if you’re on `OSX` I recommend utilizing the [`Postgres App`](https://postgresapp.com/).
@@ -119,7 +92,7 @@ python manage.py db migrate
 python manage.py db upgrade
 ````
 
-## Configure front end
+## Client Configuration
 `cd` into the `front` directory. Install all dependencies with:
 
 ````bash
@@ -133,7 +106,7 @@ Run the webpack dev server with:
 npm run dev
 ````
 
-### Production
+## Production
 
 `Heroku` is used for this project's production environment.
 
