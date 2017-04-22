@@ -7,14 +7,16 @@ module.exports = {
     './browser.js'
   ],
   output: {
-    path: path.join(__dirname, '../app/static/'),
-    publicPath: '/static/',
-    filename: 'js/bundle.js'
+    path: path.join(__dirname, '../app/static/js'),
+    publicPath: '/static/js',
+    filename: 'bundle.js'
   },
   devServer: {
-    contentBase: path.join(__dirname, '../app/templates'),
     historyApiFallback: true,
-    port: 3000
+    publicPath: '/static/js',
+    proxy: {
+      '*': 'http://localhost:5000'
+    }
   },
   module: {
     rules: [
