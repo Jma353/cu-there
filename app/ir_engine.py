@@ -12,20 +12,25 @@ class IREngine(object):
 
   def __init__(self, **kwargs):
     query = kwargs.get('query', "")
+    categs = kwargs.get('categs', [])
     rel = kwargs.get('rel', [])
     irrel = kwargs.get('irrel', [])
     events = kwargs.get('events', [])
     doc_by_term = kwargs.get('doc_by_term', [])
     tfidf_vec = kwargs.get('tfidf_vec', None)
+    categ_by_term = kwargs.get('categ_by_term', [])
+    categ_name_to_idx = kwargs.get('categ_name_to_idx', {})
 
     self.query = query
+    self.categs = categs
     self.rel = rel
     self.irrel = irrel
     self.events = events
     self.n_events = len(self.events)
     self.doc_by_term = doc_by_term
     self.term_to_idx = {v:i for i, v in enumerate(tfidf_vec.get_feature_names())}
-    self.categ_sim_matrix = self.get_categ_sim_matrix()
+    self.categ_by_term = categ_by_term
+    self.categ_name_to_idx = categ_name_to_idx
 
   def get_ranked_results(self):
     """
@@ -48,13 +53,29 @@ class IREngine(object):
     """
     rocchio_ranked_events = self.get_rocchio_rankings(self.rel, self.irrel)
 
+    # For testing purposes
     print("Rocchio Cosine Similarity Results:")
-    self.print_top_events(rocchio_ranked_events, 10) # For testing purposes
+    self.print_top_events(rocchio_ranked_events, 10)
 
     if not rocchio_ranked_events:
         print("No relevant events")
 
     return [self.events[doc_id]["id"] for cs, doc_id in rocchio_ranked_events]
+
+  def get_rocchio_categ_ranked_results(self):
+    """
+    Return a ranked list of event_ids given query using cosine similarity with Rocchio and category incorporated
+    """
+    rocchio_categ_ranked_events = self.get_rocchio_categ_rankings(self.rel, self.irrel)
+
+    # For testing purposes
+    print("Rocchio Category Cosine Similarity Results:")
+    self.print_top_events(rocchio_categ_ranked_events, 10)
+
+    if not rocchio_categ_ranked_events:
+      print("No relevant events")
+
+    return [self.events[doc_id]["id"] for cs, doc_id in rocchio_categ_ranked_events]
 
   def tokenize(self, text):
     """
@@ -183,15 +204,10 @@ class IREngine(object):
     print("#" * len(self.query))
 
     for score, doc_id in ranked_events[:top_k]:
-      category = "N/A"
-
-      if self.events[doc_id]['category']:
-        category = self.events[doc_id]['category']
-
       print("[{:.2f}] {}: {}".format(
             score,
             self.events[doc_id]['name'].encode('utf-8'),
-            category.encode('utf-8')))
+            self.events[doc_id]['category'].encode('utf-8')))
     print
 
   def get_cos_sim(self, vec1, vec2):
@@ -251,50 +267,24 @@ class IREngine(object):
 
     return ranking
 
-  def get_categ_sim_matrix(self):
+  def get_rocchio_categ_rankings(self, rel, irrel, d=.2):
     """
-    Get category cosine similarity matrix
+    Get new ranked event list using new Rocchio query vector and taking event categories into account
     """
-    categs = [event["category"] for event in self.events]
-
-    # Dict format: {category: [events marked as category]}
-    categ_to_event = defaultdict(list)
-
-    for idx, categ in enumerate(categs):
-      categ_to_event.setdefault(categ,[]).append(idx)
-
-    uniq_categs = [c for c in categ_to_event.keys()]
-    categ_name_to_idx = {name:idx for idx, name in enumerate(uniq_categs)}
-    categ_idx_to_name = {v:k for k,v in categ_name_to_idx.items()}
-    categ_by_term = np.empty([len(uniq_categs), len(self.doc_by_term[0])])
-
-    # Build category_by_words matrix
-    for idx, _ in enumerate(categ_by_term):
-      # Get event vectors for category
-      categ = categ_idx_to_name[idx]
-      event_vecs = [self.doc_by_term[event] for event in categ_to_event[categ]]
-
-      # Calculate category average vector
-      vec_sum = np.sum(event_vecs, axis=0)
-      norm = np.linalg.norm(vec_sum)
-      avg_tfidf_vec = vec_sum / float(norm)
-      categ_by_term[idx,:] = avg_tfidf_vec
-
-    return np.dot(categ_by_term, categ_by_term.T)
-
-  def get_rocchio_category_rankings(self, rel, irrel, d=.2):
     # Get new query vector using Rocchio
-    q_vec = rocchio(rel, irrel, clip=False)
+    q_vec = self.run_rocchio(rel, irrel, clip=False)
 
-    # TODO: Get category vector based on query
-    categ_vec = np.zeros(0)
+    # Calculate category vector
+    idx_categs = [self.categ_name_to_idx[c] for c in self.categs if c in self.categ_name_to_idx]
+    categ_vecs = [self.categ_by_term[idx] for idx in idx_categs]
+    avg_categ_vec = np.sum(categ_vecs, axis = 0) / float(len(categ_vecs))
 
     # Augment new Rocchio vector by average category vector (clip negative values)
-    new_vec = q_vec + (d * categ_vec)
+    new_vec = q_vec + (d * avg_categ_vec)
     new_vec = [t if t >= 0 else 0 for t in new_vec]
 
     # Get ranked event list based on cosine similarity
-    cos_sims = [get_cos_sim(new_vec, vec) for vec in doc_by_term]
+    cos_sims = [self.get_cos_sim(new_vec, vec) for vec in self.doc_by_term]
     ranking = [(cos_sims[i], i) for i in np.argsort(cos_sims)[::-1]]
 
     return ranking
