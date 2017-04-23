@@ -20,33 +20,52 @@ class TimeModel(object):
   highest-attendance time).
   """
 
-  def train(self, train_set):
+  def __init__(self):
+    self.hour_model = None
+    self.day_of_month_model = None
+    
+  def train_model(self, model, train_set):
     """Polynomial interpolation of degree 2 (quadratic regression)."""
-    self.sklearn_model = make_pipeline(PolynomialFeatures(3), Ridge())
+    model = make_pipeline(PolynomialFeatures(3), Ridge())
     X, y = train_set[:, 0], train_set[:, 1]
     X = X.reshape(-1, 1)
-    results = self.sklearn_model.fit(X, y)
+    results = model.fit(X, y)
     return results
 
-  def test(self, test_set):
+  def hour_train(self, train_set):
+    return self.train_model(self.hour_model, train_set)
+    
+  def day_of_month_test(self, train_set):
+    return self.train_model(self.day_of_month_model, train_set)
+
+  def test_model(self, model, test_set):
     """Output of quadratic regression model."""
     if not self.sklearn_model:
       raise Exception('Model has not been trained yet.')
-    return self.sklearn_model.predict(test_set.reshape(-1, 1))
+    return model.predict(test_set.reshape(-1, 1))
 
-  def find_peak(self, test_set):
+  def hour_test(self, test_set):
+    return self.test_model(self.hour_model, test_set)
+    
+  def day_of_month_test(self, test_set):
+    return self.test_model(self.day_of_month_model, test_set)
+
+  def find_model_peak(self, model, test_set):
     """
     Finds peak using first derivative test.
     Returns tuple (t, v) representing the peak time and peak value.
     """
-    test_values = self.test(test_set)
+    test_values = self.test_model(model, test_set)
     derivs = [(i, test_values[i] - test_values[i-1]) for i in xrange(1, len(test_values))]
     sorted_derivs = sorted(derivs, key=lambda t:math.fabs(t[1])) # This yields derivatives with smallest absolute value
     index_of_peak = sorted_derivs[0][0]
     return (index_of_peak, test_values[index_of_peak])
-
-  def __init__(self):
-    self.sklearn_model = None
+    
+  def find_hour_peak(self, test_set):
+    return find_model_peak(self.hour_model, test_set)
+    
+  def find_day_of_month_peak(self, test_set):
+    return find_model_peak(self.day_of_month_model, test_set)
 
 class TimeLocationPair:
   """ Struct containing time, location, attendance """
@@ -104,7 +123,7 @@ def top_k_recommendations(events, k=10):
     t = TimeModel()
     train_data = time_model_data(venues_to_events[venue_id])
     if train_data != []:
-      t.train(train_data)
+      t.hour_train(train_data)
       venues_to_models[venue_id] = t
 
   # Step 3: Find peaks of models (yielding time-location pairs)
@@ -113,7 +132,7 @@ def top_k_recommendations(events, k=10):
   for venue_id in venues_to_models:
     t = venues_to_models[venue_id]
     synthetic_test_data = np.asarray([i for i in xrange(0, 24)])
-    peak_time, peak_value = t.find_peak(synthetic_test_data)
+    peak_time, peak_value = t.find_hour_peak(synthetic_test_data)
     time_location_pairs.append(TimeLocationPair(
       venue_id=venue_id,
       time=peak_time,
