@@ -14,7 +14,7 @@ def init_ir_engine():
     print("Please provide event description and categories.")
     quit()
 
-  query, categs = args[1], args[2].split(",")
+  query, query_categs = args[1], args[2].split(",")
 
   events = {}
 
@@ -63,7 +63,7 @@ def init_ir_engine():
 
   ### Create IR Engine ###
 
-  ir_engine = IREngine(query=query, events=events, categs=categs, doc_by_term=doc_by_term, tfidf_vec=tfidf_vec, categ_by_term=categ_by_term, categ_name_to_idx=categ_name_to_idx)
+  ir_engine = IREngine(query=query, events=events, categs=query_categs, doc_by_term=doc_by_term, tfidf_vec=tfidf_vec, categ_by_term=categ_by_term, categ_name_to_idx=categ_name_to_idx)
 
   return ir_engine
 
