@@ -1,3 +1,4 @@
+from app import db
 from app.events.models.event import Event
 from app.events.models.venue import Venue
 import json
@@ -41,4 +42,4 @@ def store_venues(f, db):
 
 if __name__ == '__main__':
   if len(sys.argv) < 2: raise
-  store_venues(sys.argv[1])
+  store_venues(sys.argv[1], db)
