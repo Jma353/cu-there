@@ -277,7 +277,8 @@ class IREngine(object):
     # Calculate category vector
     idx_categs = [self.categ_name_to_idx[c] for c in self.categs if c in self.categ_name_to_idx]
     categ_vecs = [self.categ_by_term[idx] for idx in idx_categs]
-    avg_categ_vec = np.sum(categ_vecs, axis = 0) / float(len(categ_vecs))
+
+    avg_categ_vec = (np.sum(categ_vecs, axis = 0) / float(len(categ_vecs))) if len(categ_vecs) > 0 else 0
 
     # Augment new Rocchio vector by average category vector (clip negative values)
     new_vec = q_vec + (d * avg_categ_vec)
