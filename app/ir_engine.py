@@ -21,10 +21,7 @@ class IREngine(object):
     self.query = query
     self.rel = rel
     self.irrel = irrel
-    self.events = [{"id": event["id"], "name": event["name"],
-                    "description": event["description"] if event["description"] else "",
-                    "category": event["category"] if event["category"] else ""}
-                    for event in events]
+    self.events = events
     self.n_events = len(self.events)
     self.doc_by_term = doc_by_term
     self.term_to_idx = {v:i for i, v in enumerate(tfidf_vec.get_feature_names())}
