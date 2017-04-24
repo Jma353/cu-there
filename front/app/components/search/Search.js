@@ -50,6 +50,10 @@ class Search extends React.Component {
     this._uuid = uuid;
   }
 
+  componentWillUnmount () {
+    this._socket.close();
+  }
+
   /**
    * Handle a change to text input
    */
