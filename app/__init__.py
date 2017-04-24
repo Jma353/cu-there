@@ -18,7 +18,6 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 # DB
 db = SQLAlchemy(app)
 
-# Preprocessing
 preprocessed = Preprocess()
 
 # Import + Register Blueprints
