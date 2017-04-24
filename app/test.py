@@ -16,9 +16,15 @@ def stem(terms):
 
 def tokenize(text):
   """
-  Tokenize text into list of words and stem words
+  Tokenize text into list of words and stem words (also remove links and emails)
   """
-  return stem(re.findall(r'[a-z]+', text.lower()))
+  text = text.lower()
+
+  emails_links_regex = re.compile(r'(((http|https)\:\/\/(([a-z|0-9]+)\.)*([a-z|0-9]+)\.([a-z|0-9]+)(\/([a-z|0-9]+))*))|([\w\.-]+@[\w\.-]+)')
+
+  text = re.sub(emails_links_regex, '', text)
+
+  return stem(re.findall(r'[a-z0-9]+', text))
 
 def print_top_sim_words(matrix, idx_to_term, top_k=50):
   """
@@ -130,5 +136,5 @@ def init_ir_engine():
 if __name__ == '__main__':
   # Create IR Engine
   ir_engine = init_ir_engine()
-  rocchio_ranked_results = ir_engine.get_rocchio_ranked_results()
+  # rocchio_ranked_results = ir_engine.get_rocchio_ranked_results()
   rocchio_categ_rankings = ir_engine.get_rocchio_categ_ranked_results()
