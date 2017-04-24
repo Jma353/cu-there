@@ -1,14 +1,16 @@
 @import 'variables';
 
 .event-detail-list-container {
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
+  padding: 0px;
 }
 
 .event-detail-list-title {
   @extend .lg-text;
-  padding: 10px 0px;
+  padding: 40px 0px 20px 0px;
+
+  @include respond-to(handhelds) {
+    font-size: 24px;
+  }
 }
 
 .event-detail-list-content {

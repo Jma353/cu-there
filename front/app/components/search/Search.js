@@ -2,11 +2,15 @@ import React from 'react';
 
 require('../../../public/sass/Search.scss');
 
+import SuggestionList from '../lists/SuggestionList';
+
 import LightButton from '../buttons/LightButton';
 require('../../../public/sass/LightButton.scss');
 
 import DarkButton from '../buttons/DarkButton';
 require('../../../public/sass/DarkButton.scss');
+
+import getUUID from '../../utils/uuid';
 
 /**
  * Defines a generic Search component
@@ -19,18 +23,75 @@ class Search extends React.Component {
    */
   constructor (props) {
     super(props);
-    this.state = { value: this.props.initialValue };
+    this.state = {
+      value: this.props.initialValue,
+      suggestions: [],
+      selectedIndex: -1
+    };
     // Placeholders for now
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleKeyPress = this.handleKeyPress.bind(this);
+    this.handleKeyDown = this.handleKeyDown.bind(this);
+  }
+
+  componentDidMount () {
+    const socket = require('socket.io-client')('/search');
+    const uuid = getUUID();
+
+    socket.on('connect', () => {
+      console.log('Search socket connected.');
+    });
+
+    socket.on('connect_error', (err) => {
+      console.log(err);
+    });
+
+    socket.on(uuid, (data) => {
+      this.setState({
+        suggestions: data.slice(0, 6)
+      });
+    });
+
+    socket.on('disconnect', () => {
+      console.log('Search socket disconnected.');
+    });
+
+    this._socket = socket;
+    this._uuid = uuid;
+  }
+
+  componentWillUnmount () {
+    this._socket.close();
   }
 
   /**
    * Handle a change to text input
    */
   handleChange (event) {
-    this.setState({ value: event.target.value });
+    const value = event.target.value;
+
+    if (!value) {
+      this.setState({
+        value: value,
+        suggestions: []
+      });
+    } else {
+      const query = value.split(' ').splice(-1)[0];
+      this.setState({ value: value });
+
+      if (query === '') {
+        this.setState({
+          suggestions: [],
+          selectedIndex: -1
+        });
+      } else {
+        const req = {
+          session: this._uuid,
+          query: query
+        };
+        this._socket.emit('search', JSON.stringify(req));
+      }
+    }
   }
 
   /**
@@ -41,11 +102,50 @@ class Search extends React.Component {
   }
 
   /**
-   * Handle key press for enter
+   * Handle key down
    */
-  handleKeyPress (event) {
+  handleKeyDown (event) {
+    const { selectedIndex, suggestions } = this.state;
+
+    if (event.keyCode === 37 || event.keyCode === 39) {
+      this.setState({
+        suggestions: [],
+        selectedIndex: -1
+      });
+    }
+
     if (event.key === 'Enter') {
-      this.handleSubmit(event);
+      if (selectedIndex < 0) this.handleSubmit(event);
+      else {
+        const word = this.state.suggestions[selectedIndex] + ' ';
+        const lastSpaceIndex = this.state.value.lastIndexOf(' ') + 1;
+        const newValue = this.state.value.slice(0, lastSpaceIndex) + word;
+        this.setState({
+          value: newValue,
+          suggestions: [],
+          selectedIndex: -1
+        });
+      }
+    } else {
+      var newIndex = selectedIndex;
+      // Up
+      if (event.keyCode === 38) {
+        newIndex--;
+        event.preventDefault();
+      }
+
+      // Down
+      if (event.keyCode === 40) {
+        newIndex++;
+        event.preventDefault();
+      }
+
+      if (newIndex < -1) newIndex = -1;
+      if (newIndex >= suggestions.length) newIndex = suggestions.length - 1;
+
+      this.setState({
+        selectedIndex: newIndex
+      });
     }
   }
 
@@ -53,9 +153,15 @@ class Search extends React.Component {
    * Render
    */
   render () {
+    const buttonProps = {
+      className: 'submit fa fa-search',
+      onClick: this.handleSubmit
+    };
+
     const submitButton = this.props.light
-      ? <LightButton className='submit fa fa-search' onClick={this.handleSubmit} />
-      : <DarkButton className='submit fa fa-search' onClick={this.handleSubmit} />;
+      ? <LightButton {...buttonProps} />
+      : <DarkButton {...buttonProps} />;
+
     return (
       <div className='search'>
         {/* The bar itself */}
@@ -64,9 +170,15 @@ class Search extends React.Component {
           onChange={this.handleChange}
           placeholder={'e.g. A tech talk hosted by ACSU'}
           className='bar'
-          onKeyPress={this.handleKeyPress} />
+          onKeyDown={this.handleKeyDown} />
         {/* Submit button */}
         {submitButton}
+        {this.state.suggestions.length !== 0
+          ? <SuggestionList
+            query={this.state.value}
+            suggestions={this.state.suggestions}
+            selectedIndex={this.state.selectedIndex}
+            /> : null}
       </div>
     );
   }

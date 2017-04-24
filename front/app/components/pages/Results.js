@@ -47,9 +47,9 @@ class Results extends React.Component {
               <TextCardList data={response.tags} title='Tags' />
             </div>
             */}
-            <div className='result-times'>
-              <TextCardList data={times} title='Times' />
-            </div>
+            {times.length !== 0 ? <div className='result-times'>
+              <TextCardList data={times} title='Suggest Times' />
+            </div> : null}
           </div>
           <VenueDetailList data={response.venues} title='Venues' />
           <EventDetailList data={this.props.results.events.all} title='Related Events' />

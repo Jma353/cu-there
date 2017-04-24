@@ -2,10 +2,9 @@
 
 .venue-detail-container {
   display: flex;
-  margin: 0px 10px 0px 10px;
-  padding: 15px;
   flex-direction: row;
   flex-wrap: wrap;
+  padding: 10px 0px;
   border-top: 1px solid $border-gray;
 }
 
@@ -16,18 +15,26 @@
     width: 100%;
     height: auto;
   }
+
+  @include respond-to(handhelds) {
+    flex-basis: 0%;
+  }
 }
 
 .venue-detail-text-container {
-  flex-basis: 70%;
+  flex-basis: 80%;
   margin-left: 5%;
+
+  @include respond-to(handhelds) {
+    flex-basis: 100%;
+    margin-left: 0%;
+  }
 }
 
 .venue-detail-title {
   @extend .md-text;
   flex-basis: 100%;
   @include respond-to(handhelds) {
-    flex-basis: 80%;
     font-size: 16px;
   }
 }
