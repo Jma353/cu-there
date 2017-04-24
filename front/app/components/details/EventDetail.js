@@ -57,19 +57,26 @@ class EventDetail extends React.Component {
         <div className='event-detail-text-container'>
           {/* Title */}
           <a className='event-detail-title'  href={'https://www.facebook.com/events/' + this.props.data.id} target='_blank'>
-            {this.props.data.name}
+            {this.props.data.name} - {this.props.data.category}
           </a>
           {/* Venue */}
           <div className='event-detail-venue'>
-            <p>{this.props.data.venue}</p>
+            <p>{this.props.data.venue_id}</p>
           </div>
           {/* Date */}
           <div className='event-detail-date'>
-            <p>{this.props.data.date}</p>
+            <p>{this.props.data.start_time} - {this.props.data.start_time}</p>
           </div>
           {/* Description */}
           <div className='event-detail-description'>
             {this.props.data.description}
+          </div>
+          {/* Stats */}
+          <div className='event-detail-stats'>
+            {"Attending: " + this.props.data.attending + "\n"}
+            {"No Reply: " + this.props.data.noreply + "\n"}
+            {"Declined: " + this.props.data.declined + "\n"}
+            {"Maybe: " + this.props.data.maybe}
           </div>
         </div>
         <button
