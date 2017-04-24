@@ -5,13 +5,13 @@ from collections import Counter, defaultdict
 from nltk.stem.porter import PorterStemmer
 
 class IREngine(object):
-  """"
+  """
   Input: A text query containing words related to an event
   Output: A ranked list of event_ids based on the most relevant events to query
   """
 
   def __init__(self, **kwargs):
-    query = kwargs.get('query', "")
+    query = kwargs.get('query', '')
     categs = kwargs.get('categs', [])
     rel = kwargs.get('rel', [])
     irrel = kwargs.get('irrel', [])

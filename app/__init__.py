@@ -47,10 +47,6 @@ def tokenize(text):
   return re.findall(r'[a-z]+', text)
 
 def data_storage():
-  import store
-  # Store everything
-  store.store_venues('events.json', db)
-
   # Load events
   OUR_EVENTS = {}
 

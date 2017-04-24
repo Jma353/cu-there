@@ -2,8 +2,8 @@ from . import *
 
 # IR / ML
 from app.events.models import queries
-from app.ir_engine import *
-from app.machine_learning.pipeline import *
+from app.ir.ir_engine import *
+from app.ml.pipeline import *
 
 # Serialization
 event_schema = EventSchema()

@@ -5,7 +5,7 @@ import numpy as np
 from collections import defaultdict
 from nltk.stem.porter import PorterStemmer
 from sklearn.feature_extraction.text import TfidfVectorizer
-from ir_engine import IREngine
+from ir.ir_engine import IREngine
 
 def stem(terms):
   """
