@@ -15,18 +15,26 @@
     width: 100%;
     height: auto;
   }
+
+  @include respond-to(handhelds) {
+    flex-basis: 0%;
+  }
 }
 
 .venue-detail-text-container {
-  flex-basis: 70%;
+  flex-basis: 80%;
   margin-left: 5%;
+
+  @include respond-to(handhelds) {
+    flex-basis: 100%;
+    margin-left: 0%;
+  }
 }
 
 .venue-detail-title {
   @extend .md-text;
   flex-basis: 100%;
   @include respond-to(handhelds) {
-    flex-basis: 80%;
     font-size: 16px;
   }
 }

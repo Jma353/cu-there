@@ -10,16 +10,15 @@
 
 .brand-item {
   @extend .md-text;
-  margin-left: 20px;
   display: flex;
-  flex-basis: 10%;
+  flex-basis: 15%;
   @include respond-to(handhelds) {
+    flex-basis: 0%;
     display: none;
   }
   @include respond-to(medium-screens) {
-    flex-basis: 20%;
+    font-size: 18px;
   }
-  min-width: 120px;
 }
 
 .search-item {
@@ -28,19 +27,19 @@
   flex-basis: 80%;
   justify-content: flex-start;
   @include respond-to(handhelds) {
-    flex-basis: 90%;
-  }
-  @include respond-to(medium-screens) {
-    flex-basis: 70%;
+    flex-basis: 100%;
   }
 }
 
 .navbar-links-container {
   display: flex;
   list-style: none;
-  flex-basis: 10%;
+  flex-basis: 5%;
   justify-content: flex-end;
-  margin-right: 20px;
+  @include respond-to(handhelds) {
+    flex-basis: 0%;
+    display: none;
+  }
 }
 
 .link-item {

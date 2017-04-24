@@ -1,12 +1,13 @@
 @import 'variables';
 
 .venue-detail-list-container {
-  padding: 10px;
+  padding: 0px;
 }
 
 .venue-detail-list-title {
   @extend .lg-text;
-  padding: 10px;
+
+  padding: 10px 0px;
 }
 
 .venue-detail-list-content {
@@ -22,6 +23,12 @@
 .venue-detail-list-map {
   justify-content: flex-end;
   padding-left: 40px;
-  @include respond-to(handhelds) { flex-basis: 0%; }
-  @include respond-to(medium-screens) { flex-basis: 0%; }
+  @include respond-to(handhelds) {
+    flex-basis: 0%;
+    padding-left: 0px;
+  }
+  @include respond-to(medium-screens) {
+    flex-basis: 0%;
+    padding-left: 0px;
+  }
 }
