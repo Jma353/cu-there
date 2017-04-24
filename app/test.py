@@ -56,9 +56,9 @@ def print_top_sim_words(matrix, idx_to_term, top_k=10):
   for (words, score) in score_list[-top_k:][::-1]:
     print("[%.2f] %s" % (score, words))
 
-def print_sim_words(word, matrix, idx_to_term, top_k=10):
+def get_top_sim_words(word, matrix, idx_to_term, top_k=10):
   """
-  Print top_k most similar word pairs given word
+  Return top_k most similar word pairs given word
   """
   term_to_idx = {v:k for k, v in idx_to_term.items()}
 
@@ -70,8 +70,11 @@ def print_sim_words(word, matrix, idx_to_term, top_k=10):
   score_word_vec = [(idx_to_term[idx], score) for idx, score in enumerate(word_vec)]
   score_list = sorted(score_word_vec, key=lambda x: -x[1])
 
-  for (word, score) in score_list[:top_k]:
-    print("[%.2f] %s" % (score, word))
+  # Testing: print out top_k similar words
+  # for (word, score) in score_list[:top_k]:
+  #   print("[%.2f] %s" % (score, word))
+
+  return [w for w, _ in score_list[:top_k]]
 
 def init_ir_engine():
   """
@@ -111,12 +114,19 @@ def init_ir_engine():
   cooccurence_matrix = np.dot(bin_doc_by_term.T, bin_doc_by_term)
   np.fill_diagonal(cooccurence_matrix, 0)
 
+  ### Expand query using top 10 related words ###
+
+  idx_to_term = {i:v for i, v in enumerate(tfidf_vec.get_feature_names())}
+
+  tokenized_query = tokenize(query)
+
+  for token in tokenized_query:
+    query += " " + " ".join(get_top_sim_words(token, cooccurence_matrix, idx_to_term))
+
   ### Testing ###
 
-  term_to_idx = {v:i for i, v in enumerate(tfidf_vec.get_feature_names())}
-  idx_to_term = {v:k for k, v in term_to_idx.items()}
   # print_top_sim_words(cooccurence_matrix, idx_to_term) # Print out most and least similar word pairs
-  # print_sim_words("weill", cooccurence_matrix, idx_to_term) # Print out most similar words
+  # get_top_sim_words("weill", cooccurence_matrix, idx_to_term) # Print out most similar words
 
   ### Create category-term matrix ###
 
@@ -156,4 +166,4 @@ if __name__ == '__main__':
   # Create IR Engine
   ir_engine = init_ir_engine()
   # rocchio_ranked_results = ir_engine.get_rocchio_ranked_results()
-  # rocchio_categ_rankings = ir_engine.get_rocchio_categ_ranked_results()
+  rocchio_categ_rankings = ir_engine.get_rocchio_categ_ranked_results()
