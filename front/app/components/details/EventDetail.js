@@ -56,9 +56,9 @@ class EventDetail extends React.Component {
         </div>
         <div className='event-detail-text-container'>
           {/* Title */}
-          <div className='event-detail-title'>
+          <a className='event-detail-title'  href={'https://www.facebook.com/events/' + this.props.data.id} target='_blank'>
             {this.props.data.name}
-          </div>
+          </a>
           {/* Venue */}
           <div className='event-detail-venue'>
             <p>{this.props.data.venue}</p>
