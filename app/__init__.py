@@ -9,7 +9,7 @@ import re
 import numpy as np
 from collections import defaultdict
 from nltk.stem.porter import PorterStemmer
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template, jsonify, make_response
 from flask_sqlalchemy import SQLAlchemy
 from flask_socketio import SocketIO
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -93,10 +93,11 @@ def data_storage():
     categ_by_term[idx,:] = avg_tfidf_vec
 
   print 'Loaded data-structures and data...'
-  return OUR_EVENTS, tfidf_vec, doc_by_term, categ_by_term, categ_name_to_idx
+
+  return OUR_EVENTS, tfidf_vec, doc_by_term, categ_by_term, categ_name_to_idx, tfidf_vec.get_feature_names()
 
 # Grab info
-OUR_EVENTS, tfidf_vec, doc_by_term, categ_by_term, categ_name_to_idx = data_storage()
+OUR_EVENTS, tfidf_vec, doc_by_term, categ_by_term, categ_name_to_idx, features = data_storage()
 
 # Import + Register Blueprints
 from app.events import events as events
@@ -105,13 +106,17 @@ app.register_blueprint(events)
 # Initialize app w/SocketIO
 socketio.init_app(app)
 
+# Default functionality of rendering index.html
+def render_page():
+  return render_template('index.html')
+
 # React Catch All Paths
 @app.route('/', methods=['GET'])
 def index():
-  return render_template('index.html')
+  return render_page()
 @app.route('/<path:path>', methods=['GET'])
 def any_root_path(path):
-    return render_template('index.html')
+  return render_page()
 
 # HTTP error handling
 @app.errorhandler(404)
