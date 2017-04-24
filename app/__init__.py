@@ -1,11 +1,17 @@
+# Gevent needed for sockets
+from gevent import monkey
+monkey.patch_all()
+
 # Imports
 import os
 import json
 from flask import Flask, render_template, jsonify
 from flask_sqlalchemy import SQLAlchemy
+from flask_socketio import SocketIO
 from sklearn.feature_extraction.text import TfidfVectorizer
 
 # Configure app
+socketio = SocketIO()
 app = Flask(__name__, static_url_path='/static')
 app.config.from_object(os.environ['APP_SETTINGS'])
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
@@ -48,6 +54,9 @@ OUR_EVENTS, tfidf_vec, event_descs, doc_by_term = data_storage()
 # Import + Register Blueprints
 from app.events import events as events
 app.register_blueprint(events)
+
+# Initialize app w/SocketIO
+socketio.init_app(app)
 
 # React Catch All Paths
 @app.route('/', methods=['GET'])
