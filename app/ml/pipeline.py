@@ -24,43 +24,56 @@ class TimeModel(object):
     self.hour_model = None
     self.day_model = None
     self.events = []
-    
-  def train_model(self, model, train_set):
-    """Polynomial interpolation of degree 2 (quadratic regression)."""
-    model = make_pipeline(PolynomialFeatures(3), Ridge())
-    X, y = train_set[:, 0], train_set[:, 1]
-    X = X.reshape(-1, 1)
-    results = model.fit(X, y)
-    return results
 
   def hour_train(self, train_set, events):
-    self.events = events
-    self.hour_model = self.train_model(self.hour_model, train_set)
+    if self.events == []:
+      self.events = events
+    self.hour_model = make_pipeline(PolynomialFeatures(3), Ridge())
+    X, y = train_set[:, 0], train_set[:, 1]
+    X = X.reshape(-1, 1)
+    results = self.hour_model.fit(X, y)
     return self.hour_model
     
   def day_train(self, train_set, events):
-    self.events = events
-    self.day_model = self.train_model(self.day_model, train_set)
+    if self.events == []:
+      self.events = events
+    self.day_model = make_pipeline(PolynomialFeatures(3), Ridge())
+    X, y = train_set[:, 0], train_set[:, 1]
+    X = X.reshape(-1, 1)
+    results = self.day_model.fit(X, y)
     return self.day_model
 
-  def test_model(self, model, test_set):
-    """Output of quadratic regression model."""
-    if not model:
-      return [0]*len(test_set)
-    return model.predict(test_set.reshape(-1, 1))
-
   def hour_test(self, test_set):
-    return self.test_model(self.hour_model, test_set)
+    if not self.hour_model:
+      return [0]*len(test_set)
+    return self.hour_model.predict(test_set.reshape(-1, 1))
     
   def day_test(self, test_set):
-    return self.test_model(self.day_model, test_set)
+    if not self.day_model:
+      return [0]*len(test_set)
+    return self.day_model.predict(test_set.reshape(-1, 1))
 
-  def find_model_peak(self, model, test_set):
+  def find_hour_peak(self, test_set):
     """
     Finds peak using first derivative test.
     Returns tuple (t, v) representing the peak time and peak value.
     """
-    test_values = self.test_model(model, test_set)
+    test_values = self.hour_test(test_set)
+    import matplotlib.pyplot as plt
+    plt.scatter([get_hour(event.start_time) for event in self.events], [event.attending for event in self.events])
+    plt.plot(test_set, test_values)
+    plt.show()
+    derivs = [(i, test_values[i] - test_values[i-1]) for i in xrange(1, len(test_values))]
+    sorted_derivs = sorted(derivs, key=lambda t:math.fabs(t[1])) # This yields derivatives with smallest absolute value
+    index_of_peak = sorted_derivs[0][0]
+    return (index_of_peak, test_values[index_of_peak])
+    
+  def find_day_peak(self, test_set):
+    """
+    Finds peak using first derivative test.
+    Returns tuple (t, v) representing the peak time and peak value.
+    """
+    test_values = self.day_test(test_set)
     #import matplotlib.pyplot as plt
     #plt.scatter([get_hour(event.start_time) for event in self.events], [event.attending for event in self.events])
     #plt.plot(test_set, test_values)
@@ -69,12 +82,6 @@ class TimeModel(object):
     sorted_derivs = sorted(derivs, key=lambda t:math.fabs(t[1])) # This yields derivatives with smallest absolute value
     index_of_peak = sorted_derivs[0][0]
     return (index_of_peak, test_values[index_of_peak])
-    
-  def find_hour_peak(self, test_set):
-    return self.find_model_peak(self.hour_model, test_set)
-    
-  def find_day_of_month_peak(self, test_set):
-    return self.find_model_peak(self.day_model, test_set)
 
 class TimeLocationPair:
   """ Struct containing time, location, attendance """
@@ -156,7 +163,7 @@ def top_k_recommendations(events, k=10):
     synthetic_time_data = np.asarray([i for i in xrange(0, 24)])
     synthetic_day_data = np.asarray([i for i in xrange(0, 31)])
     peak_time, peak_time_value = t.find_hour_peak(synthetic_time_data)
-    peak_day, peak_day_value = t.find_day_of_month_peak(synthetic_day_data)
+    peak_day, peak_day_value = t.find_day_peak(synthetic_day_data)
     time_location_pairs.append(TimeLocationPair(
       venue_id=venue_id,
       time=peak_time,
