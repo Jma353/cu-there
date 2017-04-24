@@ -4,13 +4,6 @@ import Levenshtein
 # Grab socketio instance
 socketio = app.socketio
 
-@socketio.on('connect', namespace='/search')
-def ws_conn():
-  """
-  Search socket connection sanity check
-  """
-  socketio.emit('connect', 'Someone is searching..', '/search')
-
 @socketio.on('search', namespace='/search')
 def search(q):
   """
