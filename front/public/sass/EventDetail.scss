@@ -74,3 +74,8 @@
   background-color: transparent;
   @include button-hover(transparent, $dark-gray, transparent, $light-gray);
 }
+
+.event-detail-title .event-detail-title:hover, .event-detail-title:link, .event-detail-title:visited, .event-detail-title:active {
+  color: $black;
+  text-decoration: none;
+}
