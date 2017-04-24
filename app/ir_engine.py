@@ -291,7 +291,7 @@ class IREngine(object):
     Get new ranked event list using new Rocchio query vector and taking event categories into account
     """
     # Get new query vector using Rocchio
-    q_vec = self.run_rocchio(rel, irrel, clip=False)
+    q_vec = self.run_rocchio(rel, irrel)
 
     # Calculate category vector
     idx_categs = [self.categ_name_to_idx[c] for c in self.categs if c in self.categ_name_to_idx]
@@ -301,7 +301,6 @@ class IREngine(object):
 
     # Augment new Rocchio vector by average category vector (clip negative values)
     new_vec = q_vec + (d * avg_categ_vec)
-    new_vec = [t if t >= 0 else 0 for t in new_vec]
 
     # Get ranked event list based on cosine similarity
     cos_sims = [self.get_cos_sim(new_vec, vec) for vec in self.doc_by_term]
