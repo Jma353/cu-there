@@ -131,11 +131,13 @@ class Search extends React.Component {
       // Up
       if (event.keyCode === 38) {
         newIndex--;
+        event.preventDefault();
       }
 
       // Down
       if (event.keyCode === 40) {
         newIndex++;
+        event.preventDefault();
       }
 
       if (newIndex < -1) newIndex = -1;
