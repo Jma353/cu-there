@@ -48,7 +48,7 @@ class Results extends React.Component {
             </div>
             */}
             {times.length !== 0 ? <div className='result-times'>
-              <TextCardList data={times} title='Times' />
+              <TextCardList data={times} title='Suggest Times' />
             </div> : null}
           </div>
           <VenueDetailList data={response.venues} title='Venues' />

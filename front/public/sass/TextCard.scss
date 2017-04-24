@@ -11,11 +11,7 @@
   color: $color-4;
   background-color: $off-white;
   transition: $transition-duration;
-  @include respond-to(handhelds) {
-    width: 100%;
-    margin-right: 0px;
-  }
-
+  
   &:hover {
     color: white;
     background-color: $color-2;
