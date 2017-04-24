@@ -6,8 +6,10 @@
 
 .venue-detail-list-title {
   @extend .lg-text;
-
-  padding: 10px 0px;
+  padding: 40px 0px 20px 0px;
+  @include respond-to(handhelds) {
+    font-size: 24px;
+  }
 }
 
 .venue-detail-list-content {
