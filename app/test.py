@@ -1,9 +1,24 @@
+import re
 import sys
 import json
 import numpy as np
 from collections import defaultdict
+from nltk.stem.porter import PorterStemmer
 from sklearn.feature_extraction.text import TfidfVectorizer
 from ir_engine import IREngine
+
+def stem(terms):
+  """
+  Stem each word in word list using Porter Stemming Algorithm
+  """
+  stemmer = PorterStemmer()
+  return [stemmer.stem(term) for term in terms]
+
+def tokenize(text):
+  """
+  Tokenize text into list of words and stem words
+  """
+  return stem(re.findall(r'[a-z]+', text.lower()))
 
 def print_top_sim_words(matrix, idx_to_term, top_k=50):
   """
@@ -62,11 +77,8 @@ def init_ir_engine():
 
   ### Create doc-term matrix ###
 
-  tfidf_vec = TfidfVectorizer(min_df=5, max_df=0.95, max_features=5000, stop_words='english')
+  tfidf_vec = TfidfVectorizer(tokenizer=tokenize, min_df=5, max_df=0.95, max_features=5000, stop_words='english')
   event_descs = [event["description"] for event in events]
-  doc_by_term = tfidf_vec.fit_transform(event_descs).toarray()
-
-  tfidf_vec = TfidfVectorizer(min_df=5, max_df=0.95, max_features=5000, stop_words='english')
   doc_by_term = tfidf_vec.fit_transform(event_descs).toarray()
 
   ### Create co-occurence matrix ###
