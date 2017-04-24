@@ -6,9 +6,13 @@ class SuggestionList extends React.Component {
       const className = i === this.props.selectedIndex
         ? 'selected'
         : 'unselected';
+
+      const prefix = this.props.query.split(' ');
+      prefix.splice(-1);
+
       return (
         <li key={i} className={className}>
-          <span>{s}</span>
+          <span>{prefix} <b>{s}</b></span>
         </li>
       );
     });

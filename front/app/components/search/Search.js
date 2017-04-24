@@ -48,7 +48,7 @@ class Search extends React.Component {
 
     socket.on(uuid, (data) => {
       this.setState({
-        suggestions: data.slice(0, 8)
+        suggestions: data.slice(0, 6)
       });
     });
 
@@ -76,14 +76,21 @@ class Search extends React.Component {
         suggestions: []
       });
     } else {
-      this.setState({ value: value });
       const query = value.split(' ').splice(-1)[0];
-      console.log(query);
-      const req = {
-        session: this._uuid,
-        query: query
-      };
-      this._socket.emit('search', JSON.stringify(req));
+      this.setState({ value: value });
+
+      if (query === '') {
+        this.setState({
+          suggestions: [],
+          selectedIndex: -1
+        });
+      } else {
+        const req = {
+          session: this._uuid,
+          query: query
+        };
+        this._socket.emit('search', JSON.stringify(req));
+      }
     }
   }
 
@@ -166,6 +173,7 @@ class Search extends React.Component {
         {submitButton}
         {this.state.suggestions.length !== 0
           ? <SuggestionList
+            query={this.state.value}
             suggestions={this.state.suggestions}
             selectedIndex={this.state.selectedIndex}
             /> : null}
