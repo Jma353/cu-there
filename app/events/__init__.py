@@ -7,4 +7,4 @@ events = Blueprint('events', __name__, url_prefix='')
 # Import all endpoints
 from controllers.venues_controller import *
 from controllers.search_controller import *
-from controllers.sockets_controller import * 
+from controllers.sockets_controller import *

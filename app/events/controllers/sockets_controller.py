@@ -7,11 +7,11 @@ socketio = app.socketio
 
 @socketio.on('connect', namespace='/search')
 def search_conn():
-  print 'connected'
+  print 'Someone is searching'
 
 @socketio.on('disconnect', namespace='/search')
 def search_disconn():
-  print 'disconnected'
+  print 'Someone stopped searching'
 
 @socketio.on('search', namespace='/search')
 def search(q):

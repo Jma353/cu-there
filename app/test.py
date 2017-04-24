@@ -118,10 +118,10 @@ def init_ir_engine():
 
   idx_to_term = {i:v for i, v in enumerate(tfidf_vec.get_feature_names())}
 
-  tokenized_query = tokenize(query)
-
-  for token in tokenized_query:
-    query += " " + " ".join(get_top_sim_words(token, cooccurence_matrix, idx_to_term))
+  # tokenized_query = tokenize(query)
+  #
+  # for token in tokenized_query:
+  #   query += " " + " ".join(get_top_sim_words(token, cooccurence_matrix, idx_to_term))
 
   ### Testing ###
 
