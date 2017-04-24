@@ -5,7 +5,7 @@ monkey.patch_all()
 # Imports
 import os
 import json
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template, jsonify, make_response
 from flask_sqlalchemy import SQLAlchemy
 from flask_socketio import SocketIO
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -46,10 +46,10 @@ def data_storage():
   doc_by_term = tfidf_vec.fit_transform(event_descs).toarray()
 
   print 'Loaded data-structures and data...'
-  return OUR_EVENTS, tfidf_vec, event_descs, doc_by_term
+  return OUR_EVENTS, tfidf_vec, event_descs, doc_by_term, tfidf_vec.get_feature_names()
 
 # Grab info
-OUR_EVENTS, tfidf_vec, event_descs, doc_by_term = data_storage()
+OUR_EVENTS, tfidf_vec, event_descs, doc_by_term, features = data_storage()
 
 # Import + Register Blueprints
 from app.events import events as events
@@ -58,13 +58,17 @@ app.register_blueprint(events)
 # Initialize app w/SocketIO
 socketio.init_app(app)
 
+# Default functionality of rendering index.html
+def render_page():
+  return render_template('index.html')
+
 # React Catch All Paths
 @app.route('/', methods=['GET'])
 def index():
-  return render_template('index.html')
+  return render_page()
 @app.route('/<path:path>', methods=['GET'])
 def any_root_path(path):
-    return render_template('index.html')
+  return render_page()
 
 # HTTP error handling
 @app.errorhandler(404)
