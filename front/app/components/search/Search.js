@@ -29,10 +29,13 @@ class Search extends React.Component {
   componentDidMount () {
     const socket = require('socket.io-client')('/search');
     const uuid = getUUID();
-    console.log(uuid);
 
     socket.on('connect', () => {
       console.log('Search socket connected.');
+    });
+
+    socket.on('connect_error', (err) => {
+      console.log(err);
     });
 
     socket.on(uuid, (data) => {
@@ -44,6 +47,7 @@ class Search extends React.Component {
     });
 
     this._socket = socket;
+    this._uuid = uuid;
   }
 
   /**
@@ -52,7 +56,11 @@ class Search extends React.Component {
   handleChange (event) {
     const value = event.target.value;
     this.setState({ value: value });
-    this._socket.emit('search', value);
+    const req = {
+      session: this._uuid,
+      query: value
+    };
+    this._socket.emit('search', JSON.stringify(req));
   }
 
   /**
