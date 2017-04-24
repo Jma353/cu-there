@@ -21,14 +21,23 @@ class IREngine(object):
     categ_by_term = kwargs.get('categ_by_term', [])
     categ_name_to_idx = kwargs.get('categ_name_to_idx', {})
 
+    # Create query vector
+    term_to_idx = {v:i for i, v in enumerate(tfidf_vec.get_feature_names())}
+    query_vec = np.zeros(len(doc_by_term[0]), dtype = np.float32)
+
+    for term in self.tokenize(query):
+      if term in term_to_idx:
+        query_vec[term_to_idx[term]] += 1
+
     self.query = query
     self.categs = categs
     self.rel = rel
     self.irrel = irrel
     self.events = events
     self.n_events = len(self.events)
+    self.query_vec = query_vec
     self.doc_by_term = doc_by_term
-    self.term_to_idx = {v:i for i, v in enumerate(tfidf_vec.get_feature_names())}
+    self.idx_to_term = {v:k for k,v in term_to_idx.items()}
     self.categ_by_term = categ_by_term
     self.categ_name_to_idx = categ_name_to_idx
 
@@ -74,6 +83,22 @@ class IREngine(object):
 
     if not rocchio_categ_ranked_events:
       print("No relevant events")
+
+    # Get similar terms between query and event
+    for _, doc_id in rocchio_categ_ranked_events[:10]:
+        event_vec = self.doc_by_term[doc_id]
+        prod_vec = np.multiply(self.query_vec, event_vec)
+
+        # Get all similar terms between vectors
+        prod_list = [(i, p) for i, p in enumerate(prod_vec) if p > 0]
+        sim_terms = sorted(prod_list, key=lambda x: -x[1])
+
+        # Get similar category
+        sim_categ = self.events[doc_id]['category']  if self.events[doc_id]['category'] in self.categs else ""
+
+        print "### " + self.events[doc_id]["name"] + " ###"
+        print "Sim words: ", [self.idx_to_term[i] for i,_ in sim_terms]
+        print "Sim categories: ", sim_categ
 
     return [self.events[doc_id]["id"] for cs, doc_id in rocchio_categ_ranked_events]
 
@@ -226,13 +251,7 @@ class IREngine(object):
     query_part, rel_part, irrel_part = 0, 0, 0
 
     # Calculate query_part
-    query_vec = np.zeros(len(self.doc_by_term[0]), dtype = np.float32)
-
-    for term in self.tokenize(self.query):
-      if term in self.term_to_idx:
-        query_vec[self.term_to_idx[term]] += 1
-
-    query_part = a * query_vec
+    query_part = a * self.query_vec
 
     # Calculate rel_part
     if rel:
