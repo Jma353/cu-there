@@ -3,6 +3,9 @@ apiclient==1.0.3
 appdirs==1.4.0
 autoenv==1.0.0
 click==6.7
+enum-compat==0.0.2
+enum34==1.1.6
+eventlet==0.21.0
 facebook-sdk==2.0.0
 Flask==0.12
 Flask-Migrate==2.0.3
