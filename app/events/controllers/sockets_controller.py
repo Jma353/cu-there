@@ -1,7 +1,7 @@
 from . import *
 import Levenshtein
 
-# Grab socketio instance 
+# Grab socketio instance
 socketio = app.socketio
 
 @socketio.on('connect', namespace='/search')
