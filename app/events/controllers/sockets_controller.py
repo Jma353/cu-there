@@ -28,7 +28,7 @@ def search(q):
   query = q['query'].decode('utf-8')
 
   words = []
-  for f in app.features:
+  for f in app.preprocessed.words:
     if Levenshtein.distance(query, f) <= 1:
       words.append(f)
 

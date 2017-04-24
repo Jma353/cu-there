@@ -58,7 +58,8 @@ class IREngine(object):
 
   def get_rocchio_ranked_results(self):
     """
-    Return a ranked list of event_ids given query using cosine similarity with Rocchio
+    Return a ranked list of event_ids given query using cosine
+    similarity with Rocchio
     """
     rocchio_ranked_events = self.get_rocchio_rankings(self.rel, self.irrel)
 
@@ -67,13 +68,14 @@ class IREngine(object):
     self.print_top_events(rocchio_ranked_events, 10)
 
     if not rocchio_ranked_events:
-        print("No relevant events")
+      print("No relevant events")
 
     return [self.events[doc_id]["id"] for cs, doc_id in rocchio_ranked_events]
 
   def get_rocchio_categ_ranked_results(self):
     """
-    Return a ranked list of event_ids given query using cosine similarity with Rocchio and category incorporated
+    Return a ranked list of event_ids given query using cosine
+    similarity with Rocchio and category incorporated
     """
     rocchio_categ_ranked_events = self.get_rocchio_categ_rankings(self.rel, self.irrel)
 
@@ -86,19 +88,19 @@ class IREngine(object):
 
     # Get similar terms between query and event
     for _, doc_id in rocchio_categ_ranked_events[:10]:
-        event_vec = self.doc_by_term[doc_id]
-        prod_vec = np.multiply(self.query_vec, event_vec)
+      event_vec = self.doc_by_term[doc_id]
+      prod_vec = np.multiply(self.query_vec, event_vec)
 
-        # Get all similar terms between vectors
-        prod_list = [(i, p) for i, p in enumerate(prod_vec) if p > 0]
-        sim_terms = sorted(prod_list, key=lambda x: -x[1])
+      # Get all similar terms between vectors
+      prod_list = [(i, p) for i, p in enumerate(prod_vec) if p > 0]
+      sim_terms = sorted(prod_list, key=lambda x: -x[1])
 
-        # Get similar category
-        sim_categ = self.events[doc_id]['category']  if self.events[doc_id]['category'] in self.categs else ""
+      # Get similar category
+      sim_categ = self.events[doc_id]['category']  if self.events[doc_id]['category'] in self.categs else ""
 
-        print "### " + self.events[doc_id]["name"] + " ###"
-        print "Sim words: ", [self.idx_to_term[i] for i,_ in sim_terms]
-        print "Sim categories: ", sim_categ
+      print "### " + self.events[doc_id]["name"] + " ###"
+      print "Sim words: ", [self.idx_to_term[i] for i,_ in sim_terms]
+      print "Sim categories: ", sim_categ
 
     return [self.events[doc_id]["id"] for cs, doc_id in rocchio_categ_ranked_events]
 
@@ -288,7 +290,8 @@ class IREngine(object):
 
   def get_rocchio_categ_rankings(self, rel, irrel, d=.2):
     """
-    Get new ranked event list using new Rocchio query vector and taking event categories into account
+    Get new ranked event list using new Rocchio query vector and
+    taking event categories into account
     """
     # Get new query vector using Rocchio
     q_vec = self.run_rocchio(rel, irrel)

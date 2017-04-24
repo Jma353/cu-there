@@ -35,4 +35,3 @@ class Thesaurus(object):
     self.C = C
     self.D = D
     self.p = preprocessed
-    
