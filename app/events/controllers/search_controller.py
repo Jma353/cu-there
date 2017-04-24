@@ -23,15 +23,16 @@ def search():
   # IR, get events
   ir_engine = IREngine(
     query=q,
-    categs="", # TODO: fill with user input
+    categs=[], # TODO: fill with user input
     events=app.OUR_EVENTS,
     doc_by_term=app.doc_by_term,
     tfidf_vec=app.tfidf_vec,
-    categ_by_term = app.categ_by_term,
-    categ_name_to_idx = app.categ_name_to_idx
+    categ_by_term=app.categ_by_term,
+    categ_name_to_idx=app.categ_name_to_idx
   )
 
-  event_ids = ir_engine.get_rocchio_ranked_results()
+  # Note: just use rocchio function with empty relevant/irrelevant lists
+  event_ids = ir_engine.get_rocchio_categ_ranked_results()
   event_ids = event_ids[:min(len(event_ids), 12)] # Take 12 or less
   es = queries.get_events(event_ids)
 
@@ -79,11 +80,11 @@ def search_rocchio():
     relevant=relevant,
     irrelevant=irrelevant,
     tfidf_vec=app.tfidf_vec,
-    categ_by_term = app.categ_by_term,
-    categ_name_to_idx = app.categ_name_to_idx
+    categ_by_term=app.categ_by_term,
+    categ_name_to_idx=app.categ_name_to_idx
   )
 
-  event_ids = ir_engine.get_rocchio_ranked_results()
+  event_ids = ir_engine.get_rocchio_categ_ranked_results()
   event_ids = event_ids[:min(len(event_ids), 12)] # Take 12 or less
   es = queries.get_events(event_ids)
 
