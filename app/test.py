@@ -24,9 +24,9 @@ def tokenize(text):
 
   text = re.sub(emails_links_regex, '', text)
 
-  return stem(re.findall(r'[a-z0-9]+', text))
+  return re.findall(r'[a-z]+', text)
 
-def print_top_sim_words(matrix, idx_to_term, top_k=50):
+def print_top_sim_words(matrix, idx_to_term, top_k=10):
   """
   Print top_k most and least similar word pairs given coocurrence matrix
   """
@@ -55,6 +55,26 @@ def print_top_sim_words(matrix, idx_to_term, top_k=50):
   print("LEAST SIMILAR:")
   for (words, score) in score_list[-top_k:][::-1]:
     print("[%.2f] %s" % (score, words))
+
+def get_top_sim_words(word, matrix, idx_to_term, top_k=10):
+  """
+  Return top_k most similar word pairs given word
+  """
+  term_to_idx = {v:k for k, v in idx_to_term.items()}
+
+  if word not in term_to_idx:
+    print "Word not in vocab"
+    return
+
+  word_vec = matrix[term_to_idx[word]]
+  score_word_vec = [(idx_to_term[idx], score) for idx, score in enumerate(word_vec)]
+  score_list = sorted(score_word_vec, key=lambda x: -x[1])
+
+  # Testing: print out top_k similar words
+  # for (word, score) in score_list[:top_k]:
+  #   print("[%.2f] %s" % (score, word))
+
+  return [w for w, _ in score_list[:top_k]]
 
 def init_ir_engine():
   """
@@ -94,10 +114,19 @@ def init_ir_engine():
   cooccurence_matrix = np.dot(bin_doc_by_term.T, bin_doc_by_term)
   np.fill_diagonal(cooccurence_matrix, 0)
 
-  # Testing: print out most and least similar word pairs
-  # term_to_idx = {v:i for i, v in enumerate(tfidf_vec.get_feature_names())}
-  # idx_to_term = {v:k for k, v in term_to_idx.items()}
-  # print_top_sim_words(cooccurence_matrix, idx_to_term)
+  ### Expand query using top 10 related words ###
+
+  idx_to_term = {i:v for i, v in enumerate(tfidf_vec.get_feature_names())}
+
+  tokenized_query = tokenize(query)
+
+  for token in tokenized_query:
+    query += " " + " ".join(get_top_sim_words(token, cooccurence_matrix, idx_to_term))
+
+  ### Testing ###
+
+  # print_top_sim_words(cooccurence_matrix, idx_to_term) # Print out most and least similar word pairs
+  # get_top_sim_words("weill", cooccurence_matrix, idx_to_term) # Print out most similar words
 
   ### Create category-term matrix ###
 

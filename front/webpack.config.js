@@ -3,17 +3,15 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const extractSass = new ExtractTextPlugin('css/styles.css');
 
 module.exports = {
-  entry: [
-    './browser.js'
-  ],
+  entry: [path.join(__dirname, '/browser.js')],
   output: {
-    path: path.join(__dirname, '../app/static/js'),
-    publicPath: '/static/js',
-    filename: 'bundle.js'
+    path: path.join(__dirname, '../app/static'),
+    publicPath: '/static',
+    filename: 'js/bundle.js'
   },
   devServer: {
     historyApiFallback: true,
-    publicPath: '/static/js',
+    publicPath: '/static',
     proxy: {
       '*': 'http://localhost:5000'
     }
