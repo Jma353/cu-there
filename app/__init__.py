@@ -88,7 +88,7 @@ def data_storage():
     avg_tfidf_vec = vec_sum / float(norm)
     categ_by_term[idx,:] = avg_tfidf_vec
 
-  print 'Loaded data-structures and data...'
+  print 'Preprocessing....'
 
   return OUR_EVENTS, tfidf_vec, doc_by_term, categ_by_term, categ_name_to_idx, tfidf_vec.get_feature_names()
 
