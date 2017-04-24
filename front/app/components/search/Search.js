@@ -26,11 +26,41 @@ class Search extends React.Component {
     this.handleKeyPress = this.handleKeyPress.bind(this);
   }
 
+  componentDidMount () {
+    const socket = require('socket.io-client')('/search');
+    const uuid = getUUID();
+
+    socket.on('connect', () => {
+      console.log('Search socket connected.');
+    });
+
+    socket.on('connect_error', (err) => {
+      console.log(err);
+    });
+
+    socket.on(uuid, (data) => {
+      console.log('search:', data);
+    });
+
+    socket.on('disconnect', () => {
+      console.log('Search socket disconnected.');
+    });
+
+    this._socket = socket;
+    this._uuid = uuid;
+  }
+
   /**
    * Handle a change to text input
    */
   handleChange (event) {
-    this.setState({ value: event.target.value });
+    const value = event.target.value;
+    this.setState({ value: value });
+    const req = {
+      session: this._uuid,
+      query: value
+    };
+    this._socket.emit('search', JSON.stringify(req));
   }
 
   /**
@@ -70,6 +100,13 @@ class Search extends React.Component {
       </div>
     );
   }
+}
+
+function getUUID () {
+  function S4 () {
+    return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
+  }
+  return (S4() + S4() + '-' + S4() + '-4' + S4().substr(0, 3) + '-' + S4() + '-' + S4() + S4() + S4()).toLowerCase();
 }
 
 export default Search;

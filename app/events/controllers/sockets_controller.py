@@ -1,8 +1,17 @@
 from . import *
 import Levenshtein
+import ast
 
 # Grab socketio instance
 socketio = app.socketio
+
+@socketio.on('connect', namespace='/search')
+def search_conn():
+  print 'connected'
+
+@socketio.on('disconnect', namespace='/search')
+def search_disconn():
+  print 'disconnected'
 
 @socketio.on('search', namespace='/search')
 def search(q):
@@ -14,12 +23,13 @@ def search(q):
   }
   """
   # Grab session / query from the request
+  q = ast.literal_eval(q)
   session = q['session']
-  query = q['query']
+  query = q['query'].decode('utf-8')
 
   words = []
   for f in app.features:
-    if Levenshtein.distance(query, f) <= 2:
+    if Levenshtein.distance(query, f) <= 1:
       words.append(f)
 
   socketio.emit(session, words, namespace='/search')
