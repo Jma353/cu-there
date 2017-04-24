@@ -22,7 +22,7 @@ class TimeModel(object):
 
   def __init__(self):
     self.hour_model = None
-    self.day_of_month_model = None
+    self.day_model = None
     
   def train_model(self, model, train_set):
     """Polynomial interpolation of degree 2 (quadratic regression)."""
@@ -33,22 +33,24 @@ class TimeModel(object):
     return results
 
   def hour_train(self, train_set):
-    return self.train_model(self.hour_model, train_set)
+    self.hour_model = self.train_model(self.hour_model, train_set)
+    return self.hour_model
     
   def day_train(self, train_set):
-    return self.train_model(self.day_of_month_model, train_set)
+    self.day_model = self.train_model(self.day_model, train_set)
+    return self.day_model
 
   def test_model(self, model, test_set):
     """Output of quadratic regression model."""
     if not model:
-      raise Exception('Model has not been trained yet.')
+      return [0]*len(test_set)
     return model.predict(test_set.reshape(-1, 1))
 
   def hour_test(self, test_set):
     return self.test_model(self.hour_model, test_set)
     
   def day_test(self, test_set):
-    return self.test_model(self.day_of_month_model, test_set)
+    return self.test_model(self.day_model, test_set)
 
   def find_model_peak(self, model, test_set):
     """
@@ -65,7 +67,7 @@ class TimeModel(object):
     return self.find_model_peak(self.hour_model, test_set)
     
   def find_day_of_month_peak(self, test_set):
-    return self.find_model_peak(self.day_of_month_model, test_set)
+    return self.find_model_peak(self.day_model, test_set)
 
 class TimeLocationPair:
   """ Struct containing time, location, attendance """
