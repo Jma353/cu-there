@@ -12,70 +12,37 @@ from sklearn.pipeline import make_pipeline
 
 from app.events.models.event import Event
 
-class TimeModel(object):
-  """
-  Predicts event attendance based on event time.
-  Attempts to fit time-attendance relationship to a polynomial of degree 2
-  (with roots at the lowest-attendance times and vertex at the
-  highest-attendance time).
-  """
-
-  def __init__(self):
-    self.hour_model = None
-    self.day_model = None
+class QuadraticModel(object):
+  model = None
+  feature_func = None
+  events = []
+  
+  def __init__(self, feature_func):
+    self.feature_func = feature_func
     self.events = []
-
-  def hour_train(self, train_set, events):
+  
+  def train(self, train_set, events):
     if self.events == []:
       self.events = events
-    self.hour_model = make_pipeline(PolynomialFeatures(3), Ridge())
+    self.model = make_pipeline(PolynomialFeatures(3), Ridge())
     X, y = train_set[:, 0], train_set[:, 1]
     X = X.reshape(-1, 1)
-    results = self.hour_model.fit(X, y)
-    return self.hour_model
+    results = self.model.fit(X, y)
+    return self.model
     
-  def day_train(self, train_set, events):
-    if self.events == []:
-      self.events = events
-    self.day_model = make_pipeline(PolynomialFeatures(3), Ridge())
-    X, y = train_set[:, 0], train_set[:, 1]
-    X = X.reshape(-1, 1)
-    results = self.day_model.fit(X, y)
-    return self.day_model
-
-  def hour_test(self, test_set):
-    if not self.hour_model:
+  def test(self, test_set):
+    if not self.model:
       return [0]*len(test_set)
-    return self.hour_model.predict(test_set.reshape(-1, 1))
+    return self.model.predict(test_set.reshape(-1, 1))
     
-  def day_test(self, test_set):
-    if not self.day_model:
-      return [0]*len(test_set)
-    return self.day_model.predict(test_set.reshape(-1, 1))
-
-  def find_hour_peak(self, test_set):
+  def find_peak(self, test_set):
     """
     Finds peak using first derivative test.
     Returns tuple (t, v) representing the peak time and peak value.
     """
-    test_values = self.hour_test(test_set)
-    import matplotlib.pyplot as plt
-    plt.scatter([get_hour(event.start_time) for event in self.events], [event.attending for event in self.events])
-    plt.plot(test_set, test_values)
-    plt.show()
-    derivs = [(i, test_values[i] - test_values[i-1]) for i in xrange(1, len(test_values))]
-    sorted_derivs = sorted(derivs, key=lambda t:math.fabs(t[1])) # This yields derivatives with smallest absolute value
-    index_of_peak = sorted_derivs[0][0]
-    return (index_of_peak, test_values[index_of_peak])
-    
-  def find_day_peak(self, test_set):
-    """
-    Finds peak using first derivative test.
-    Returns tuple (t, v) representing the peak time and peak value.
-    """
-    test_values = self.day_test(test_set)
+    test_values = self.test(test_set)
     #import matplotlib.pyplot as plt
-    #plt.scatter([get_hour(event.start_time) for event in self.events], [event.attending for event in self.events])
+    #plt.scatter([self.feature_func(event.start_time) for event in self.events], [event.attending for event in self.events])
     #plt.plot(test_set, test_values)
     #plt.show()
     derivs = [(i, test_values[i] - test_values[i-1]) for i in xrange(1, len(test_values))]
@@ -145,25 +112,30 @@ def top_k_recommendations(events, k=10):
 
   venues_to_models = {}
   for venue_id in venues_to_events:
-    t = TimeModel()
+    hour_model = QuadraticModel(feature_func=get_hour)
+    day_model = QuadraticModel(feature_func=get_day)
     hour_train_data = hour_model_data(venues_to_events[venue_id])
     day_train_data = day_model_data(venues_to_events[venue_id])
     if hour_train_data != [] or day_train_data != []:
       if hour_train_data != []:
-        t.hour_train(hour_train_data, venues_to_events[venue_id])
+        hour_model.train(hour_train_data, venues_to_events[venue_id])
       if day_train_data != []:
-        t.day_train(day_train_data, venues_to_events[venue_id])
-      venues_to_models[venue_id] = t
+        day_model.train(day_train_data, venues_to_events[venue_id])
+      venues_to_models[venue_id] = {"hour": hour_model, "day": day_model}
 
   # Step 3: Find peaks of models (yielding time-location pairs)
 
   time_location_pairs = []
   for venue_id in venues_to_models:
-    t = venues_to_models[venue_id]
+    model_bundle = venues_to_models[venue_id]
+    hour_model, day_model = model_bundle["hour"], model_bundle["day"]
+    
     synthetic_time_data = np.asarray([i for i in xrange(0, 24)])
     synthetic_day_data = np.asarray([i for i in xrange(0, 31)])
-    peak_time, peak_time_value = t.find_hour_peak(synthetic_time_data)
-    peak_day, peak_day_value = t.find_day_peak(synthetic_day_data)
+    
+    peak_time, peak_time_value = hour_model.find_peak(synthetic_time_data)
+    peak_day, peak_day_value = day_model.find_peak(synthetic_day_data)
+    
     time_location_pairs.append(TimeLocationPair(
       venue_id=venue_id,
       time=peak_time,
