@@ -1,7 +1,10 @@
 from sklearn.feature_extraction.text import TfidfVectorizer
 from nltk.stem.porter import PorterStemmer
 from collections import defaultdict
+from Queue import Queue # Thread-safe, job queue
+import collections
 import numpy as np
+import threading
 import os
 import json
 import re
@@ -17,11 +20,14 @@ class Preprocess(object):
     """
     Constructor, where all data-structures are built
     """
-    self.events        = self._build_events_list()
-    self.tfidf_vec     = self._build_tfidf_vec()
-    self.doc_by_term   = self._build_doc_by_term(self.events, self.tfidf_vec)
+    self.events            = self._build_events_list()
+    self.tfidf_vec         = self._build_tfidf_vec()
+    self.doc_by_term       = self._build_doc_by_term(self.events, self.tfidf_vec)
+    self.words             = self.tfidf_vec.get_feature_names()
+    self.word_to_idx       = self._build_word_to_idx_dict(self.words)
+    self.five_words_before = self._build_k_words_before(5, self.events, self.word_to_idx)
+    self.five_words_after  = self._build_k_words_after(5, self.events, self.word_to_idx)
     self.categ_name_to_idx, self.categ_idx_to_name, self.categ_by_term = self._build_categ_by_term(self.events, self.doc_by_term)
-    self.words         = self.tfidf_vec.get_feature_names()
     print 'Preprocessing done....'
 
   def _build_events_list(self):
@@ -103,6 +109,104 @@ class Preprocess(object):
 
     return categ_name_to_idx, categ_idx_to_name, categ_by_term
 
+  def _build_word_to_idx_dict(self, words):
+    """
+    Given a list of words, map these words to their indices
+    """
+    return {w:i for i,w in enumerate(words)}
+
+  def _build_k_words_near(self, k, events, word_to_idx, tokenize, num_threads):
+    """
+    Given a `k`, a list of event dictionaries `events`,
+    and a word-to-index mapping `word_to_idx`,
+    build a matrix mapping words to the frequencies at
+    which other words in the data-set appeared within k
+    words near the particular word (before or after
+    depends on whether the tokenize function doesn't reverse
+    the tokens or reverses the tokens respectively)
+
+    Uses the `tokenize` function to determine how to tokenize
+    the description of each event.
+
+    Uses `num_threads` threads to increase the speed at which
+    this preprocessing procedure occurs.
+    """
+    # Our goal matrix
+    num_words = len(word_to_idx)
+    result = np.empty((num_words, num_words))
+
+    # Lock / function needed for atomic numpy increments
+    lock = threading.Lock()
+    def incr_result(i, j):
+      lock.acquire()
+      result[i][j] += 1
+      lock.release()
+
+    # Queue of jobs we're gonna be pulling from
+    e_q = Queue()
+
+    # Describes work procedure of a thread handling this
+    # counting operation
+    def worker():
+      while True:
+        event = e_q.get()
+        tokens = tokenize(event['description'])
+        q = collections.deque()
+        for w in tokens:
+          for w_1 in list(q):
+            if w in word_to_idx and w_1 in word_to_idx:
+              incr_result(word_to_idx[w], word_to_idx[w_1])
+          if len(q) == k: q.pop() # Pop from right if we currently have k
+          q.appendleft(w) # Append to left a new word w
+        e_q.task_done()
+
+    # Spawn those threads
+    for i in xrange(num_threads):
+      t = threading.Thread(target=worker)
+      t.daemon = True
+      t.start()
+
+    # Add event "jobs" to the queue
+    for e in events:
+      e_q.put(e)
+
+    # Wait for everything to finish
+    e_q.join()
+
+    return result
+
+  def _build_k_words_before(self, k, events, word_to_idx, num_threads=30):
+    """
+    Given a `k`, a list of event dictionaries `events`,
+    and a word-to-index mapping `word_to_idx`,
+    build a matrix mapping words to the frequencies at
+    which other words in the data-set appeared within k
+    words before that particular word...
+
+    Uses the `tokenize` function to determine how to tokenize
+    the description of each event.
+
+    Uses `num_threads` threads to increase the speed at which
+    this preprocessing procedure occurs.
+    """
+    return self._build_k_words_near(k, events, word_to_idx, self.tokenize, num_threads)
+
+  def _build_k_words_after(self, k, events, word_to_idx, num_threads=30):
+    """
+    Given a `k`, a list of event dictionaries `events`,
+    and a word-to-index mapping `word_to_idx`,
+    build a matrix mapping words to the frequencies at
+    which other words in the data-set appeared within k
+    words after that particular word...
+
+    Uses the `tokenize` function to determine how to tokenize
+    the description of each event.
+
+    Uses `num_threads` threads to increase the speed at which
+    this preprocessing procedure occurs.
+    """
+    return self._build_k_words_near(k, events, word_to_idx, self.rev_tokenize, num_threads)
+
   def stem(self, terms):
     """
     Stem each word in word list using Porter Stemming Algorithm
@@ -120,3 +224,9 @@ class Preprocess(object):
     emails_links_regex = re.compile(reg)
     text = re.sub(emails_links_regex, '', text)
     return re.findall(r'[a-z]+', text)
+
+  def rev_tokenize(self, text):
+    """
+    Same as `tokenize` but reverses the order of the tokens
+    """
+    return self.tokenize(text)[::-1]
