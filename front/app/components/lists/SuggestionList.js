@@ -12,7 +12,7 @@ class SuggestionList extends React.Component {
 
       return (
         <li key={i} className={className}>
-          <span>{prefix} <b>{s}</b></span>
+          <span>{prefix.join(' ')} <b>{s}</b></span>
         </li>
       );
     });
