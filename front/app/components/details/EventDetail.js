@@ -41,7 +41,13 @@ class EventDetail extends React.Component {
 
     // Dispatch this event b/c relevance changed
     this.props.dispatch(
-      actionCreators.didChangeRelevance(this.props.currentQuery, relevant, irrelevant, all)
+      actionCreators.didChangeRelevance(
+        this.props.currentQuery,
+        this.props.categories,
+        relevant,
+        irrelevant,
+        all
+      )
     );
   }
 
@@ -131,6 +137,7 @@ const mapStateToProps = (state) => {
   return {
     allEvents: state._search.results.events.all,
     currentQuery: state._search.query,
+    categories: state._search.categories,
     relevant: state._search.results.events.relevant,
     irrelevant: state._search.results.events.irrelevant
   };
