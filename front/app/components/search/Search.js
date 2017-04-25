@@ -30,10 +30,6 @@ class Search extends React.Component {
       suggestionIndex: -1,
       categories: []
     };
-    // Placeholders for now
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleKeyDown = this.handleKeyDown.bind(this);
   }
 
   componentDidMount () {
@@ -155,6 +151,13 @@ class Search extends React.Component {
     });
   }
 
+  handleBlur () {
+    this.setState({
+      suggestions: [],
+      suggestionIndex: -1
+    });
+  }
+
   /**
    * Render
    */
@@ -173,12 +176,13 @@ class Search extends React.Component {
         <div className='search'>
           {/* The bar itself */}
           <input type='text'
-            autoFocus
             value={this.state.value}
-            onChange={this.handleChange}
+            onChange={(e) => this.handleChange(e)}
             placeholder={'e.g. A tech talk hosted by ACSU'}
             className='bar'
-            onKeyDown={this.handleKeyDown} />
+            onKeyDown={() => this.handleKeyDown()}
+            onBlur={() => this.handleBlur()}
+            />
           {/* Submit button */}
           {submitButton}
           {this.state.suggestions.length !== 0
