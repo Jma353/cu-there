@@ -4,7 +4,7 @@ import json
 import numpy as np
 from collections import defaultdict
 from nltk.stem.porter import PorterStemmer
-from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from ir.ir_engine import IREngine
 
 def stem(terms):
@@ -103,9 +103,11 @@ def init_ir_engine():
 
   ### Create doc-term matrix ###
 
-  tfidf_vec = TfidfVectorizer(tokenizer=tokenize, min_df=5, max_df=0.95, max_features=5000, stop_words='english')
+  count_vec = CountVectorizer(tokenizer=self.tokenize, min_df=5, max_df=0.95, max_features=5000, stop_words='english')
   event_descs = [event["description"] for event in events]
-  doc_by_term = tfidf_vec.fit_transform(event_descs).toarray()
+  doc_by_term_count = count_vec.fit_transform(event_descs)
+  tfidf_transformer = TfidfTransformer()
+  doc_by_term = tfidf_transformer.fit_transform(doc_by_term_count).toarray()
 
   ### Create co-occurence matrix ###
 
@@ -116,7 +118,7 @@ def init_ir_engine():
 
   ### Expand query using top 10 related words ###
 
-  idx_to_term = {i:v for i, v in enumerate(tfidf_vec.get_feature_names())}
+  idx_to_term = {i:v for i, v in enumerate(count_vec.get_feature_names())}
 
   # tokenized_query = tokenize(query)
   #
@@ -158,7 +160,7 @@ def init_ir_engine():
 
   ### Create IR Engine ###
 
-  ir_engine = IREngine(query=query, events=events, categs=query_categs, doc_by_term=doc_by_term, tfidf_vec=tfidf_vec, categ_by_term=categ_by_term, categ_name_to_idx=categ_name_to_idx)
+  ir_engine = IREngine(query=query, events=events, categs=query_categs, doc_by_term=doc_by_term, count_vec=count_vec, categ_by_term=categ_by_term, categ_name_to_idx=categ_name_to_idx)
 
   return ir_engine
 

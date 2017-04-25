@@ -1,4 +1,4 @@
-from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from nltk.stem.porter import PorterStemmer
 from collections import defaultdict
 from Queue import Queue # Thread-safe, job queue
@@ -21,9 +21,10 @@ class Preprocess(object):
     Constructor, where all data-structures are built
     """
     self.events            = self._build_events_list()
-    self.tfidf_vec         = self._build_tfidf_vec()
-    self.doc_by_term       = self._build_doc_by_term(self.events, self.tfidf_vec)
-    self.words             = self.tfidf_vec.get_feature_names()
+    self.count_vec         = self._build_count_vec()
+    self.doc_by_term_count = self._build_doc_by_term_count(self.events, self.count_vec)
+    self.doc_by_term       = self._build_doc_by_term(self.doc_by_term_count)
+    self.words             = self.count_vec.get_feature_names()
     self.word_to_idx       = self._build_word_to_idx_dict(self.words)
     self.five_words_before = self._build_k_words_before(5, self.events, self.word_to_idx)
     self.five_words_after  = self._build_k_words_after(5, self.events, self.word_to_idx)
@@ -51,25 +52,34 @@ class Preprocess(object):
       'category': event['category'] if event['category'] else ''
     } for event in events]
 
-  def _build_tfidf_vec(self):
+  def _build_count_vec(self):
     """
-    Builds the TfidfVectorizer needed to parse our data-set
+    Builds the CountVectorizer needed to parse our data-set
     """
-    return TfidfVectorizer(
+    return CountVectorizer(
       tokenizer=self.tokenize,
       min_df=5,
       max_df=0.95,
       max_features=5000,
       stop_words='english')
 
-  def _build_doc_by_term(self, events, tfidf_vec):
+  def _build_doc_by_term_count(self, events, count_vec):
     """
     Given a list of event dictionaries `events` and a
-    TfidfVectorizer `tfidf_vec`, builds a document-by-
-    term matrix based on the events' descriptions
+    CountVectorizer `count_vec`, builds a term frequency
+    document-by-term matrix based on the events' descriptions
     """
     event_descs = [e['description'] for e in events]
-    return tfidf_vec.fit_transform(event_descs).toarray()
+    return count_vec.fit_transform(event_descs)
+
+  def _build_doc_by_term(self, count_matrix):
+    """
+    Given a list of event dictionaries `events` and a
+    term-frequency matrix `count_matrix`, builds a document-by-
+    term matrix based on the events' descriptions
+    """
+    tfidf_transformer = TfidfTransformer()
+    return tfidf_transformer.fit_transform(count_matrix).toarray()
 
   def _build_categ_by_term(self, events, doc_by_term):
     """

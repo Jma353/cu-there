@@ -78,6 +78,11 @@ class EventDetail extends React.Component {
             {"Declined: " + this.props.data.declined + "\n"}
             {"Maybe: " + this.props.data.maybe}
           </div>
+          {/* Similar Tags */}
+          <div className='event-detail-stats'>
+            {"Similar Words: " + this.props.data.sim_words.join(", ") + "\n"}
+            {"Similar Categories: " + this.props.data.sim_categs}
+          </div>
         </div>
         <button
           className='button event-detail-dismiss fa fa-times'
