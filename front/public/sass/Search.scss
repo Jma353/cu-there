@@ -27,6 +27,7 @@
 }
 
 .suggestion-list {
+  z-index: 99999;
   position: absolute;
   top: 100%;
   width: calc(100% - 60px);
@@ -53,7 +54,7 @@
     font-weight: 700;
   }
 
-  .selected {
+  .selected, li:hover {
     background-color: $off-white;
   }
 }

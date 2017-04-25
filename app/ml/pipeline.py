@@ -4,15 +4,22 @@ from collections import defaultdict
 import json
 import math
 import numpy as np
-from utils import *
 
-from sklearn.linear_model import Ridge
+from sklearn.linear_model import Ridge, LinearRegression
 from sklearn.preprocessing import PolynomialFeatures
 from sklearn.pipeline import make_pipeline
 
 from app.events.models.event import Event
+import polyfit
+from utils import *
 
 class QuadraticModel(object):
+  """ Model for a polynomial of degree 2. 
+      feature_func is the function used to extract the independent variable from an event
+      (for example, get_hour).
+  
+      Contains a train, test, and find_peak function.
+  """
   model = None
   feature_func = None
   events = []
@@ -22,18 +29,20 @@ class QuadraticModel(object):
     self.events = []
   
   def train(self, train_set, events):
+    """ Trains model. """
     if self.events == []:
       self.events = events
-    self.model = make_pipeline(PolynomialFeatures(3), Ridge())
-    X, y = train_set[:, 0], train_set[:, 1]
-    X = X.reshape(-1, 1)
-    results = self.model.fit(X, y)
+    self.model = polyfit.create_fit(train_set)
+    #X, y = train_set[:, 0], train_set[:, 1]
+    #X = X.reshape(-1, 1)
+    #results = self.model.fit(X, y)
     return self.model
     
   def test(self, test_set):
+    """ Tests model. """
     if not self.model:
       return [0]*len(test_set)
-    return self.model.predict(test_set.reshape(-1, 1))
+    return self.model(test_set.reshape(-1, 1))
     
   def find_peak(self, test_set):
     """
@@ -41,10 +50,13 @@ class QuadraticModel(object):
     Returns tuple (t, v) representing the peak time and peak value.
     """
     test_values = self.test(test_set)
+    
+    # TESTING CODE - do not uncomment in production 
     #import matplotlib.pyplot as plt
     #plt.scatter([self.feature_func(event.start_time) for event in self.events], [event.attending for event in self.events])
     #plt.plot(test_set, test_values)
     #plt.show()
+    
     derivs = [(i, test_values[i] - test_values[i-1]) for i in xrange(1, len(test_values))]
     sorted_derivs = sorted(derivs, key=lambda t:math.fabs(t[1])) # This yields derivatives with smallest absolute value
     index_of_peak = sorted_derivs[0][0]
@@ -68,21 +80,23 @@ class TimeLocationPair:
     }
 
 def top_k_recommendations(events, k=10):
-  # Helper function
 
   def _bucketify(attendance_time):
     """ Helper function for returning average attendance for each discrete time value. """
     buckets = defaultdict(list)
+    
     for i in xrange(8, 24):
       for pair in attendance_time:
         if pair[0] == i:
           buckets[i].append(pair[1])
     mean_buckets = defaultdict(int)
+    
     for i in xrange(8, 24):
       if len(buckets[i]) > 0:
         mean_buckets[i] = sum(buckets[i])/len(buckets[i])
+        
     # We now have the max attendance for each time
-
+    
     mean_attendance_time = zip(mean_buckets.keys(), mean_buckets.values())
     return np.asarray(mean_attendance_time)
 
@@ -147,7 +161,6 @@ def top_k_recommendations(events, k=10):
 
   sorted_pairs = sorted(time_location_pairs, key=lambda t: t.attendance, reverse=True)
   return [pair.to_dict() for pair in sorted_pairs[:k]]
-
 
 if __name__ == "__main__":
   # Testing

@@ -117,14 +117,7 @@ class Search extends React.Component {
     if (event.key === 'Enter') {
       if (selectedIndex < 0) this.handleSubmit(event);
       else {
-        const word = this.state.suggestions[selectedIndex] + ' ';
-        const lastSpaceIndex = this.state.value.lastIndexOf(' ') + 1;
-        const newValue = this.state.value.slice(0, lastSpaceIndex) + word;
-        this.setState({
-          value: newValue,
-          suggestions: [],
-          selectedIndex: -1
-        });
+        this.handleSelectSuggestion(selectedIndex);
       }
     } else {
       var newIndex = selectedIndex;
@@ -149,6 +142,17 @@ class Search extends React.Component {
     }
   }
 
+  handleSelectSuggestion (i) {
+    const word = this.state.suggestions[i] + ' ';
+    const lastSpaceIndex = this.state.value.lastIndexOf(' ') + 1;
+    const newValue = this.state.value.slice(0, lastSpaceIndex) + word;
+    this.setState({
+      value: newValue,
+      suggestions: [],
+      selectedIndex: -1
+    });
+  }
+
   /**
    * Render
    */
@@ -166,6 +170,7 @@ class Search extends React.Component {
       <div className='search'>
         {/* The bar itself */}
         <input type='text'
+          autoFocus
           value={this.state.value}
           onChange={this.handleChange}
           placeholder={'e.g. A tech talk hosted by ACSU'}
@@ -178,6 +183,7 @@ class Search extends React.Component {
             query={this.state.value}
             suggestions={this.state.suggestions}
             selectedIndex={this.state.selectedIndex}
+            onItemClick={(i) => this.handleSelectSuggestion(i)}
             /> : null}
       </div>
     );

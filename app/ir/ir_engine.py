@@ -17,12 +17,12 @@ class IREngine(object):
     irrel = kwargs.get('irrel', [])
     events = kwargs.get('events', [])
     doc_by_term = kwargs.get('doc_by_term', [])
-    tfidf_vec = kwargs.get('tfidf_vec', None)
+    count_vec = kwargs.get('count_vec', None)
     categ_by_term = kwargs.get('categ_by_term', [])
     categ_name_to_idx = kwargs.get('categ_name_to_idx', {})
 
     # Create query vector
-    term_to_idx = {v:i for i, v in enumerate(tfidf_vec.get_feature_names())}
+    term_to_idx = {v:i for i, v in enumerate(count_vec.get_feature_names())}
     query_vec = np.zeros(len(doc_by_term[0]), dtype = np.float32)
 
     for term in self.tokenize(query):
@@ -74,8 +74,8 @@ class IREngine(object):
 
   def get_rocchio_categ_ranked_results(self):
     """
-    Return a ranked list of event_ids given query using cosine
-    similarity with Rocchio and category incorporated
+    Return a ranked list of event_ids, similar words, and similar categories
+    given query using cosine similarity with Rocchio and category incorporated
     """
     rocchio_categ_ranked_events = self.get_rocchio_categ_rankings(self.rel, self.irrel)
 
@@ -87,6 +87,11 @@ class IREngine(object):
       print("No relevant events")
 
     # Get similar terms between query and event
+    event_id = ""
+    event_sim_words = []
+    event_sim_categs = ""
+    results = []
+
     for _, doc_id in rocchio_categ_ranked_events[:10]:
       event_vec = self.doc_by_term[doc_id]
       prod_vec = np.multiply(self.query_vec, event_vec)
@@ -98,9 +103,10 @@ class IREngine(object):
       # Get similar category
       sim_categ = self.events[doc_id]['category']  if self.events[doc_id]['category'] in self.categs else ""
 
-      print "### " + self.events[doc_id]["name"] + " ###"
-      print "Sim words: ", [self.idx_to_term[i] for i,_ in sim_terms]
-      print "Sim categories: ", sim_categ
+      event_id = self.events[doc_id]["id"]
+      event_sim_words = [self.idx_to_term[i] for i,_ in sim_terms]
+      event_sim_categs = sim_categ
+      results.append((event_id, event_sim_words, event_sim_categs))
 
     return [self.events[doc_id]["id"] for cs, doc_id in rocchio_categ_ranked_events]
 
