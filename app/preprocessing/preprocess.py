@@ -1,6 +1,7 @@
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from nltk.stem.porter import PorterStemmer
 from collections import defaultdict
+from scipy.sparse.linalg import svds
 from Queue import Queue # Thread-safe, job queue
 import collections
 import numpy as np
@@ -9,9 +10,11 @@ import os
 import json
 import re
 
+THREAD_COUNT = 5
+
 class Preprocess(object):
   """
-  Object driving construction of and access to all required
+    Object driving construction of and access to all required
   preprocessed data-structures, matricies, and indexes needed
   for IR tasks like TFIDF, thesaurus-building, etc.
   """
@@ -22,13 +25,13 @@ class Preprocess(object):
     """
     self.events            = self._build_events_list()
     self.count_vec         = self._build_count_vec()
-    self.doc_by_term_count = self._build_doc_by_term_count(self.events, self.count_vec).toarray()
-    self.doc_by_term       = self._build_doc_by_term(self.doc_by_term_count)
+    doc_by_term_count = self._build_doc_by_term_count(self.events, self.count_vec).toarray()
+    self.doc_by_term       = self._build_doc_by_term(doc_by_term_count)
     self.words             = self.count_vec.get_feature_names()
     self.word_to_idx       = self._build_word_to_idx_dict(self.words)
-    self.coocurrence       = self._build_cooccurence(self.doc_by_term)
-    self.five_words_before = self._build_k_words_before(5, self.events, self.doc_by_term_count, self.word_to_idx)
-    self.five_words_after  = self._build_k_words_after(5, self.events, self.doc_by_term_count, self.word_to_idx)
+    # self.coocurrence       = self._build_cooccurence(self.doc_by_term)
+    # self.five_words_before = self._build_k_words_before(5, self.events, doc_by_term_count, self.word_to_idx)
+    self.five_words_after  = self._build_k_words_after(5, self.events, doc_by_term_count, self.word_to_idx)
     self.uniq_categs, self.categ_name_to_idx, self.categ_idx_to_name, self.categ_by_term = self._build_categ_by_term(self.events, self.doc_by_term)
     print 'Preprocessing done....'
 
@@ -191,8 +194,8 @@ class Preprocess(object):
     count_w = float(np.sum(doc_by_term_count))
 
     # Row-wise probabilities for words + features -> dot-product
-    p_w     = (np.sum(doc_by_term_count, axis=0) / count_w)
-    p_f     = (np.sum(result, axis=0) / count_f)
+    p_w     = np.sum(doc_by_term_count, axis=0) / count_w
+    p_f     = np.sum(result, axis=0) / count_f
 
     # Reshape (1D -> 2D)
     p_w = np.reshape(p_w, (-1, p_w.shape[0])).T
@@ -204,10 +207,10 @@ class Preprocess(object):
     about_to_log = np.divide(result / count_w, divisor)
     about_to_log[about_to_log == 0.0] = 1.0
     result = np.log2(about_to_log)
+    r, _, _ = svds(result, k=40)
+    return r
 
-    return result
-
-  def _build_k_words_before(self, k, events, doc_by_term_count, word_to_idx, num_threads=30):
+  def _build_k_words_before(self, k, events, doc_by_term_count, word_to_idx, num_threads=THREAD_COUNT):
     """
     Given a `k`, a list of event dictionaries `events`,
     a word-to-index mapping `word_to_idx`, and a
@@ -224,7 +227,7 @@ class Preprocess(object):
     """
     return self._build_k_words_near(k, events, doc_by_term_count, word_to_idx, self.tokenize, num_threads)
 
-  def _build_k_words_after(self, k, events, doc_by_term_count, word_to_idx, num_threads=30):
+  def _build_k_words_after(self, k, events, doc_by_term_count, word_to_idx, num_threads=THREAD_COUNT):
     """
     Given a `k`, a list of event dictionaries `events`,
     a word-to-index mapping `word_to_idx`, and a

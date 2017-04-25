@@ -22,7 +22,7 @@ class CategoryBar extends React.Component {
         const categories = resp.data.data.categories;
         this.setState({
           available: categories,
-          suggestions: categories
+          suggestions: categories.slice(0, 6)
         });
       });
   }
@@ -44,7 +44,7 @@ class CategoryBar extends React.Component {
       value: e.target.value,
       suggestions: this.state.available.filter((c) =>
         c.toLowerCase().startsWith(e.target.value.toLowerCase())
-      ),
+      ).slice(0, 6),
       suggestionIndex: 0
     });
   }
@@ -55,7 +55,7 @@ class CategoryBar extends React.Component {
   handleBlur (e) {
     this.setState({
       value: null,
-      suggestions: this.state.available,
+      suggestions: this.state.available.slice(0, 6),
       suggestionIndex: 0
     });
   }
@@ -118,7 +118,7 @@ class CategoryBar extends React.Component {
       this.props.onAdd(this.state.suggestions[i]);
       this.setState({
         value: null,
-        suggestions: this.state.available,
+        suggestions: this.state.available.slice(0, 6),
         suggestionIndex: 0
       });
     }
@@ -154,7 +154,7 @@ class CategoryBar extends React.Component {
             this.state.suggestions.length !== 0 &&
             <SuggestionList
               query={this.state.value}
-              suggestions={this.state.suggestions.slice(0, 6)}
+              suggestions={this.state.suggestions}
               selectedIndex={this.state.suggestionIndex}
               onItemClick={(i) => this.handleSelectSuggestion(i)}
               />

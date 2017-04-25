@@ -31,7 +31,7 @@ def search(q):
   close_words = []
   for f in app.preprocessed.words:
     lowered = f.lower()
-    if lowered.startswith(query):
+    if lowered.startswith(query) and lowered != query:
         prefixed_words.append(f)
     elif Levenshtein.distance(query, lowered) <= 1:
       close_words.append(f)

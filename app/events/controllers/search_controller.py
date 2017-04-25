@@ -10,6 +10,9 @@ from app.ml.pipeline import *
 event_schema = EventSchema()
 venue_schema = VenueSchema()
 
+# Thesaurus
+thes = Thesaurus(1.0, 0, 0, app.preprocessed)
+
 namespace = '/search'
 
 @events.route(namespace, methods=['GET'])
@@ -80,9 +83,6 @@ def search_rocchio():
   q          = request.args.get('q')
   relevant   = request.args.getlist('relevant') # ids
   irrelevant = request.args.getlist('irrelevant') # ids
-
-  # Thesaurus
-  thes = Thesaurus(0.35, 0.35, 0.3, app.preprocessed)
 
   # Update query by extending it with similar words
   q = thes.add_sim_words(q, 5)
