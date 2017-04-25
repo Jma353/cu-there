@@ -153,7 +153,6 @@ class CategoryBar extends React.Component {
             this.state.value !== null &&
             this.state.suggestions.length !== 0 &&
             <SuggestionList
-              retainQuery
               query={this.state.value}
               suggestions={this.state.suggestions.slice(0, 6)}
               selectedIndex={this.state.suggestionIndex}

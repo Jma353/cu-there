@@ -19,7 +19,12 @@ class Results extends React.Component {
    * When the component mounts, do stuff
    */
   componentDidMount () {
-    this.props.dispatch(actionCreators.didSearch(this.props.location.query.q));
+    this.props.dispatch(
+      actionCreators.didSearch(
+        this.props.location.query.q,
+        this.props.location.query.categs
+      )
+    );
   }
 
   /**

@@ -36,15 +36,15 @@ export function didSearch (query, categories) {
  * Did change relevance -> query again with modified
  * `relevant` / `irrelevant` information
  */
-export function didChangeRelevance (query, relevant, irrelevant, all) {
+export function didChangeRelevance (query, categories, relevant, irrelevant, all) {
   return {
     types: ['DID_CHANGE_RELEVANCE_REQUEST', 'DID_CHANGE_RELEVANCE_SUCCESS', 'DID_CHANGE_RELEVANCE_FAILURE'],
     promise: () => {
       let relS = relevant.map((r, i) => { return '&relevant=' + r; });
       let irrelS = irrelevant.map((ir, i) => { return '&irrelevant=' + ir; });
       return axios.get(util.format(
-        '/search/rocchio?q=%s%s%s',
-        encodeURIComponent(query), relS, irrelS))
+        '/search/rocchio?q=%s%s%s&categs=%s',
+        encodeURIComponent(query), relS, irrelS, categories))
         .then(resp => {
           return Promise.resolve({
             query: query,
