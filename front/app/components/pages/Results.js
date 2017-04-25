@@ -36,7 +36,10 @@ class Results extends React.Component {
 
     return (
       <div>
-        <NavBar query={this.props.location.query.q} />
+        <NavBar
+          query={this.props.location.query.q}
+          categories={this.props.location.query.categs.split(',')}
+          />
         <div className='results-header'>
           <p>{`Showing ${Object.keys(response.venues).length} venues`}</p>
         </div>

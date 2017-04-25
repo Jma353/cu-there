@@ -28,7 +28,7 @@ class Search extends React.Component {
       value: this.props.initialValue,
       suggestions: [],
       suggestionIndex: -1,
-      categories: []
+      categories: this.props.initialCategories || []
     };
   }
 
@@ -96,7 +96,7 @@ class Search extends React.Component {
    * Handle submission of search query
    */
   handleSubmit (event) {
-    if (this.state.value) window.location.href = `/results?q=${this.state.value}`;
+    if (this.state.value) window.location.href = `/results?q=${this.state.value}&categs=${this.state.categories}`;
   }
 
   /**
@@ -157,10 +157,31 @@ class Search extends React.Component {
   /**
    * Handle unfocusing search
    */
-  handleBlur () {
+  handleBlur (e) {
+    console.log(e);
     this.setState({
       suggestions: [],
       suggestionIndex: -1
+    });
+  }
+
+  /**
+   * Handle add category
+   */
+  handleCategoryAdd (c) {
+    this.setState({
+      categories: this.state.categories.concat([c])
+    });
+  }
+
+  /**
+   * Handle add category
+   */
+  handleCategoryDelete (i) {
+    const { categories } = this.state;
+    categories.splice(i, 1);
+    this.setState({
+      categories: categories
     });
   }
 
@@ -170,7 +191,7 @@ class Search extends React.Component {
   render () {
     const buttonProps = {
       className: 'submit fa fa-search',
-      onClick: this.handleSubmit
+      onClick: () => this.handleSubmit()
     };
 
     const submitButton = this.props.light
@@ -187,7 +208,7 @@ class Search extends React.Component {
             placeholder={'e.g. A tech talk hosted by ACSU'}
             className='bar'
             onKeyDown={(e) => this.handleKeyDown(e)}
-            onBlur={() => this.handleBlur()}
+            onBlur={(e) => this.handleBlur(e)}
             />
           {/* Submit button */}
           {submitButton}
@@ -203,7 +224,8 @@ class Search extends React.Component {
           categories={this.state.categories}
           availableCategories={this.props.availableCategories}
           onDelete={(i) => this.handleDelete(i)}
-          onAdd={(c) => this.onAdd(c)}
+          onAdd={(c) => this.handleCategoryAdd(c)}
+          onCategoryDelete={(i) => this.handleCategoryDelete(i)}
           />
       </div>
     );
