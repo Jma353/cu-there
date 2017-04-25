@@ -1,0 +1,61 @@
+@import 'variables';
+
+.category-bar {
+  color: white;
+  display: flex;
+
+  .category-label {
+    float: left;
+    padding-right: 8px;
+    height: 100%;
+    margin: auto 0;
+    font-weight: 700;
+  }
+
+  ul {
+    list-style-type: none;
+    height: 100%;
+    margin: 0;
+    padding: 4px;
+    overflow: hidden;
+  }
+
+  li {
+    float: left;
+    margin: 4px;
+    padding: 6px 0px 6px 6px;
+    background-color: $color-5;
+    border-radius: $border-radius;
+
+    span {
+      padding-right: 2px;
+      font-weight: 500;
+    }
+
+    button {
+      cursor: pointer;
+      border: none;
+      background-color: transparent;
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    button:hover {
+      color: white;
+    }
+  }
+
+  .category-add {
+    cursor: pointer;
+    padding: 6px 6px 6px 0px;
+    background-color: rgba(255, 255, 255, 0.1);;
+
+    button {
+      cursor: inherit;
+      color: white;
+    }
+  }
+
+  .category-add:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+}

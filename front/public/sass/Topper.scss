@@ -31,7 +31,7 @@
 
 .topper-search {
   display: flex;
-  height: 50px;
+  height: 110px;
   padding: 40px;
   @include respond-to(handhelds) { width: 80%; }
   @include respond-to(medium-screens) { width: 80%; }

@@ -3,8 +3,7 @@
 .navbar-container {
   display: flex;
   background: $color-3;
-  align-items: center;
-  height: 65px;
+  align-items: baseline;
   padding: 0% 10%;
 }
 
@@ -23,6 +22,7 @@
 
 .search-item {
   display: flex;
+  padding-top: 16px;
   height: 60%;
   flex-basis: 80%;
   justify-content: flex-start;
