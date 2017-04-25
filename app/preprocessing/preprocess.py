@@ -10,6 +10,8 @@ import os
 import json
 import re
 
+THREAD_COUNT = 5
+
 class Preprocess(object):
   """
     Object driving construction of and access to all required
@@ -208,7 +210,7 @@ class Preprocess(object):
     r, _, _ = svds(result, k=40)
     return r
 
-  def _build_k_words_before(self, k, events, doc_by_term_count, word_to_idx, num_threads=30):
+  def _build_k_words_before(self, k, events, doc_by_term_count, word_to_idx, num_threads=THREAD_COUNT):
     """
     Given a `k`, a list of event dictionaries `events`,
     a word-to-index mapping `word_to_idx`, and a
@@ -225,7 +227,7 @@ class Preprocess(object):
     """
     return self._build_k_words_near(k, events, doc_by_term_count, word_to_idx, self.tokenize, num_threads)
 
-  def _build_k_words_after(self, k, events, doc_by_term_count, word_to_idx, num_threads=30):
+  def _build_k_words_after(self, k, events, doc_by_term_count, word_to_idx, num_threads=THREAD_COUNT):
     """
     Given a `k`, a list of event dictionaries `events`,
     a word-to-index mapping `word_to_idx`, and a
