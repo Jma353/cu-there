@@ -26,7 +26,7 @@ def search():
     categs=[], # TODO: fill with user input
     events=app.preprocessed.events,
     doc_by_term=app.preprocessed.doc_by_term,
-    tfidf_vec=app.preprocessed.tfidf_vec,
+    count_vec=app.preprocessed.count_vec,
     categ_by_term=app.preprocessed.categ_by_term,
     categ_name_to_idx=app.preprocessed.categ_name_to_idx
   )
@@ -79,7 +79,7 @@ def search_rocchio():
     doc_by_term=app.preprocessed.doc_by_term,
     relevant=relevant,
     irrelevant=irrelevant,
-    tfidf_vec=app.preprocessed.tfidf_vec,
+    count_vec=app.preprocessed.count_vec,
     categ_by_term=app.preprocessed.categ_by_term,
     categ_name_to_idx=app.preprocessed.categ_name_to_idx
   )
