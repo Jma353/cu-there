@@ -23,6 +23,29 @@ class Results extends React.Component {
   }
 
   /**
+   * Format time to 12 hour system
+   */
+  formatTime (times) {
+    var formattedTimes = [];
+
+    for (var i = 0; i < times.length; i++) {
+      var timeComps = times[i].split(":");
+      var hour = timeComps[0];
+      var min = timeComps[1];
+      var ampm = (hour >= 12) ? 'PM' : 'AM';
+      hour = hour % 12;
+      hour = hour ? hour : 12;
+      var time = hour + ':' + min + ' ' + ampm;
+
+      if (!formattedTimes.includes(time)) {
+        formattedTimes.push(time);
+      }
+    }
+
+    return (formattedTimes);
+  }
+
+  /**
    * Render
    */
   render () {
@@ -52,7 +75,7 @@ class Results extends React.Component {
             </div>
             */}
             {times.length !== 0 ? <div className='result-times'>
-              <TextCardList data={times} title='Suggest Times' />
+              <TextCardList data={this.formatTime(times)} title='Suggested Times' />
             </div> : null}
           </div>
           <VenueDetailList data={response.venues} title='Venues' />
