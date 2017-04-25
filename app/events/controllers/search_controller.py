@@ -25,9 +25,6 @@ def search():
   q = '' if request.args.get('q') is None else request.args.get('q')
   categs = [] if request.args.get('categs') is None else request.args.get('categs').split(",")
 
-  # Thesaurus
-  thes = Thesaurus(0.35, 0.35, 0.3, app.preprocessed)
-
   # Update query by extending it with similar words
   q = thes.add_sim_words(q, 5)
 
