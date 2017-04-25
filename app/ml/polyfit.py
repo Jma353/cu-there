@@ -1,6 +1,7 @@
 import numpy as np
 
 DEGREE = 2
+SMOOTHING = 0.01
 
 def add_anchors(train_set):
   """ Adds 'anchor' points of value 0 at the min and max values
@@ -64,7 +65,7 @@ def generate_weights(train_set):
     sum_y=sum_y,
     med_x=med_x
   )
-  w.append(ccs_0)
+  w.append(ccs_0 + SMOOTHING)
   
   # Middle section of the dataset
 
@@ -85,7 +86,7 @@ def generate_weights(train_set):
       sum_y=sum_y,
       med_x=med_x
     )
-    w.append((ccs_left+ccs_right)/2)
+    w.append((ccs_left+ccs_right)/2 + SMOOTHING)
     
   # Last data point
   
@@ -97,7 +98,7 @@ def generate_weights(train_set):
     sum_y=sum_y,
     med_x=med_x
   )
-  w.append(ccs_last)
+  w.append(ccs_last+SMOOTHING)
   
   return w
 
