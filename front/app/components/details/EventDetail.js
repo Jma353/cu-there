@@ -66,6 +66,13 @@ class EventDetail extends React.Component {
   }
 
   /**
+   * Set text to 'None' if empty
+   */
+  setDefaultText (text) {
+    return (text ? text : "None");
+  }
+
+  /**
    * Render
    */
   render () {
@@ -94,15 +101,22 @@ class EventDetail extends React.Component {
           {/* Stats */}
           <div className='event-detail-stats'>
             {'Attending: ' + this.props.data.attending + '\n'}
+            <br/>
             {'No Reply: ' + this.props.data.noreply + '\n'}
+            <br/>
             {'Declined: ' + this.props.data.declined + '\n'}
+            <br/>
             {'Maybe: ' + this.props.data.maybe}
           </div>
-          {/* Similar Tags */}
-          <div className='event-detail-stats'>
-            {'Similar Words: ' + this.props.data.sim_words.join(', ') + '\n'}
-            {'Similar Categories: ' + this.props.data.sim_categs}
+          {/* Similar Words */}
+          <div className='event-detail-sim-words'>
+            {'Related Words: ' + this.setDefaultText(this.props.data.sim_words.join(', '))}
           </div>
+          {/* Similar Categories */}
+          <div className='event-detail-sim-words'>
+            {'Related Categories: ' + this.setDefaultText(this.props.data.sim_categs)}
+          </div>
+
         </div>
         <button
           className='button event-detail-dismiss fa fa-times'
