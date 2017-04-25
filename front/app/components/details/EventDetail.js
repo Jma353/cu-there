@@ -46,6 +46,26 @@ class EventDetail extends React.Component {
   }
 
   /**
+   * Format date
+   */
+  formatDate (d) {
+    var date = new Date(d)
+    var hours = date.getHours()
+    var mins = date.getMinutes()
+    var ampm = (hours >= 12) ? 'pm' : 'am';
+    hours = hours % 12;
+    hours = hours ? hours : 12;
+    mins = (mins < 10) ? '0' + mins : mins;
+    var time = hours + ':' + mins + ' ' + ampm;
+
+    var monthNames = ["January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"
+    ];
+
+    return (monthNames[date.getMonth()] + ' ' + date.getDate() + ', ' + date.getFullYear() + ' ' + time);
+  }
+
+  /**
    * Render
    */
   render () {
@@ -65,7 +85,7 @@ class EventDetail extends React.Component {
           </div>
           {/* Date */}
           <div className='event-detail-date'>
-            <p>{this.props.data.start_time} - {this.props.data.start_time}</p>
+            <p>{this.formatDate(this.props.data.start_time)} - {this.formatDate(this.props.data.end_time)}</p>
           </div>
           {/* Description */}
           <div className='event-detail-description'>
