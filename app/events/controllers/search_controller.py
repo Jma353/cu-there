@@ -20,8 +20,7 @@ def search():
   """
   # Grab the parameters
   q = '' if request.args.get('q') is None else request.args.get('q')
-  categs = [] if request.args.get('categs') is None else request.args.get('categs')
-  print 'request', request.args
+  categs = [] if request.args.get('categs') is None else request.args.get('categs').split(",")
 
   # Thesaurus
   thes = Thesaurus(0.35, 0.35, 0.3, app.preprocessed)
@@ -96,7 +95,7 @@ def search_rocchio():
   # IR, get events
   ir_engine = IREngine(
     query=q,
-    categs=[], # TODO: fill with user input
+    categs=categs,
     events=app.preprocessed.events,
     doc_by_term=app.preprocessed.doc_by_term,
     relevant=relevant,
