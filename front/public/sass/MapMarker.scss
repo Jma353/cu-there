@@ -11,3 +11,25 @@
   background-color: $color-4;
   text-align: center;
 }
+
+.map-marker-tool-tip {
+  visibility: hidden;
+  width: 120px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -60px;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.map-marker:hover .map-marker-tool-tip {
+  visibility: visible;
+  opacity: 1;
+}

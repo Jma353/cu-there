@@ -27,10 +27,12 @@ class Map extends React.Component {
    * Generate a map marker
    */
   generateMapMarker (location) {
+    console.log(location);
     return <MapMarker
       lat={location.latitude}
       lng={location.longitude}
-      key={location.latitude + ':' + location.longitude} />;
+      key={location.latitude + ':' + location.longitude}
+      data={location.venues} />;
   }
 
   /**
@@ -41,7 +43,30 @@ class Map extends React.Component {
       lat: this.mean(this.props.locations.map(l => { return l.latitude; })) || 42.447605,
       lng: this.mean(this.props.locations.map(l => { return l.longitude; })) || -76.484878
     };
-    let markers = this.props.locations.map(this.generateMapMarker);
+
+    // Results -> cluster events by location
+    let results = {};
+    for (let i = 0; i < this.props.locations.length; i++) {
+      let l = this.props.locations[i];
+      let k = l.latitude + ':' + l.longitude;
+      if (results[k]) {
+        results[k].venues.push(l.data);
+      } else {
+        results[k] = {};
+        results[k].latitude = l.latitude;
+        results[k].longitude = l.longitude;
+        results[k].venues = [];
+        results[k].venues.push(l.data);
+      }
+    }
+
+    // Convert to array
+    let locales = [];
+    for (let k in results) {
+      locales.push(results[k]);
+    }
+
+    let markers = locales.map(this.generateMapMarker);
     return (
       <div className='map'>
         <GoogleMapReact

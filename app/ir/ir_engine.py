@@ -101,7 +101,7 @@ class IREngine(object):
       sim_terms = sorted(prod_list, key=lambda x: -x[1])
 
       # Get similar category
-      sim_categ = self.events[doc_id]['category']  if self.events[doc_id]['category'] in self.categs else ""
+      sim_categ = self.events[doc_id]['category'] if self.events[doc_id]['category'] in self.categs else ""
 
       event_id = self.events[doc_id]["id"]
       event_sim_words = [self.idx_to_term[i] for i,_ in sim_terms]

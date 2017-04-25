@@ -30,7 +30,7 @@ class VenueDetailList extends React.Component {
   render () {
     let details = this.props.data.map(this.generateDetail);
     let locations = this.props.data.map(d => {
-      return {latitude: d.latitude, longitude: d.longitude};
+      return {latitude: d.latitude, longitude: d.longitude, data: d};
     });
     return (
       <div className='venue-detail-list-container'>
@@ -40,7 +40,7 @@ class VenueDetailList extends React.Component {
             {details}
           </div>
           <div className='venue-detail-list-map'>
-            <Map locations={locations} zoom={11} />
+            <Map locations={locations} zoom={14} />
           </div>
         </div>
       </div>
