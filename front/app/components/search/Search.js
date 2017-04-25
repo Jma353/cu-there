@@ -180,7 +180,7 @@ class Search extends React.Component {
             onChange={(e) => this.handleChange(e)}
             placeholder={'e.g. A tech talk hosted by ACSU'}
             className='bar'
-            onKeyDown={() => this.handleKeyDown()}
+            onKeyDown={(e) => this.handleKeyDown(e)}
             onBlur={() => this.handleBlur()}
             />
           {/* Submit button */}
@@ -189,7 +189,7 @@ class Search extends React.Component {
             ? <SuggestionList
               query={this.state.value}
               suggestions={this.state.suggestions}
-              suggestionIndex={this.state.suggestionIndex}
+              selectedIndex={this.state.suggestionIndex}
               onItemClick={(i) => this.handleSelectSuggestion(i)}
               /> : null}
         </div>
