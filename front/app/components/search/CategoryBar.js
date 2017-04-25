@@ -8,7 +8,7 @@ class CategoryBar extends React.Component {
   componentDidMount () {
     axios.get('/categories')
       .then(resp => {
-        console.log(resp.data);
+        // TODO
       });
   }
 
