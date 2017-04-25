@@ -80,10 +80,10 @@ def search_rocchio():
   q          = request.args.get('q')
   relevant   = request.args.getlist('relevant') # ids
   irrelevant = request.args.getlist('irrelevant') # ids
+  categs = [] if request.args.get('categs') is None else request.args.get('categs').split(",")
 
   # Update query by extending it with similar words
   q = thes.add_sim_words(q, 5)
-
   print 'Relevant IDs:'
   print relevant
   print 'Irrelevant IDs:'
