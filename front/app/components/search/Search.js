@@ -25,7 +25,7 @@ class Search extends React.Component {
   constructor (props) {
     super(props);
     this.state = {
-      value: this.props.initialValue,
+      value: this.props.initialValue || '',
       suggestions: [],
       suggestionIndex: -1,
       categories: this.props.initialCategories || []
@@ -158,7 +158,6 @@ class Search extends React.Component {
    * Handle unfocusing search
    */
   handleBlur (e) {
-    e.preventDefault();
     this.setState({
       suggestions: [],
       suggestionIndex: -1
