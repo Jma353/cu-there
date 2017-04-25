@@ -5,14 +5,15 @@ import Promise from 'bluebird';
 /**
  * Did search for results with query `query
  */
-export function didSearch (query) {
+export function didSearch (query, categories) {
   return {
     types: ['DID_SEARCH_REQUEST', 'DID_SEARCH_SUCCESS', 'DID_SEARCH_FAILURE'],
     promise: () => {
-      return axios.get('/search?q=' + encodeURIComponent(query))
+      return axios.get(`/search?q=${encodeURIComponent(query)}&categs=${categories}`)
         .then(resp => {
           return Promise.resolve({
             query: query,
+            categories: categories,
             results: {
               response: {
                 venues: resp.data.data.venues,

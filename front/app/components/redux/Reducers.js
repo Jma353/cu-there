@@ -4,6 +4,7 @@
  */
 let initialSearchState = {
   query: '',
+  categories: [],
   results: {
     response: {
       venues: [],

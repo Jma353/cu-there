@@ -46,6 +46,33 @@ class EventDetail extends React.Component {
   }
 
   /**
+   * Format date
+   */
+  formatDate (d) {
+    var date = new Date(d)
+    var hours = date.getHours()
+    var mins = date.getMinutes()
+    var ampm = (hours >= 12) ? 'pm' : 'am';
+    hours = hours % 12;
+    hours = hours ? hours : 12;
+    mins = (mins < 10) ? '0' + mins : mins;
+    var time = hours + ':' + mins + ' ' + ampm;
+
+    var monthNames = ["January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"
+    ];
+
+    return (monthNames[date.getMonth()] + ' ' + date.getDate() + ', ' + date.getFullYear() + ' ' + time);
+  }
+
+  /**
+   * Set text to 'None' if empty
+   */
+  setDefaultText (text) {
+    return (text ? text : "None");
+  }
+
+  /**
    * Render
    */
   render () {
@@ -56,7 +83,7 @@ class EventDetail extends React.Component {
         </div>
         <div className='event-detail-text-container'>
           {/* Title */}
-          <a className='event-detail-title'  href={'https://www.facebook.com/events/' + this.props.data.id} target='_blank'>
+          <a className='event-detail-title' href={'https://www.facebook.com/events/' + this.props.data.id} target='_blank'>
             {this.props.data.name} - {this.props.data.category}
           </a>
           {/* Venue */}
@@ -65,7 +92,7 @@ class EventDetail extends React.Component {
           </div>
           {/* Date */}
           <div className='event-detail-date'>
-            <p>{this.props.data.start_time} - {this.props.data.start_time}</p>
+            <p>{this.formatDate(this.props.data.start_time)} - {this.formatDate(this.props.data.end_time)}</p>
           </div>
           {/* Description */}
           <div className='event-detail-description'>
@@ -73,11 +100,23 @@ class EventDetail extends React.Component {
           </div>
           {/* Stats */}
           <div className='event-detail-stats'>
-            {"Attending: " + this.props.data.attending + "\n"}
-            {"No Reply: " + this.props.data.noreply + "\n"}
-            {"Declined: " + this.props.data.declined + "\n"}
-            {"Maybe: " + this.props.data.maybe}
+            {'Attending: ' + this.props.data.attending}
+            <br/>
+            {'No Reply: ' + this.props.data.noreply}
+            <br/>
+            {'Declined: ' + this.props.data.declined}
+            <br/>
+            {'Maybe: ' + this.props.data.maybe}
           </div>
+          {/* Similar Words */}
+          <div className='event-detail-sim-words'>
+            {'Related Words: ' + this.setDefaultText(this.props.data.sim_words.join(', '))}
+          </div>
+          {/* Similar Categories */}
+          <div className='event-detail-sim-words'>
+            {'Related Categories: ' + this.setDefaultText(this.props.data.sim_categs)}
+          </div>
+
         </div>
         <button
           className='button event-detail-dismiss fa fa-times'

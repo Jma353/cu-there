@@ -3,6 +3,7 @@ import React from 'react';
 require('../../../public/sass/Search.scss');
 
 import SuggestionList from '../lists/SuggestionList';
+import CategoryBar from './CategoryBar';
 
 import LightButton from '../buttons/LightButton';
 require('../../../public/sass/LightButton.scss');
@@ -26,12 +27,9 @@ class Search extends React.Component {
     this.state = {
       value: this.props.initialValue,
       suggestions: [],
-      selectedIndex: -1
+      suggestionIndex: -1,
+      categories: this.props.initialCategories || []
     };
-    // Placeholders for now
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleKeyDown = this.handleKeyDown.bind(this);
   }
 
   componentDidMount () {
@@ -82,7 +80,7 @@ class Search extends React.Component {
       if (query === '') {
         this.setState({
           suggestions: [],
-          selectedIndex: -1
+          suggestionIndex: -1
         });
       } else {
         const req = {
@@ -98,36 +96,29 @@ class Search extends React.Component {
    * Handle submission of search query
    */
   handleSubmit (event) {
-    if (this.state.value) window.location.href = `/results?q=${this.state.value}`;
+    if (this.state.value) window.location.href = `/results?q=${this.state.value}&categs=${this.state.categories}`;
   }
 
   /**
    * Handle key down
    */
   handleKeyDown (event) {
-    const { selectedIndex, suggestions } = this.state;
+    const { suggestionIndex, suggestions } = this.state;
 
     if (event.keyCode === 37 || event.keyCode === 39) {
       this.setState({
         suggestions: [],
-        selectedIndex: -1
+        suggestionIndex: -1
       });
     }
 
     if (event.key === 'Enter') {
-      if (selectedIndex < 0) this.handleSubmit(event);
+      if (suggestionIndex < 0) this.handleSubmit(event);
       else {
-        const word = this.state.suggestions[selectedIndex] + ' ';
-        const lastSpaceIndex = this.state.value.lastIndexOf(' ') + 1;
-        const newValue = this.state.value.slice(0, lastSpaceIndex) + word;
-        this.setState({
-          value: newValue,
-          suggestions: [],
-          selectedIndex: -1
-        });
+        this.handleSelectSuggestion(suggestionIndex);
       }
     } else {
-      var newIndex = selectedIndex;
+      var newIndex = suggestionIndex;
       // Up
       if (event.keyCode === 38) {
         newIndex--;
@@ -144,9 +135,54 @@ class Search extends React.Component {
       if (newIndex >= suggestions.length) newIndex = suggestions.length - 1;
 
       this.setState({
-        selectedIndex: newIndex
+        suggestionIndex: newIndex
       });
     }
+  }
+
+  /**
+   * Handle suggestion selection by mouse or by keystroke
+   */
+  handleSelectSuggestion (i) {
+    const word = this.state.suggestions[i] + ' ';
+    const lastSpaceIndex = this.state.value.lastIndexOf(' ') + 1;
+    const newValue = this.state.value.slice(0, lastSpaceIndex) + word;
+    this.setState({
+      value: newValue,
+      suggestions: [],
+      suggestionIndex: -1
+    });
+  }
+
+  /**
+   * Handle unfocusing search
+   */
+  handleBlur (e) {
+    console.log(e);
+    this.setState({
+      suggestions: [],
+      suggestionIndex: -1
+    });
+  }
+
+  /**
+   * Handle add category
+   */
+  handleCategoryAdd (c) {
+    this.setState({
+      categories: this.state.categories.concat([c])
+    });
+  }
+
+  /**
+   * Handle add category
+   */
+  handleCategoryDelete (i) {
+    const { categories } = this.state;
+    categories.splice(i, 1);
+    this.setState({
+      categories: categories
+    });
   }
 
   /**
@@ -155,7 +191,7 @@ class Search extends React.Component {
   render () {
     const buttonProps = {
       className: 'submit fa fa-search',
-      onClick: this.handleSubmit
+      onClick: () => this.handleSubmit()
     };
 
     const submitButton = this.props.light
@@ -163,22 +199,34 @@ class Search extends React.Component {
       : <DarkButton {...buttonProps} />;
 
     return (
-      <div className='search'>
-        {/* The bar itself */}
-        <input type='text'
-          value={this.state.value}
-          onChange={this.handleChange}
-          placeholder={'e.g. A tech talk hosted by ACSU'}
-          className='bar'
-          onKeyDown={this.handleKeyDown} />
-        {/* Submit button */}
-        {submitButton}
-        {this.state.suggestions.length !== 0
-          ? <SuggestionList
-            query={this.state.value}
-            suggestions={this.state.suggestions}
-            selectedIndex={this.state.selectedIndex}
-            /> : null}
+      <div className='search-container'>
+        <div className='search'>
+          {/* The bar itself */}
+          <input type='text'
+            value={this.state.value}
+            onChange={(e) => this.handleChange(e)}
+            placeholder={'e.g. A tech talk hosted by ACSU'}
+            className='bar'
+            onKeyDown={(e) => this.handleKeyDown(e)}
+            onBlur={(e) => this.handleBlur(e)}
+            />
+          {/* Submit button */}
+          {submitButton}
+          {this.state.suggestions.length !== 0
+            ? <SuggestionList
+              query={this.state.value}
+              suggestions={this.state.suggestions}
+              selectedIndex={this.state.suggestionIndex}
+              onItemClick={(i) => this.handleSelectSuggestion(i)}
+              /> : null}
+        </div>
+        <CategoryBar
+          categories={this.state.categories}
+          availableCategories={this.props.availableCategories}
+          onDelete={(i) => this.handleDelete(i)}
+          onAdd={(c) => this.handleCategoryAdd(c)}
+          onCategoryDelete={(i) => this.handleCategoryDelete(i)}
+          />
       </div>
     );
   }
