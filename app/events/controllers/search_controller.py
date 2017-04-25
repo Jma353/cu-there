@@ -11,7 +11,7 @@ event_schema = EventSchema()
 venue_schema = VenueSchema()
 
 # Thesaurus
-thes = Thesaurus(0.6, 0.4, 0, app.preprocessed)
+thes = Thesaurus(1.0, 0, 0, app.preprocessed)
 
 namespace = '/search'
 
