@@ -26,10 +26,10 @@ def generate_weights(train_set):
     """ Normalized score crudely indicating how 'concave down' a pair of points is.
         If the points are before the median, we check how positive delta y is.
         If the points are after the median, we check how negative delta y is. """
-        if x1 < med_x:
-          return min((y2-y1)/(sum_y*1.0), 0)
-        else:
-          return min((y1-y2)/(sum_y*1.0), 0)
+    if x1 < med_x:
+      return min((y2-y1)/(sum_y*1.0), 0)
+    else:
+      return min((y1-y2)/(sum_y*1.0), 0)
   
   """ Generates weights for the polyfit. Computes a 'concavity contribution
       score' for each pair of points and weights points proportionally to the
@@ -89,4 +89,4 @@ def create_fit(train_set):
   """ Returns a numpy polyfit (polynomial) object. """
   adjusted_train_set = add_bump(add_anchors(train_set))
   weights = generate_weights(adjusted_train_set)
-  return np.poly1d(np.polyfit(adjusted_train_set[:,0], adjusted_train_set[:,1], w=weights, DEGREE))
+  return np.poly1d(np.polyfit(adjusted_train_set[:,0], adjusted_train_set[:,1], DEGREE, w=weights))
