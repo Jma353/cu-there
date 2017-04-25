@@ -1,6 +1,7 @@
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from nltk.stem.porter import PorterStemmer
 from collections import defaultdict
+from scipy.sparse.linalg import svds
 from Queue import Queue # Thread-safe, job queue
 import collections
 import numpy as np
@@ -11,7 +12,7 @@ import re
 
 class Preprocess(object):
   """
-  Object driving construction of and access to all required
+    Object driving construction of and access to all required
   preprocessed data-structures, matricies, and indexes needed
   for IR tasks like TFIDF, thesaurus-building, etc.
   """
@@ -22,13 +23,14 @@ class Preprocess(object):
     """
     self.events            = self._build_events_list()
     self.count_vec         = self._build_count_vec()
-    self.doc_by_term_count = self._build_doc_by_term_count(self.events, self.count_vec).toarray()
-    self.doc_by_term       = self._build_doc_by_term(self.doc_by_term_count)
+
+    doc_by_term_count = self._build_doc_by_term_count(self.events, self.count_vec).toarray()
+    self.doc_by_term       = self._build_doc_by_term(doc_by_term_count)
     self.words             = self.count_vec.get_feature_names()
     self.word_to_idx       = self._build_word_to_idx_dict(self.words)
-    self.coocurrence       = self._build_cooccurence(self.doc_by_term)
-    self.five_words_before = self._build_k_words_before(5, self.events, self.doc_by_term_count, self.word_to_idx)
-    self.five_words_after  = self._build_k_words_after(5, self.events, self.doc_by_term_count, self.word_to_idx)
+    # self.coocurrence       = self._build_cooccurence(self.doc_by_term)
+    # self.five_words_before = self._build_k_words_before(5, self.events, doc_by_term_count, self.word_to_idx)
+    self.five_words_after  = self._build_k_words_after(5, self.events, doc_by_term_count, self.word_to_idx)
     self.uniq_categs, self.categ_name_to_idx, self.categ_idx_to_name, self.categ_by_term = self._build_categ_by_term(self.events, self.doc_by_term)
     print 'Preprocessing done....'
 
