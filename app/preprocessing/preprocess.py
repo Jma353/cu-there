@@ -23,9 +23,9 @@ class Preprocess(object):
     """
     self.events            = self._build_events_list()
     self.count_vec         = self._build_count_vec()
-
     doc_by_term_count = self._build_doc_by_term_count(self.events, self.count_vec).toarray()
     self.doc_by_term       = self._build_doc_by_term(doc_by_term_count)
+    doc_by_term_count = np.sum(doc_by_term_count, axis=0)
     self.words             = self.count_vec.get_feature_names()
     self.word_to_idx       = self._build_word_to_idx_dict(self.words)
     # self.coocurrence       = self._build_cooccurence(self.doc_by_term)
@@ -193,7 +193,7 @@ class Preprocess(object):
     count_w = float(np.sum(doc_by_term_count))
 
     # Row-wise probabilities for words + features -> dot-product
-    p_w     = (np.sum(doc_by_term_count, axis=0) / count_w)
+    p_w     = doc_by_term_count / count_w
     p_f     = (np.sum(result, axis=0) / count_f)
 
     # Reshape (1D -> 2D)
