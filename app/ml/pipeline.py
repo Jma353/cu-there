@@ -51,10 +51,11 @@ class QuadraticModel(object):
     """
     test_values = self.test(test_set)
     
-    import matplotlib.pyplot as plt
-    plt.scatter([self.feature_func(event.start_time) for event in self.events], [event.attending for event in self.events])
-    plt.plot(test_set, test_values)
-    plt.show()
+    # TESTING CODE - do not uncomment in production 
+    #import matplotlib.pyplot as plt
+    #plt.scatter([self.feature_func(event.start_time) for event in self.events], [event.attending for event in self.events])
+    #plt.plot(test_set, test_values)
+    #plt.show()
     
     derivs = [(i, test_values[i] - test_values[i-1]) for i in xrange(1, len(test_values))]
     sorted_derivs = sorted(derivs, key=lambda t:math.fabs(t[1])) # This yields derivatives with smallest absolute value
