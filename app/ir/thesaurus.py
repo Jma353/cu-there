@@ -30,8 +30,15 @@ class Thesaurus(object):
   """
 
   def __init__(self, A, B, C, D, preprocessed):
+    """
+    Constructor
+    """
+    assert A + B + C + D == 1.0 # Must be true
     self.A = A
     self.B = B
     self.C = C
     self.D = D
     self.p = preprocessed
+
+
+  # TODO 
