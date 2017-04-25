@@ -100,11 +100,11 @@ class EventDetail extends React.Component {
           </div>
           {/* Stats */}
           <div className='event-detail-stats'>
-            {'Attending: ' + this.props.data.attending + '\n'}
+            {'Attending: ' + this.props.data.attending}
             <br/>
-            {'No Reply: ' + this.props.data.noreply + '\n'}
+            {'No Reply: ' + this.props.data.noreply}
             <br/>
-            {'Declined: ' + this.props.data.declined + '\n'}
+            {'Declined: ' + this.props.data.declined}
             <br/>
             {'Maybe: ' + this.props.data.maybe}
           </div>
