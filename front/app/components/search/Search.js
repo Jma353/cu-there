@@ -3,6 +3,7 @@ import React from 'react';
 require('../../../public/sass/Search.scss');
 
 import SuggestionList from '../lists/SuggestionList';
+import CategoryBar from './CategoryBar';
 
 import LightButton from '../buttons/LightButton';
 require('../../../public/sass/LightButton.scss');
@@ -26,7 +27,8 @@ class Search extends React.Component {
     this.state = {
       value: this.props.initialValue,
       suggestions: [],
-      selectedIndex: -1
+      suggestionIndex: -1,
+      categories: []
     };
     // Placeholders for now
     this.handleChange = this.handleChange.bind(this);
@@ -82,7 +84,7 @@ class Search extends React.Component {
       if (query === '') {
         this.setState({
           suggestions: [],
-          selectedIndex: -1
+          suggestionIndex: -1
         });
       } else {
         const req = {
@@ -105,22 +107,22 @@ class Search extends React.Component {
    * Handle key down
    */
   handleKeyDown (event) {
-    const { selectedIndex, suggestions } = this.state;
+    const { suggestionIndex, suggestions } = this.state;
 
     if (event.keyCode === 37 || event.keyCode === 39) {
       this.setState({
         suggestions: [],
-        selectedIndex: -1
+        suggestionIndex: -1
       });
     }
 
     if (event.key === 'Enter') {
-      if (selectedIndex < 0) this.handleSubmit(event);
+      if (suggestionIndex < 0) this.handleSubmit(event);
       else {
-        this.handleSelectSuggestion(selectedIndex);
+        this.handleSelectSuggestion(suggestionIndex);
       }
     } else {
-      var newIndex = selectedIndex;
+      var newIndex = suggestionIndex;
       // Up
       if (event.keyCode === 38) {
         newIndex--;
@@ -137,7 +139,7 @@ class Search extends React.Component {
       if (newIndex >= suggestions.length) newIndex = suggestions.length - 1;
 
       this.setState({
-        selectedIndex: newIndex
+        suggestionIndex: newIndex
       });
     }
   }
@@ -149,7 +151,7 @@ class Search extends React.Component {
     this.setState({
       value: newValue,
       suggestions: [],
-      selectedIndex: -1
+      suggestionIndex: -1
     });
   }
 
@@ -167,24 +169,32 @@ class Search extends React.Component {
       : <DarkButton {...buttonProps} />;
 
     return (
-      <div className='search'>
-        {/* The bar itself */}
-        <input type='text'
-          autoFocus
-          value={this.state.value}
-          onChange={this.handleChange}
-          placeholder={'e.g. A tech talk hosted by ACSU'}
-          className='bar'
-          onKeyDown={this.handleKeyDown} />
-        {/* Submit button */}
-        {submitButton}
-        {this.state.suggestions.length !== 0
-          ? <SuggestionList
-            query={this.state.value}
-            suggestions={this.state.suggestions}
-            selectedIndex={this.state.selectedIndex}
-            onItemClick={(i) => this.handleSelectSuggestion(i)}
-            /> : null}
+      <div className='search-container'>
+        <div className='search'>
+          {/* The bar itself */}
+          <input type='text'
+            autoFocus
+            value={this.state.value}
+            onChange={this.handleChange}
+            placeholder={'e.g. A tech talk hosted by ACSU'}
+            className='bar'
+            onKeyDown={this.handleKeyDown} />
+          {/* Submit button */}
+          {submitButton}
+          {this.state.suggestions.length !== 0
+            ? <SuggestionList
+              query={this.state.value}
+              suggestions={this.state.suggestions}
+              suggestionIndex={this.state.suggestionIndex}
+              onItemClick={(i) => this.handleSelectSuggestion(i)}
+              /> : null}
+        </div>
+        <CategoryBar
+          categories={this.state.categories}
+          availableCategories={this.props.availableCategories}
+          onDelete={(i) => this.handleDelete(i)}
+          onAdd={(c) => this.onAdd(c)}
+          />
       </div>
     );
   }

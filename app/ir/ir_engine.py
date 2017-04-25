@@ -108,7 +108,7 @@ class IREngine(object):
       event_sim_categs = sim_categ
       results.append((event_id, event_sim_words, event_sim_categs))
 
-    return [self.events[doc_id]["id"] for cs, doc_id in rocchio_categ_ranked_events]
+    return results
 
   def tokenize(self, text):
     """
