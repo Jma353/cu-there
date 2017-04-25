@@ -5,7 +5,6 @@ require('../../../public/sass/SuggestionList.scss');
 class SuggestionList extends React.Component {
   render () {
     const items = this.props.suggestions
-      .filter((s) => this.props.query !== s || this.props.retainQuery)
       .map((s, i) => {
         const className = i === this.props.selectedIndex
           ? 'selected'

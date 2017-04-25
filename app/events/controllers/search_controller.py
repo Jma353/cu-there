@@ -24,6 +24,7 @@ def search():
   # Grab the parameters
   q = '' if request.args.get('q') is None else request.args.get('q')
   categs = [] if request.args.get('categs') is None else request.args.get('categs')
+  print 'request', request.args
 
   # Update query by extending it with similar words
   q = thes.add_sim_words(q, 5)
