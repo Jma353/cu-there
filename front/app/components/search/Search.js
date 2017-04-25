@@ -158,7 +158,7 @@ class Search extends React.Component {
    * Handle unfocusing search
    */
   handleBlur (e) {
-    console.log(e);
+    e.preventDefault();
     this.setState({
       suggestions: [],
       suggestionIndex: -1

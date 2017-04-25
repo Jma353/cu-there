@@ -23,7 +23,7 @@ class SuggestionList extends React.Component {
         }
 
         return (
-          <li key={i} className={className} onClick={() => this.props.onItemClick(i)}>
+          <li key={i} className={className} onMouseDown={() => this.props.onItemClick(i)}>
             <span>{prefix.join(' ')} {lastWordStart}<b>{lastWordRemainder}</b></span>
           </li>
         );
