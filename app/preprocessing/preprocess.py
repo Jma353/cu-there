@@ -223,7 +223,7 @@ class Preprocess(object):
     Uses `num_threads` threads to increase the speed at which
     this preprocessing procedure occurs.
     """
-    self._build_k_words_near(k, events, doc_by_term_count, word_to_idx, self.tokenize, num_threads)
+    return self._build_k_words_near(k, events, doc_by_term_count, word_to_idx, self.tokenize, num_threads)
 
   def _build_k_words_after(self, k, events, doc_by_term_count, word_to_idx, num_threads=30):
     """

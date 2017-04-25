@@ -3,6 +3,7 @@ from . import *
 # IR / ML
 from app.events.models import queries
 from app.ir.ir_engine import *
+from app.ir.thesaurus import *
 from app.ml.pipeline import *
 
 # Serialization
@@ -19,6 +20,12 @@ def search():
   """
   # Grab the parameters
   q = '' if request.args.get('q') is None else request.args.get('q')
+
+  # Thesaurus
+  thes = Thesaurus(0.35, 0.35, 0.3, app.preprocessed)
+
+  # Update query by extending it with similar words
+  q = thes.add_sim_words(q, 5)
 
   # IR, get events
   ir_engine = IREngine(
@@ -72,6 +79,12 @@ def search_rocchio():
   q          = request.args.get('q')
   relevant   = request.args.getlist('relevant') # ids
   irrelevant = request.args.getlist('irrelevant') # ids
+
+  # Thesaurus
+  thes = Thesaurus(0.35, 0.35, 0.3, app.preprocessed)
+
+  # Update query by extending it with similar words
+  q = thes.add_sim_words(q, 5)
 
   print 'Relevant IDs:'
   print relevant
