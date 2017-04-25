@@ -7,20 +7,31 @@ def add_anchors(train_set):
       in the dataset to add concave-downness to the dataset. """
   min_x = min(train_set[:,0])
   max_x = max(train_set[:,0])
-  train_set[:,0] = [min_x - 1] + train_set[:,0] + [max_x + 1]
-  train_set[:,1] = [0] + train_set[:,1] + [0]
-  return train_set
+  new_train_set = np.asarray([np.asarray(item) for item in zip(
+    np.append(
+      np.append(
+        [min_x - 1],
+        train_set[:,0]
+      ), [max_x + 1]), 
+    np.append(
+      np.append([0],
+        train_set[:,1]
+      ), [0])
+  )])
+  return new_train_set
   
 def add_bump(train_set):
   """ Adds 'bump' of slightly elevated value at the median value
       in the dataset to add concave-downness to the dataset. """
   median_x = train_set[len(train_set[:,0])/2, 0]
   median_y = train_set[len(train_set[:,0])/2, 1]
-  train_set[:,0] = train_set[:,0] + [median_x]
-  train_set[:,1] = train_set[:,0] + [(median_y * 1.5) + 1]
-  return train_set
+  new_train_set = np.asarray([np.asarray(item) for item in zip(train_set[:,0] + [median_x], train_set[:,1] + [(median_y * 1.5) + 1])])
+  return new_train_set
   
 def generate_weights(train_set):
+  """ Generates weights for the polyfit. Computes a 'concavity contribution
+      score' for each pair of points and weights points proportionally to the
+      average of the concavity contribution score of the two pairs it is a part of."""
   
   def _concavity_contribution_score(x1, y1, x2, y2, sum_y, med_x):
     """ Normalized score crudely indicating how 'concave down' a pair of points is.
@@ -30,10 +41,7 @@ def generate_weights(train_set):
       return min((y2-y1)/(sum_y*1.0), 0)
     else:
       return min((y1-y2)/(sum_y*1.0), 0)
-  
-  """ Generates weights for the polyfit. Computes a 'concavity contribution
-      score' for each pair of points and weights points proportionally to the
-      average of the concavity contribution score of the two pairs it is a part of."""
+
   w = []
   
   sum_y = sum(train_set[:,1])
@@ -90,3 +98,5 @@ def create_fit(train_set):
   adjusted_train_set = add_bump(add_anchors(train_set))
   weights = generate_weights(adjusted_train_set)
   return np.poly1d(np.polyfit(adjusted_train_set[:,0], adjusted_train_set[:,1], DEGREE, w=weights))
+  
+print add_anchors(np.asarray([[1,2], [2,3], [3,2]]))
