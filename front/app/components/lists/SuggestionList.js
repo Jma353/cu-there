@@ -11,7 +11,7 @@ class SuggestionList extends React.Component {
       prefix.splice(-1);
 
       return (
-        <li key={i} className={className}>
+        <li key={i} className={className} onClick={() => this.props.onItemClick(i)}>
           <span>{prefix.join(' ')} <b>{s}</b></span>
         </li>
       );
