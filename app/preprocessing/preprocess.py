@@ -210,7 +210,7 @@ class Preprocess(object):
     about_to_log = np.divide(result / count_w, divisor)
     about_to_log[about_to_log == 0.0] = 1.0
     result = np.log2(about_to_log)
-    r, _, _ = svds(result, k=40)
+    r, _, _ = svds(result, k=20)
     return r
 
   def _build_k_words_before(self, k, events, term_counts, word_to_idx, num_threads=THREAD_COUNT):
