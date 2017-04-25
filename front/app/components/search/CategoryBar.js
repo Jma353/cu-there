@@ -53,11 +53,11 @@ class CategoryBar extends React.Component {
    * Handle unfocus input
    */
   handleBlur (e) {
-    this.setState({
-      value: null,
-      suggestions: this.state.available,
-      suggestionIndex: 0
-    });
+    // this.setState({
+    //   value: null,
+    //   suggestions: this.state.available,
+    //   suggestionIndex: 0
+    // });
   }
 
   /**
@@ -114,17 +114,19 @@ class CategoryBar extends React.Component {
    * Handle select suggestion
    */
   handleSelectSuggestion (i) {
-    this.props.onAdd(this.state.suggestions[i]);
-    this.setState({
-      value: null,
-      suggestions: this.state.available,
-      suggestionIndex: 0
-    });
+    if (this.state.suggestions.length !== 0) {
+      this.props.onAdd(this.state.suggestions[i]);
+      this.setState({
+        value: null,
+        suggestions: this.state.available,
+        suggestionIndex: 0
+      });
+    }
   }
 
   render () {
     const categories = this.props.categories.map((c, i) =>
-      <li key={i}>
+      <li className='category-item' key={i}>
         <span>{c}</span>
         <button className='fa fa-times' onClick={() => this.props.onCategoryDelete(i)} />
       </li>
@@ -132,12 +134,12 @@ class CategoryBar extends React.Component {
 
     const addCategory = this.state.value === null
       ? (
-        <li className='category-add' onClick={() => this.handleAdd()}>
+        <li className='category-item category-add' onClick={() => this.handleAdd()}>
           <button className='fa fa-plus' />
           <span>Add Category</span>
         </li>
       ) : (
-        <li className='category-add' onClick={() => this.handleAdd()}>
+        <li className='category-item category-add' onClick={() => this.handleAdd()}>
           <button className='fa fa-plus' />
           <input
             autoFocus
@@ -148,10 +150,12 @@ class CategoryBar extends React.Component {
             onBlur={(e) => this.handleBlur(e)}
             />
           {
-            this.state.value !== null && <SuggestionList
+            this.state.value !== null &&
+            this.state.suggestions.length !== 0 &&
+            <SuggestionList
               retainQuery
               query={this.state.value}
-              suggestions={this.state.suggestions}
+              suggestions={this.state.suggestions.slice(0, 6)}
               selectedIndex={this.state.suggestionIndex}
               onItemClick={(i) => this.handleSelectSuggestion(i)}
               />
@@ -162,7 +166,7 @@ class CategoryBar extends React.Component {
     return (
       <div className='category-bar'>
         <span className='category-label'>Categories:</span>
-        <ul>
+        <ul className='category-list'>
           {categories}
           {addCategory}
         </ul>

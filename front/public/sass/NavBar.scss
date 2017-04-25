@@ -1,6 +1,7 @@
 @import 'variables';
 
 .navbar-container {
+  z-index: 100;
   display: flex;
   background: $color-3;
   align-items: baseline;

@@ -27,6 +27,7 @@ class Results extends React.Component {
    */
   render () {
     const response = this.props.results.response;
+    const categories = this.props.location.query.categs;
     // Quick time formatting
     const times = response.times.map((time, i) => {
       return time + ':00';
@@ -38,7 +39,7 @@ class Results extends React.Component {
       <div>
         <NavBar
           query={this.props.location.query.q}
-          categories={this.props.location.query.categs.split(',')}
+          categories={categories && categories.split(',')}
           />
         <div className='results-header'>
           <p>{`Showing ${Object.keys(response.venues).length} venues`}</p>

@@ -12,13 +12,13 @@ class SuggestionList extends React.Component {
           : 'unselected';
 
         const prefix = this.props.query.split(' ');
-        const lastWord = prefix.splice(-1)[0];
+        const lastWord = prefix.splice(-1)[0].toLowerCase();
 
         var lastWordStart = null;
         var lastWordRemainder = s;
 
-        if (s.startsWith(lastWord)) {
-          lastWordStart = lastWord;
+        if (s.toLowerCase().startsWith(lastWord)) {
+          lastWordStart = s.slice(0, lastWord.length);
           lastWordRemainder = s.slice(lastWord.length);
         }
 
