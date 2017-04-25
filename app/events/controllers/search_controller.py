@@ -21,7 +21,6 @@ def search():
   # Grab the parameters
   q = '' if request.args.get('q') is None else request.args.get('q')
   categs = [] if request.args.get('categs') is None else request.args.get('categs')
-  print 'request', request.args
 
   # Thesaurus
   thes = Thesaurus(0.35, 0.35, 0.3, app.preprocessed)
