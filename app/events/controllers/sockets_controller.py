@@ -25,14 +25,15 @@ def search(q):
   # Grab session / query from the request
   q = ast.literal_eval(q)
   session = q['session']
-  query = q['query'].decode('utf-8')
+  query = q['query'].decode('utf-8').lower()
 
   prefixed_words = []
   close_words = []
   for f in app.preprocessed.words:
-    if f.startswith(query):
+    lowered = f.lower()
+    if lowered.startswith(query):
         prefixed_words.append(f)
-    elif Levenshtein.distance(query, f) <= 1:
+    elif Levenshtein.distance(query, lowered) <= 1:
       close_words.append(f)
 
   socketio.emit(session, prefixed_words + close_words, namespace='/search')

@@ -53,11 +53,11 @@ class CategoryBar extends React.Component {
    * Handle unfocus input
    */
   handleBlur (e) {
-    // this.setState({
-    //   value: null,
-    //   suggestions: this.state.available,
-    //   suggestionIndex: 0
-    // });
+    this.setState({
+      value: null,
+      suggestions: this.state.available,
+      suggestionIndex: 0
+    });
   }
 
   /**
