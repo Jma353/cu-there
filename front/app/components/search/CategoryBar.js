@@ -43,7 +43,7 @@ class CategoryBar extends React.Component {
     this.setState({
       value: e.target.value,
       suggestions: this.state.available.filter((c) =>
-        c.toLowerCase().startsWith(e.target.value)
+        c.toLowerCase().startsWith(e.target.value.toLowerCase())
       ),
       suggestionIndex: 0
     });
