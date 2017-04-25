@@ -93,7 +93,6 @@ class Preprocess(object):
     """
     # Get list of categories (repeats are intentional)
     categs = [event['category'] for event in events]
-
     # Dict format: {category: [events marked as category]}
     categ_to_event = defaultdict(list)
     for idx, categ in enumerate(categs):

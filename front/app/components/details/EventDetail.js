@@ -56,7 +56,7 @@ class EventDetail extends React.Component {
         </div>
         <div className='event-detail-text-container'>
           {/* Title */}
-          <a className='event-detail-title'  href={'https://www.facebook.com/events/' + this.props.data.id} target='_blank'>
+          <a className='event-detail-title' href={'https://www.facebook.com/events/' + this.props.data.id} target='_blank'>
             {this.props.data.name} - {this.props.data.category}
           </a>
           {/* Venue */}
@@ -73,15 +73,15 @@ class EventDetail extends React.Component {
           </div>
           {/* Stats */}
           <div className='event-detail-stats'>
-            {"Attending: " + this.props.data.attending + "\n"}
-            {"No Reply: " + this.props.data.noreply + "\n"}
-            {"Declined: " + this.props.data.declined + "\n"}
-            {"Maybe: " + this.props.data.maybe}
+            {'Attending: ' + this.props.data.attending + '\n'}
+            {'No Reply: ' + this.props.data.noreply + '\n'}
+            {'Declined: ' + this.props.data.declined + '\n'}
+            {'Maybe: ' + this.props.data.maybe}
           </div>
           {/* Similar Tags */}
           <div className='event-detail-stats'>
-            {"Similar Words: " + this.props.data.sim_words.join(", ") + "\n"}
-            {"Similar Categories: " + this.props.data.sim_categs}
+            {'Similar Words: ' + this.props.data.sim_words.join(', ') + '\n'}
+            {'Similar Categories: ' + this.props.data.sim_categs}
           </div>
         </div>
         <button
