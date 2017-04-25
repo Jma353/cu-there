@@ -1,11 +1,18 @@
 import React from 'react';
+import axios from 'axios';
 
 require('../../../public/sass/CategoryBar.scss');
 
 class CategoryBar extends React.Component {
 
+  componentDidMount () {
+    axios.get('/categories')
+      .then(resp => {
+        console.log(resp.data);
+      });
+  }
+
   handleAdd () {
-    
   }
 
   render () {

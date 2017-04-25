@@ -140,6 +140,9 @@ class Search extends React.Component {
     }
   }
 
+  /**
+   * Handle suggestion selection by mouse or by keystroke
+   */
   handleSelectSuggestion (i) {
     const word = this.state.suggestions[i] + ' ';
     const lastSpaceIndex = this.state.value.lastIndexOf(' ') + 1;
@@ -151,6 +154,9 @@ class Search extends React.Component {
     });
   }
 
+  /**
+   * Handle unfocusing search
+   */
   handleBlur () {
     this.setState({
       suggestions: [],

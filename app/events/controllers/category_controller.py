@@ -2,15 +2,16 @@ import json
 from . import *
 from app.events.models import queries
 
+event_schema = EventSchema()
+
 namespace = '/categories'
 
-@events.route(namespace + '/', methods=['GET'])
+@events.route(namespace, methods=['GET'])
 def get_categories():
   """
   Grab a list of all categories from database events
   """
   categories = app.preprocessed.uniq_categs
-  categories = [venue_schema.dump(c).data for c in categories]
 
   result = {
     'success': True,
@@ -18,5 +19,5 @@ def get_categories():
       'categories': categories
     }
   }
-
+  
   return jsonify(result)

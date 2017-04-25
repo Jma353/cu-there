@@ -8,3 +8,4 @@ events = Blueprint('events', __name__, url_prefix='')
 from controllers.venues_controller import *
 from controllers.search_controller import *
 from controllers.sockets_controller import *
+from controllers.category_controller import *
