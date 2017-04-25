@@ -29,36 +29,3 @@
   justify-content: center;
   border-radius: 0px $border-radius $border-radius 0px;
 }
-
-.suggestion-list {
-  z-index: 99999;
-  position: absolute;
-  top: 100%;
-  width: calc(100% - 60px);
-  margin-top: 1px;
-  border-radius: $border-radius;
-  background-color: white;
-  overflow: hidden;
-
-  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5);
-
-  ul {
-    padding: 0;
-    margin: 0;
-  }
-
-  li {
-    list-style: none;
-    padding: 10px;
-    height: 100%;
-    width: 100%;
-  }
-
-  b {
-    font-weight: 700;
-  }
-
-  .selected, li:hover {
-    background-color: $off-white;
-  }
-}
