@@ -33,9 +33,6 @@ class QuadraticModel(object):
     if self.events == []:
       self.events = events
     self.model = polyfit.create_fit(train_set)
-    #X, y = train_set[:, 0], train_set[:, 1]
-    #X = X.reshape(-1, 1)
-    #results = self.model.fit(X, y)
     return self.model
     
   def test(self, test_set):
@@ -117,6 +114,9 @@ def top_k_recommendations(events, k=10):
     return train_data(events, get_day)
 
   # Step 1: Group events by venue
+  
+  for i in xrange(0, len(events)):
+    events[i].attending = events[i].attending*math.e**(-1*i)
 
   venues_to_events = defaultdict(list)
   for event in events:
