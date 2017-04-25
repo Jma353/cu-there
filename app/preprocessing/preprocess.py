@@ -100,7 +100,7 @@ class Preprocess(object):
         categ_to_event.setdefault(categ,[]).append(idx)
 
     # Look-up data-structures
-    uniq_categs = [c for c in categ_to_event.keys()]
+    uniq_categs = [c for c in categ_to_event.keys() if c]
     categ_name_to_idx = {name:idx for idx, name in enumerate(uniq_categs)}
     categ_idx_to_name = {v:k for k,v in categ_name_to_idx.items()}
 
