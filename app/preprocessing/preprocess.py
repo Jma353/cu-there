@@ -25,7 +25,6 @@ class Preprocess(object):
     self.count_vec         = self._build_count_vec()
     doc_by_term_count = self._build_doc_by_term_count(self.events, self.count_vec).toarray()
     self.doc_by_term       = self._build_doc_by_term(doc_by_term_count)
-    doc_by_term_count = np.sum(doc_by_term_count, axis=0)
     self.words             = self.count_vec.get_feature_names()
     self.word_to_idx       = self._build_word_to_idx_dict(self.words)
     # self.coocurrence       = self._build_cooccurence(self.doc_by_term)
@@ -193,8 +192,8 @@ class Preprocess(object):
     count_w = float(np.sum(doc_by_term_count))
 
     # Row-wise probabilities for words + features -> dot-product
-    p_w     = doc_by_term_count / count_w
-    p_f     = (np.sum(result, axis=0) / count_f)
+    p_w     = np.sum(doc_by_term_count, axis=0) / count_w
+    p_f     = np.sum(result, axis=0) / count_f
 
     # Reshape (1D -> 2D)
     p_w = np.reshape(p_w, (-1, p_w.shape[0])).T
@@ -206,8 +205,8 @@ class Preprocess(object):
     about_to_log = np.divide(result / count_w, divisor)
     about_to_log[about_to_log == 0.0] = 1.0
     result = np.log2(about_to_log)
-
-    return result
+    r, _, _ = svds(result, k=40)
+    return r
 
   def _build_k_words_before(self, k, events, doc_by_term_count, word_to_idx, num_threads=30):
     """

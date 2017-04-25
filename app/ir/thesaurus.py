@@ -73,7 +73,7 @@ class Thesaurus(object):
     Cosine similarity in numpy, batched form
     """
     # Dot product
-    dot_prod = np.dot(vector, matrix)
+    dot_prod = np.dot(vector, matrix.T)
     # Norms
     vec_norm = np.linalg.norm(vector)
     mat_norm = np.linalg.norm(matrix, axis=1)
