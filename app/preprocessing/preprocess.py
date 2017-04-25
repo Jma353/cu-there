@@ -22,12 +22,13 @@ class Preprocess(object):
     """
     self.events            = self._build_events_list()
     self.count_vec         = self._build_count_vec()
-    self.doc_by_term_count = self._build_doc_by_term_count(self.events, self.count_vec)
+    self.doc_by_term_count = self._build_doc_by_term_count(self.events, self.count_vec).toarray()
     self.doc_by_term       = self._build_doc_by_term(self.doc_by_term_count)
     self.words             = self.count_vec.get_feature_names()
     self.word_to_idx       = self._build_word_to_idx_dict(self.words)
-    self.five_words_before = self._build_k_words_before(5, self.events, self.word_to_idx)
-    self.five_words_after  = self._build_k_words_after(5, self.events, self.word_to_idx)
+    self.coocurrence       = self._build_cooccurence(self.doc_by_term)
+    self.five_words_before = self._build_k_words_before(5, self.events, self.doc_by_term_count, self.word_to_idx)
+    self.five_words_after  = self._build_k_words_after(5, self.events, self.doc_by_term_count, self.word_to_idx)
     self.categ_name_to_idx, self.categ_idx_to_name, self.categ_by_term = self._build_categ_by_term(self.events, self.doc_by_term)
     print 'Preprocessing done....'
 
@@ -125,10 +126,11 @@ class Preprocess(object):
     """
     return {w:i for i,w in enumerate(words)}
 
-  def _build_k_words_near(self, k, events, word_to_idx, tokenize, num_threads):
+  def _build_k_words_near(self, k, events, doc_by_term_count, word_to_idx, tokenize, num_threads):
     """
     Given a `k`, a list of event dictionaries `events`,
-    and a word-to-index mapping `word_to_idx`,
+    a word-to-index mapping `word_to_idx`, and a
+    term-document matrix `doc_by_term_count` (freq count),
     build a matrix mapping words to the frequencies at
     which other words in the data-set appeared within k
     words near the particular word (before or after
@@ -183,12 +185,34 @@ class Preprocess(object):
     # Wait for everything to finish
     e_q.join()
 
+    # Convert PMI
+
+    # Sigma resultants
+    count_f = float(np.sum(result))
+    count_w = float(np.sum(doc_by_term_count))
+
+    # Row-wise probabilities for words + features -> dot-product
+    p_w     = (np.sum(doc_by_term_count, axis=0) / count_w)
+    p_f     = (np.sum(result, axis=0) / count_f)
+
+    # Reshape (1D -> 2D)
+    p_w = np.reshape(p_w, (-1, p_w.shape[0])).T
+    p_f = np.reshape(p_f, (-1, p_f.shape[0]))
+
+    # Find our answer
+    divisor = np.dot(p_w, p_f)
+    divisor[divisor == 0.0] = 1.0
+    about_to_log = np.divide(result / count_w, divisor)
+    about_to_log[about_to_log == 0.0] = 1.0
+    result = np.log2(about_to_log)
+
     return result
 
-  def _build_k_words_before(self, k, events, word_to_idx, num_threads=30):
+  def _build_k_words_before(self, k, events, doc_by_term_count, word_to_idx, num_threads=30):
     """
     Given a `k`, a list of event dictionaries `events`,
-    and a word-to-index mapping `word_to_idx`,
+    a word-to-index mapping `word_to_idx`, and a
+    term-document matrix `doc_by_term`,
     build a matrix mapping words to the frequencies at
     which other words in the data-set appeared within k
     words before that particular word...
@@ -199,12 +223,13 @@ class Preprocess(object):
     Uses `num_threads` threads to increase the speed at which
     this preprocessing procedure occurs.
     """
-    return self._build_k_words_near(k, events, word_to_idx, self.tokenize, num_threads)
+    self._build_k_words_near(k, events, doc_by_term_count, word_to_idx, self.tokenize, num_threads)
 
-  def _build_k_words_after(self, k, events, word_to_idx, num_threads=30):
+  def _build_k_words_after(self, k, events, doc_by_term_count, word_to_idx, num_threads=30):
     """
     Given a `k`, a list of event dictionaries `events`,
-    and a word-to-index mapping `word_to_idx`,
+    a word-to-index mapping `word_to_idx`, and a
+    term-document matrix `doc_by_term`,
     build a matrix mapping words to the frequencies at
     which other words in the data-set appeared within k
     words after that particular word...
@@ -215,7 +240,16 @@ class Preprocess(object):
     Uses `num_threads` threads to increase the speed at which
     this preprocessing procedure occurs.
     """
-    return self._build_k_words_near(k, events, word_to_idx, self.rev_tokenize, num_threads)
+    return self._build_k_words_near(k, events, doc_by_term_count, word_to_idx, self.rev_tokenize, num_threads)
+
+  def _build_cooccurence(self, doc_by_term):
+    """
+    Given a term-document-matrix `doc_by_term`,
+    develop a co-occurence matrix
+    """
+    bin_doc_by_term = doc_by_term.copy()
+    bin_doc_by_term[bin_doc_by_term > 0] = 1
+    return np.dot(bin_doc_by_term.T, bin_doc_by_term)
 
   def stem(self, terms):
     """
