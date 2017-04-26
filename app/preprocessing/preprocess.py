@@ -74,7 +74,7 @@ class Preprocess(object):
       tokenizer=self.tokenize,
       min_df=5,
       max_df=0.95,
-      max_features=5000,
+      max_features=4000,
       stop_words='english')
 
   def _build_doc_by_term_count(self, events, count_vec):
