@@ -28,7 +28,7 @@ class Preprocess(object):
     self.words             = self.count_vec.get_feature_names()
     self.word_to_idx       = self._build_word_to_idx_dict(self.words)
     term_counts = self._build_term_counts(self.events, self.count_vec)
-    self.coocurrence       = self._build_cooccurence(self.doc_by_term)
+    # self.coocurrence       = self._build_cooccurence(self.doc_by_term)
     self.five_words_before = self._build_k_words_before(5, self.events, term_counts, self.word_to_idx)
     self.five_words_after  = self._build_k_words_after(5, self.events, term_counts, self.word_to_idx)
     self.uniq_categs, self.categ_name_to_idx, self.categ_idx_to_name, self.categ_by_term = self._build_categ_by_term(self.events, self.doc_by_term)
@@ -38,7 +38,7 @@ class Preprocess(object):
     print sys.getsizeof(self.doc_by_term)
     print sys.getsizeof(self.words)
     print sys.getsizeof(self.word_to_idx)
-    print sys.getsizeof(self.coocurrence)
+    # print sys.getsizeof(self.coocurrence)
     print sys.getsizeof(self.five_words_before)
     print sys.getsizeof(self.five_words_after)
     print sys.getsizeof(self.categ_by_term)
@@ -203,7 +203,7 @@ class Preprocess(object):
     about_to_log = np.divide(result / count_w, divisor)
     about_to_log[about_to_log <= 0.0] = 1.0
     result = np.log2(about_to_log)
-    result, _, _ = svds(result)
+    result, _, _ = svds(result, k=40)
     return result
 
   def _build_k_words_before(self, k, events, term_counts, word_to_idx, num_threads=THREAD_COUNT):

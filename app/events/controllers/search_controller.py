@@ -11,12 +11,12 @@ event_schema = EventSchema()
 venue_schema = VenueSchema()
 
 # Variables for linear combo
-A = 0
-B = 0
-C = 1.0
+A = 0.5
+B = 0.5
+C = 0
 
 # Thesaurus
-# thes = Thesaurus(A, B, C, app.preprocessed)
+thes = Thesaurus(A, B, C, app.preprocessed)
 
 namespace = '/search'
 
@@ -31,7 +31,7 @@ def search():
   categs = [] if request.args.get('categs') is None else request.args.get('categs').split(",")
 
   # Update query by extending it with similar words
-  # q = thes.add_sim_words(q, 3)
+  q = thes.add_sim_words(q, 3)
 
   # IR, get events
   ir_engine = IREngine(
@@ -89,10 +89,6 @@ def search_rocchio():
 
   # Update query by extending it with similar words
   q = thes.add_sim_words(q, 5)
-  print 'Relevant IDs:'
-  print relevant
-  print 'Irrelevant IDs:'
-  print irrelevant
 
   # IR, get events
   ir_engine = IREngine(

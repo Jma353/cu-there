@@ -51,15 +51,15 @@ class Thesaurus(object):
     # Grab vectors
     five_after  = self.p.five_words_after[word_to_idx[word]]
     five_before = self.p.five_words_before[word_to_idx[word]]
-    coocurr     = self.p.coocurrence[word_to_idx[word]]
+    # coocurr     = self.p.coocurrence[word_to_idx[word]]
 
     # Result vectors
     alpha = self.batch_cosine_sim(five_after, self.p.five_words_after)
     beta  = self.batch_cosine_sim(five_before, self.p.five_words_before)
-    gamma = self.batch_cosine_sim(coocurr, self.p.coocurrence)
+    # gamma = self.batch_cosine_sim(coocurr, self.p.coocurrence)
 
     # Linear combination
-    result = self.A * alpha + self.B * beta + self.C * gamma
+    result = self.A * alpha + self.B * beta # + self.C * gamma
 
     # Grab all words' indexes not corresponding to `word`'s index
     ranking = [r for r in result.argsort()[::-1] if r != word_to_idx[word]]
