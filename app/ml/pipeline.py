@@ -14,46 +14,46 @@ import polyfit
 from utils import *
 
 class QuadraticModel(object):
-  """ Model for a polynomial of degree 2. 
+  """ Model for a polynomial of degree 2.
       feature_func is the function used to extract the independent variable from an event
       (for example, get_hour).
-  
+
       Contains a train, test, and find_peak function.
   """
   model = None
   feature_func = None
   events = []
-  
+
   def __init__(self, feature_func):
     self.feature_func = feature_func
     self.events = []
-  
+
   def train(self, train_set, events):
     """ Trains model. """
     if self.events == []:
       self.events = events
     self.model = polyfit.create_fit(train_set)
     return self.model
-    
+
   def test(self, test_set):
     """ Tests model. """
     if not self.model:
       return [0]*len(test_set)
     return self.model(test_set.reshape(-1, 1))
-    
+
   def find_peak(self, test_set):
     """
     Finds peak using first derivative test.
     Returns tuple (t, v) representing the peak time and peak value.
     """
     test_values = self.test(test_set)
-    
-    # TESTING CODE - do not uncomment in production 
+
+    # TESTING CODE - do not uncomment in production
     #import matplotlib.pyplot as plt
     #plt.scatter([self.feature_func(event.start_time) for event in self.events], [event.attending for event in self.events])
     #plt.plot(test_set, test_values)
     #plt.show()
-    
+
     derivs = [(i, test_values[i] - test_values[i-1]) for i in xrange(1, len(test_values))]
     sorted_derivs = sorted(derivs, key=lambda t:math.fabs(t[1])) # This yields derivatives with smallest absolute value
     index_of_peak = sorted_derivs[0][0]
@@ -81,19 +81,19 @@ def top_k_recommendations(events, k=10):
   def _bucketify(attendance_time):
     """ Helper function for returning average attendance for each discrete time value. """
     buckets = defaultdict(list)
-    
+
     for i in xrange(8, 24):
       for pair in attendance_time:
         if pair[0] == i:
           buckets[i].append(pair[1])
     mean_buckets = defaultdict(int)
-    
+
     for i in xrange(8, 24):
       if len(buckets[i]) > 0:
         mean_buckets[i] = sum(buckets[i])/len(buckets[i])
-        
+
     # We now have the max attendance for each time
-    
+
     mean_attendance_time = zip(mean_buckets.keys(), mean_buckets.values())
     return np.asarray(mean_attendance_time)
 
@@ -108,13 +108,13 @@ def top_k_recommendations(events, k=10):
   def hour_model_data(events):
     """Returns a training set for the hour component of TimeModel."""
     return train_data(events, get_hour)
-    
+
   def day_model_data(events):
-    """Returns a training set for the day-of-month component of TimeModel."""    
+    """Returns a training set for the day-of-month component of TimeModel."""
     return train_data(events, get_day)
 
   # Step 1: Group events by venue
-  
+
   for i in xrange(0, len(events)):
     events[i].attending = events[i].attending*math.e**(-1*i)
 
@@ -143,13 +143,13 @@ def top_k_recommendations(events, k=10):
   for venue_id in venues_to_models:
     model_bundle = venues_to_models[venue_id]
     hour_model, day_model = model_bundle["hour"], model_bundle["day"]
-    
+
     synthetic_time_data = np.asarray([i for i in xrange(0, 24)])
     synthetic_day_data = np.asarray([i for i in xrange(0, 31)])
-    
+
     peak_time, peak_time_value = hour_model.find_peak(synthetic_time_data)
     peak_day, peak_day_value = day_model.find_peak(synthetic_day_data)
-    
+
     time_location_pairs.append(TimeLocationPair(
       venue_id=venue_id,
       time=peak_time,
@@ -162,6 +162,7 @@ def top_k_recommendations(events, k=10):
   sorted_pairs = sorted(time_location_pairs, key=lambda t: t.attendance, reverse=True)
   return [pair.to_dict() for pair in sorted_pairs[:k]]
 
+"""
 if __name__ == "__main__":
   # Testing
   from app.events.models.venue import Venue
@@ -187,3 +188,4 @@ if __name__ == "__main__":
         rec["attendance"]
       )
     print
+"""

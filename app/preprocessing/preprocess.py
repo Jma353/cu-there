@@ -2,10 +2,10 @@ from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from nltk.stem.porter import PorterStemmer
 from collections import defaultdict
 from scipy.sparse.linalg import svds
-from Queue import Queue # Thread-safe, job queue
+# from Queue import Queue # Thread-safe, job queue
 import collections
 import numpy as np
-import threading
+# import threading
 import os
 import json
 import re
@@ -31,7 +31,7 @@ class Preprocess(object):
     term_counts = self._build_term_counts(self.events, self.count_vec)
     # self.coocurrence       = self._build_cooccurence(self.doc_by_term)
     # self.five_words_before = self._build_k_words_before(5, self.events, term_counts, self.word_to_idx)
-    self.five_words_after  = self._build_k_words_after(5, self.events, term_counts, self.word_to_idx)
+    # self.five_words_after  = self._build_k_words_after(5, self.events, term_counts, self.word_to_idx)
     self.uniq_categs, self.categ_name_to_idx, self.categ_idx_to_name, self.categ_by_term = self._build_categ_by_term(self.events, self.doc_by_term)
     print 'Preprocessing done....'
 
@@ -150,45 +150,26 @@ class Preprocess(object):
     """
     # Our goal matrix
     num_words = len(word_to_idx)
-    result = np.empty((num_words, num_words))
+    result = np.zeros((num_words, num_words), dtype=np.int8)
 
-    # Lock / function needed for atomic numpy increments
-    lock = threading.Lock()
+    # Increase a partiular cell
     def incr_result(i, j):
-      lock.acquire()
       result[i][j] += 1
-      lock.release()
 
-    # Queue of jobs we're gonna be pulling from
-    e_q = Queue()
-
-    # Describes work procedure of a thread handling this
+    # Describes work procedure of handling counting operation
     # counting operation
-    def worker():
-      while True:
-        event = e_q.get()
-        tokens = tokenize(event['description'])
-        q = collections.deque()
-        for w in tokens:
-          for w_1 in list(q):
-            if w in word_to_idx and w_1 in word_to_idx:
-              incr_result(word_to_idx[w], word_to_idx[w_1])
-          if len(q) == k: q.pop() # Pop from right if we currently have k
-          q.appendleft(w) # Append to left a new word w
-        e_q.task_done()
+    def worker(event):
+      tokens = tokenize(event['description'])
+      q = collections.deque()
+      for w in tokens:
+        for w_1 in list(q):
+          if w in word_to_idx and w_1 in word_to_idx:
+            incr_result(word_to_idx[w], word_to_idx[w_1])
+        if len(q) == k: q.pop() # Pop from right if we currently have k
+        q.appendleft(w) # Append to left a new word w
 
-    # Spawn those threads
-    for i in xrange(num_threads):
-      t = threading.Thread(target=worker)
-      t.daemon = True
-      t.start()
-
-    # Add event "jobs" to the queue
     for e in events:
-      e_q.put(e)
-
-    # Wait for everything to finish
-    e_q.join()
+      worker(e)
 
     # Convert PMI
 
@@ -197,21 +178,16 @@ class Preprocess(object):
     count_w = float(np.sum(term_counts))
 
     # Row-wise probabilities for words + features -> dot-product
-    p_w     = term_counts / count_w
-    p_f     = np.sum(result, axis=0) / count_f
+    p_w = term_counts / count_w
+    p_f = np.sum(result, axis=0) / count_f
 
     # Reshape (1D -> 2D)
     p_w = np.reshape(p_w, (-1, p_w.shape[0])).T
     p_f = np.reshape(p_f, (-1, p_f.shape[0]))
 
     # Find our answer
-    divisor = np.dot(p_w, p_f)
-    divisor[divisor == 0.0] = 1.0
-    about_to_log = np.divide(result / count_w, divisor)
-    about_to_log[about_to_log == 0.0] = 1.0
-    result = np.log2(about_to_log)
-    r, _, _ = svds(result, k=20)
-    return r
+    result, _, _ = svds(np.log2(np.where(np.divide(result / count_w, np.dot(p_w, p_f)) > 0, np.divide(result / count_w, np.dot(p_w, p_f)), 1.0)), k=20)
+    return result
 
   def _build_k_words_before(self, k, events, term_counts, word_to_idx, num_threads=THREAD_COUNT):
     """
