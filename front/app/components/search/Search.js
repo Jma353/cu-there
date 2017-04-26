@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios';
 
 require('../../../public/sass/Search.scss');
 
@@ -10,8 +11,6 @@ require('../../../public/sass/LightButton.scss');
 
 import DarkButton from '../buttons/DarkButton';
 require('../../../public/sass/DarkButton.scss');
-
-import getUUID from '../../utils/uuid';
 
 /**
  * Defines a generic Search component
@@ -30,36 +29,6 @@ class Search extends React.Component {
       suggestionIndex: -1,
       categories: this.props.initialCategories || []
     };
-  }
-
-  componentDidMount () {
-    const socket = require('socket.io-client')('/search');
-    const uuid = getUUID();
-
-    socket.on('connect', () => {
-      console.log('Search socket connected.');
-    });
-
-    socket.on('connect_error', (err) => {
-      console.log(err);
-    });
-
-    socket.on(uuid, (data) => {
-      this.setState({
-        suggestions: data.slice(0, 6)
-      });
-    });
-
-    socket.on('disconnect', () => {
-      console.log('Search socket disconnected.');
-    });
-
-    this._socket = socket;
-    this._uuid = uuid;
-  }
-
-  componentWillUnmount () {
-    this._socket.close();
   }
 
   /**
@@ -83,11 +52,12 @@ class Search extends React.Component {
           suggestionIndex: -1
         });
       } else {
-        const req = {
-          session: this._uuid,
-          query: query
-        };
-        this._socket.emit('search', JSON.stringify(req));
+        axios.get(`/info/autocomplete?query=${encodeURIComponent(query)}`)
+          .then(resp => {
+            this.setState({
+              suggestions: resp.data.data.suggestions.slice(0, 6)
+            });
+          });
       }
     }
   }
@@ -96,7 +66,9 @@ class Search extends React.Component {
    * Handle submission of search query
    */
   handleSubmit (event) {
-    if (this.state.value) window.location.href = `/results?q=${this.state.value}&categs=${this.state.categories}`;
+    if (this.state.value) {
+      window.location.href = `/results?q=${this.state.value}&categs=${this.state.categories}`;
+    }
   }
 
   /**

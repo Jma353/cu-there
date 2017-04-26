@@ -22,7 +22,7 @@ class Home extends React.Component {
    * When component mounts, make various IR requests
    */
   componentDidMount () {
-    axios.get('/venues')
+    axios.get('/info/venues')
     .then(resp => {
       this.setState({ venues: resp.data.data.venues });
     })

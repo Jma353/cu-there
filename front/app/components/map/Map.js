@@ -27,7 +27,6 @@ class Map extends React.Component {
    * Generate a map marker
    */
   generateMapMarker (location) {
-    console.log(location);
     return <MapMarker
       lat={location.latitude}
       lng={location.longitude}

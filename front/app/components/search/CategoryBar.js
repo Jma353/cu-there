@@ -17,7 +17,7 @@ class CategoryBar extends React.Component {
   }
 
   componentDidMount () {
-    axios.get('/categories')
+    axios.get('/info/categories')
       .then(resp => {
         const categories = resp.data.data.categories;
         this.setState({
@@ -105,9 +105,7 @@ class CategoryBar extends React.Component {
    * Handle submit
    */
   handleSubmit (e) {
-    if (this.state.suggestionIndex !== 0) {
-      console.log('yeah');
-    }
+    // TODO
   }
 
   /**

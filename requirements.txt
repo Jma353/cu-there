@@ -11,11 +11,9 @@ facebook-sdk==2.0.0
 Flask==0.12
 Flask-Migrate==2.0.3
 Flask-Script==2.0.5
-Flask-SocketIO==2.8.6
 Flask-SQLAlchemy==2.1
 gevent==1.2.1
 google-api-python-client==1.6.2
-greenlet==0.4.12
 gunicorn==19.7.1
 haversine==0.4.5
 httplib2==0.10.3
@@ -39,7 +37,6 @@ python-dateutil==2.6.0
 python-editor==1.0.3
 python-engineio==1.2.2
 python-Levenshtein==0.12.0
-python-socketio==1.7.4
 pytz==2017.2
 PyYAML==3.12
 requests==2.13.0
