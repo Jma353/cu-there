@@ -5,10 +5,6 @@ import json
 import math
 import numpy as np
 
-from sklearn.linear_model import Ridge, LinearRegression
-from sklearn.preprocessing import PolynomialFeatures
-from sklearn.pipeline import make_pipeline
-
 from app.events.models.event import Event
 import polyfit
 from utils import *
