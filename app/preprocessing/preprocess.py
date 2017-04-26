@@ -31,7 +31,7 @@ class Preprocess(object):
     term_counts = self._build_term_counts(self.events, self.count_vec)
     # self.coocurrence       = self._build_cooccurence(self.doc_by_term)
     self.five_words_before = self._build_k_words_before(5, self.events, term_counts, self.word_to_idx)
-    # self.five_words_after  = self._build_k_words_after(5, self.events, term_counts, self.word_to_idx)
+    self.five_words_after  = self._build_k_words_after(5, self.events, term_counts, self.word_to_idx)
     self.uniq_categs, self.categ_name_to_idx, self.categ_idx_to_name, self.categ_by_term = self._build_categ_by_term(self.events, self.doc_by_term)
     print 'Preprocessing done....'
 
