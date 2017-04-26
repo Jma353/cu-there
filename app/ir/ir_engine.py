@@ -52,7 +52,7 @@ class IREngine(object):
     self.print_top_events(ranked_events, 10)
 
     if not ranked_events:
-        print("No relevant events")
+      print("No relevant events")
 
     return [self.events[doc_id]["id"] for _, doc_id in ranked_events]
 
