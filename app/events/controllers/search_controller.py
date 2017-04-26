@@ -88,7 +88,11 @@ def search_rocchio():
   categs = [] if request.args.get('categs') is None else request.args.get('categs').split(",")
 
   # Update query by extending it with similar words
-  # q = thes.add_sim_words(q, 3)
+  q = thes.add_sim_words(q, 5)
+  print 'Relevant IDs:'
+  print relevant
+  print 'Irrelevant IDs:'
+  print irrelevant
 
   # IR, get events
   ir_engine = IREngine(
