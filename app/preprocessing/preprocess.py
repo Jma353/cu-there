@@ -33,6 +33,7 @@ class Preprocess(object):
     # self.five_words_after  = self._build_k_words_after(5, self.events, term_counts, self.word_to_idx)
     self.uniq_categs, self.categ_name_to_idx, self.categ_idx_to_name, self.categ_by_term = self._build_categ_by_term(self.events, self.doc_by_term)
 
+    print self.doc_by_term.shape
     print sys.getsizeof(self.events)
     print sys.getsizeof(self.count_vec)
     print sys.getsizeof(self.doc_by_term)
@@ -74,7 +75,7 @@ class Preprocess(object):
       tokenizer=self.tokenize,
       min_df=5,
       max_df=0.95,
-      max_features=5000,
+      max_features=3000,
       stop_words='english')
 
   def _build_doc_by_term_count(self, events, count_vec):
@@ -100,7 +101,6 @@ class Preprocess(object):
     """
     tfidf_transformer = TfidfTransformer()
     result = tfidf_transformer.fit_transform(count_matrix).toarray()
-    result.dtype = np.float32
     return result
 
   def _build_categ_by_term(self, events, doc_by_term):
