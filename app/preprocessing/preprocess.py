@@ -29,8 +29,8 @@ class Preprocess(object):
     self.word_to_idx       = self._build_word_to_idx_dict(self.words)
     term_counts = self._build_term_counts(self.events, self.count_vec)
     # self.coocurrence       = self._build_cooccurence(self.doc_by_term)
-    self.five_words_before = self._build_k_words_before(5, self.events, term_counts, self.word_to_idx)
-    self.five_words_after  = self._build_k_words_after(5, self.events, term_counts, self.word_to_idx)
+    # self.five_words_before = self._build_k_words_before(5, self.events, term_counts, self.word_to_idx)
+    # self.five_words_after  = self._build_k_words_after(5, self.events, term_counts, self.word_to_idx)
     self.uniq_categs, self.categ_name_to_idx, self.categ_idx_to_name, self.categ_by_term = self._build_categ_by_term(self.events, self.doc_by_term)
 
     print sys.getsizeof(self.events)
@@ -39,8 +39,8 @@ class Preprocess(object):
     print sys.getsizeof(self.words)
     print sys.getsizeof(self.word_to_idx)
     # print sys.getsizeof(self.coocurrence)
-    print sys.getsizeof(self.five_words_before)
-    print sys.getsizeof(self.five_words_after)
+    # print sys.getsizeof(self.five_words_before)
+    # print sys.getsizeof(self.five_words_after)
     print sys.getsizeof(self.categ_by_term)
 
     print 'Preprocessing done....'
@@ -74,7 +74,7 @@ class Preprocess(object):
       tokenizer=self.tokenize,
       min_df=5,
       max_df=0.95,
-      max_features=4000,
+      max_features=5000,
       stop_words='english')
 
   def _build_doc_by_term_count(self, events, count_vec):
