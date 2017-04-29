@@ -37,7 +37,7 @@ class QuadraticModel(object):
       return [0]*len(test_set)
     return self.model(test_set.reshape(-1, 1))
     
-  def generate_graph(synthetic_data):
+  def generate_graph(self, synthetic_data):
     test_values = self.test(synthetic_data)
     return [synthetic_data, test_values]
 
@@ -62,8 +62,9 @@ class QuadraticModel(object):
 class TimeLocationPair:
   """ Struct containing time, location, attendance """
 
-  def __init__(self, time, day_of_month, venue_id, attendance):
+  def __init__(self, time, time_graph, day_of_month, venue_id, attendance):
     self.time = time
+    self.time_graph = time_graph
     self.day_of_month = day_of_month
     self.venue_id = venue_id
     self.attendance = attendance
@@ -165,7 +166,6 @@ def top_k_recommendations(events, k=10):
   sorted_pairs = sorted(time_location_pairs, key=lambda t: t.attendance, reverse=True)
   return [pair.to_dict() for pair in sorted_pairs[:k]]
 
-"""
 if __name__ == "__main__":
   # Testing
   from app.events.models.venue import Venue
@@ -191,4 +191,3 @@ if __name__ == "__main__":
         rec["attendance"]
       )
     print
-"""
