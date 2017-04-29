@@ -70,6 +70,7 @@ def search():
     'data': {
       'venues': [venue_schema.dump(v).data for v in venues],
       'times': times,
+      'time_graphs': time_graphs,
       'tags': [],
       'events': events
     }
@@ -115,6 +116,7 @@ def search_rocchio():
   # Endpoint info
   times = [r['time'] for r in recs]
   venues = queries.get_venues([r['venue_id'] for r in recs])
+  time_graphs = [r['time_graph']for r in recs]
 
   print
   print 'Venues found:'
@@ -133,6 +135,7 @@ def search_rocchio():
     'data': {
       'venues': [venue_schema.dump(v).data for v in venues],
       'times': times,
+      'time_graphs': time_graphs,
       'tags': [],
       'events': events
     }
