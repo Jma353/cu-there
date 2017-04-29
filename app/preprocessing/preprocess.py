@@ -28,20 +28,9 @@ class Preprocess(object):
     self.words             = self.count_vec.get_feature_names()
     self.word_to_idx       = self._build_word_to_idx_dict(self.words)
     term_counts = self._build_term_counts(self.events, self.count_vec)
-    self.five_words_before = self._build_k_words_before(5, self.events, term_counts, self.word_to_idx)
-    gc.collect()
-    self.five_words_after  = self._build_k_words_after(5, self.events, term_counts, self.word_to_idx)
-    gc.collect()
+    self.five_words_before = self._build_k_words_before(5, self.events, term_counts, self.word_to_idx); gc.collect()
+    self.five_words_after  = self._build_k_words_after(5, self.events, term_counts, self.word_to_idx); gc.collect()
     self.uniq_categs, self.categ_name_to_idx, self.categ_idx_to_name, self.categ_by_term = self._build_categ_by_term(self.events, self.doc_by_term)
-
-    print sys.getsizeof(self.events)
-    print sys.getsizeof(self.count_vec)
-    print sys.getsizeof(self.doc_by_term)
-    print sys.getsizeof(self.words)
-    print sys.getsizeof(self.word_to_idx)
-    print sys.getsizeof(self.five_words_before)
-    print sys.getsizeof(self.five_words_after)
-    print sys.getsizeof(self.categ_by_term)
 
     print 'Preprocessing done....'
 
@@ -199,7 +188,6 @@ class Preprocess(object):
     # Find our answer
     # divisor is np.dot(p_w, p_f) + remove 0's / negatives
     # Remove 0's from log too
-    about_to_log = np.divide(result / count_w, np.where(np.dot(p_w, p_f) == 0.0, 1.0, np.dot(p_w, p_f)))
     result = np.log2(
       np.where(
         np.divide(result / count_w, np.where(
