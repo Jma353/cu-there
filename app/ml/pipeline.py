@@ -136,10 +136,13 @@ def top_k_recommendations(events, k=10):
   for event in events:
     venues_to_events[event.venue.id].append(event)
 
+  event_lengths = [len(venues_to_events[venue_id]) for venue_id in venues_to_events]
+  median_event_length = sorted(event_lengths)[len(event_lengths)/2]
+
   for venue_id in venues_to_events:
     events = venues_to_events[venue_id]
     for event in events:
-      event.attending *= (len(events))**(-0.5)
+      event.attending *= math.fabs((len(events) - median_event_length) + 0.1)**(-0.5)
 
   # Step 2: Create time models for each event group
 
