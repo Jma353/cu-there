@@ -52,9 +52,11 @@ class EventDetail extends React.Component {
   }
 
   /**
-   * Format date
+   * Format datetime
    */
-  formatDate (d) {
+  formatDateTime (d) {
+    if (!d) return null; // Date is null
+
     var date = new Date(d)
     var hours = date.getHours()
     var mins = date.getMinutes()
@@ -68,7 +70,32 @@ class EventDetail extends React.Component {
       "July", "August", "September", "October", "November", "December"
     ];
 
-    return (monthNames[date.getMonth()] + ' ' + date.getDate() + ', ' + date.getFullYear() + ' ' + time);
+    return ([monthNames[date.getMonth()] + ' ' + date.getDate() + ', ' + date.getFullYear(), time]);
+  }
+
+  /**
+   * Format event time given start and end time
+   */
+  formatEventTime(startDate, endDate) {
+    var start = this.formatDateTime(startDate);
+    var end = this.formatDateTime(endDate);
+    var eventTime = '';
+
+    if (start && end) { // Start and end datetime exist
+      if (start[0] == end[0]) { // Same start and end date
+        eventTime = start.join(" at ") + " - " + end[1];
+      } else {
+        eventTime = start.join(" at ") + " - " + end.join(" at ");
+      }
+    } else if (!start && !end) { // Start and end datetime don't exist
+      eventTime = "TBD";
+    } else if (start) { // Only start datetime exists
+      eventTime = start.join(" at ");
+    } else { // Only end datetime exists
+      eventtime = end.join(" at ");
+    }
+
+    return eventTime;
   }
 
   /**
@@ -98,7 +125,7 @@ class EventDetail extends React.Component {
           </div>
           {/* Date */}
           <div className='event-detail-date'>
-            <p>{this.formatDate(this.props.data.start_time)} - {this.formatDate(this.props.data.end_time)}</p>
+            <p>{this.formatEventTime(this.props.data.start_time, this.props.data.end_time)}</p>
           </div>
           {/* Description */}
           <div className='event-detail-description'>
