@@ -1,5 +1,4 @@
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
-from nltk.stem.porter import PorterStemmer
 from collections import defaultdict
 from scipy.sparse.linalg import svds
 import collections
@@ -28,9 +27,8 @@ class Preprocess(object):
     self.words             = self.count_vec.get_feature_names()
     self.word_to_idx       = self._build_word_to_idx_dict(self.words)
     term_counts = self._build_term_counts(self.events, self.count_vec)
-    # self.coocurrence       = self._build_cooccurence(self.doc_by_term)
-    # self.five_words_before = self._build_k_words_before(5, self.events, term_counts, self.word_to_idx)
-    # self.five_words_after  = self._build_k_words_after(5, self.events, term_counts, self.word_to_idx)
+    self.five_words_before = self._build_k_words_before(5, self.events, term_counts, self.word_to_idx)
+    self.five_words_after  = self._build_k_words_after(5, self.events, term_counts, self.word_to_idx)
     self.uniq_categs, self.categ_name_to_idx, self.categ_idx_to_name, self.categ_by_term = self._build_categ_by_term(self.events, self.doc_by_term)
 
     print self.doc_by_term.shape
@@ -39,7 +37,6 @@ class Preprocess(object):
     print sys.getsizeof(self.doc_by_term)
     print sys.getsizeof(self.words)
     print sys.getsizeof(self.word_to_idx)
-    # print sys.getsizeof(self.coocurrence)
     # print sys.getsizeof(self.five_words_before)
     # print sys.getsizeof(self.five_words_after)
     print sys.getsizeof(self.categ_by_term)
@@ -233,22 +230,6 @@ class Preprocess(object):
     this preprocessing procedure occurs.
     """
     return self._build_k_words_near(k, events, term_counts, word_to_idx, self.rev_tokenize, num_threads)
-
-  def _build_cooccurence(self, doc_by_term):
-    """
-    Given a term-document-matrix `doc_by_term`,
-    develop a co-occurence matrix
-    """
-    bin_doc_by_term = doc_by_term.copy()
-    bin_doc_by_term[bin_doc_by_term > 0] = 1
-    return np.dot(bin_doc_by_term.T, bin_doc_by_term)
-
-  def stem(self, terms):
-    """
-    Stem each word in word list using Porter Stemming Algorithm
-    """
-    stemmer = PorterStemmer()
-    return [stemmer.stem(term) for term in terms]
 
   def tokenize(self, text):
     """

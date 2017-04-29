@@ -3,16 +3,8 @@ import sys
 import json
 import numpy as np
 from collections import defaultdict
-from nltk.stem.porter import PorterStemmer
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from ir.ir_engine import IREngine
-
-def stem(terms):
-  """
-  Stem each word in word list using Porter Stemming Algorithm
-  """
-  stemmer = PorterStemmer()
-  return [stemmer.stem(term) for term in terms]
 
 def tokenize(text):
   """

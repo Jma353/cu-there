@@ -2,7 +2,6 @@ import re
 import math
 import numpy as np
 from collections import Counter, defaultdict
-from nltk.stem.porter import PorterStemmer
 
 class IREngine(object):
   """
@@ -115,13 +114,6 @@ class IREngine(object):
     Tokenize text into list of words and stem words
     """
     return re.findall(r'[a-z]+', text.lower()) if text else []
-
-  def stem(self, terms):
-    """
-    Stem each word in word list using Porter Stemming Algorithm
-    """
-    stemmer = PorterStemmer()
-    return [stemmer.stem(term) for term in terms]
 
   def build_inverted_index(self, events):
     """
