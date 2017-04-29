@@ -67,9 +67,48 @@ class EventMetadataModel:
   Model for event meta-features
   """
   model = None
+  feature_mat = None
   
+  def _contains_links(e):
+    return True
+
+  def _contains_email(e):
+    return True
+    
+  def _contains_food(e):
+    return True
+
+  def _contains_free(e):
+    return True
+
   def __init__(self, events):
-    pass
+    # Functions for generating features (indicator variables, numeric variables, etc.)
+    
+    self.description_length = lambda e: len(e.description)
+    self.has_profile_picture = lambda e: 1 if e.profile_picture is not None else 0
+    self.has_links = lambda e: 1 if self._contains_links(e) else 0
+    self.has_category = lambda e: 1 if e.category is not None else 0
+    self.has_cover_picture = lambda e: 1 if e.cover_picture is not None else 0
+    self.has_email = lambda e: 1 if self._contains_email(e) else 0
+    self.has_food = lambda e: 1 if self._contains_food(e) else 0
+    self.is_free = lambda e: 1 if self._contains_free(e) else 0
+    
+    self.feature_funcs = [
+      self.description_length,
+      self.has_profile_picture,
+      self.has_links,
+      self.has_category,
+      self.has_cover_picture,
+      self.has_email,
+      self.has_food,
+      self.is_free
+    ]
+    
+    arr = []
+    for event in events:
+      feature_values = [func(event) for func in self.feature_funcs]
+      arr.append(feature_values)
+    self.feature_mat = np.asarray(arr)
 
 class TimeLocationPair:
   """ Struct containing time, location, attendance """
