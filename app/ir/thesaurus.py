@@ -13,9 +13,8 @@ class Thesaurus(object):
 
   a) `w` occurs within 5 words after `v_i`
   b) `w` occurs within 5 words before `v_i`
-  c) `w` occurs within the same document as `v_i` (coocurrence)
 
-  a) and b) are scored based on PMI, c) by sheer # of similar documents
+  a) and b) are scored based on PMI
 
   A word `w_i's relationship with another word `w_j` can be determined
   by scoring all these features for `w_i` and `w_j`, determining the
@@ -23,18 +22,17 @@ class Thesaurus(object):
   (compare `w_i`'s a and `w_j`'s a, their b's, etc.) and then weighting
   the two words' similarity with the following equation:
 
-  A*a_sim + B*b_sim + C*c_sim
+  A*a_sim + B*b_sim
 
-  A, B, and C are all parameters of this object
+  A, B are all parameters of this object
   """
 
-  def __init__(self, A, B, C, preprocessed):
+  def __init__(self, A, B, preprocessed):
     """
     Constructor
     """
     self.A = A
     self.B = B
-    self.C = C
     self.p = preprocessed
 
   def related_words(self, word, k=10):
@@ -51,15 +49,13 @@ class Thesaurus(object):
     # Grab vectors
     five_after  = self.p.five_words_after[word_to_idx[word]]
     five_before = self.p.five_words_before[word_to_idx[word]]
-    # coocurr     = self.p.coocurrence[word_to_idx[word]]
 
     # Result vectors
     alpha = self.batch_cosine_sim(five_after, self.p.five_words_after)
     beta  = self.batch_cosine_sim(five_before, self.p.five_words_before)
-    # gamma = self.batch_cosine_sim(coocurr, self.p.coocurrence)
 
     # Linear combination
-    result = self.A * alpha + self.B * beta # + self.C * gamma
+    result = self.A * alpha + self.B * beta 
 
     # Grab all words' indexes not corresponding to `word`'s index
     ranking = [r for r in result.argsort()[::-1] if r != word_to_idx[word]]
