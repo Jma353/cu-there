@@ -73,6 +73,7 @@ class TimeLocationPair:
     return {
       "venue_id": self.venue_id,
       "time": self.time,
+      "time_graph": self.time_graph,
       "day_of_month": self.day_of_month,
       "attendance": self.attendance
     }

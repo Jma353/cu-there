@@ -56,6 +56,7 @@ def search():
   # Endpoint info
   times = [r['time'] for r in recs]
   venues = queries.get_venues([r['venue_id'] for r in recs])
+  time_graphs = [r['time_graph']for r in recs]
 
   # Serialize events + add IR info
   events = [event_schema.dump(e).data for e in es]
