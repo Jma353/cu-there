@@ -114,13 +114,11 @@ npm run dev
 `Webpack` must be run locally so it is pushed to `Heroku`
 
 ````bash
-git checkout heroku
-git merge master
 cd front
-webpack
+webpack -p 
 cd ..
 git add .
 git commit -m "Heroku push"
-git push -f heroku heroku:master
-git checkout master
+git push origin master
+git push -f heroku master
 ````
