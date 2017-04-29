@@ -74,12 +74,13 @@ class EventMetadataModel:
 class TimeLocationPair:
   """ Struct containing time, location, attendance """
 
-  def __init__(self, time, time_graph, day_of_month, venue_id, attendance):
+  def __init__(self, time, time_graph, day_of_month, venue_id, attendance, event_names):
     self.time = time
     self.time_graph = time_graph
     self.day_of_month = day_of_month
     self.venue_id = venue_id
     self.attendance = attendance
+    self.event_names = event_names
 
   def to_dict(self):
     return {
@@ -87,7 +88,8 @@ class TimeLocationPair:
       "time": self.time,
       "time_graph": self.time_graph,
       "day_of_month": self.day_of_month,
-      "attendance": self.attendance
+      "attendance": self.attendance,
+      "event_names": self.event_names
     }
 
 def top_k_recommendations(events, k=10):
@@ -179,6 +181,7 @@ def top_k_recommendations(events, k=10):
       time=peak_time,
       time_graph=model_graph,
       day_of_month=peak_day,
+      event_names=[event.name for event in venues_to_events[venue_id]],
       attendance=(peak_time_value + peak_day_value)/2
     ))
 
@@ -205,10 +208,11 @@ if __name__ == "__main__":
     print "Top location-time pairs for the {} events retrieved:".format(len(events))
     print
     for rec in recs:
-      print "{} on day {} at {}:00. Predicted attendance: {}".format(
+      print "{} on day {} at {}:00. Predicted attendance: {}\nRecommended because of: {}".format(
         Venue.query.filter_by(id=rec["venue_id"]).first().name,
         rec["day_of_month"],
         rec["time"],
-        rec["attendance"]
+        rec["attendance"],
+        ", ".join([name for name in rec["event_names"]])
       )
     print
