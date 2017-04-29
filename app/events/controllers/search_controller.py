@@ -70,6 +70,7 @@ def search():
     'data': {
       'venues': [venue_schema.dump(v).data for v in venues],
       'times': times,
+      'time_graphs': time_graphs,
       'tags': [],
       'events': events
     }
