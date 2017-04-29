@@ -67,19 +67,59 @@ class EventMetadataModel:
   Model for event meta-features
   """
   model = None
+  feature_mat = None
   
+  def _contains_links(e):
+    return True
+
+  def _contains_email(e):
+    return True
+    
+  def _contains_food(e):
+    return True
+
+  def _contains_free(e):
+    return True
+
   def __init__(self, events):
-    pass
+    # Functions for generating features (indicator variables, numeric variables, etc.)
+    
+    self.description_length = lambda e: len(e.description)
+    self.has_profile_picture = lambda e: 1 if e.profile_picture is not None else 0
+    self.has_links = lambda e: 1 if self._contains_links(e) else 0
+    self.has_category = lambda e: 1 if e.category is not None else 0
+    self.has_cover_picture = lambda e: 1 if e.cover_picture is not None else 0
+    self.has_email = lambda e: 1 if self._contains_email(e) else 0
+    self.has_food = lambda e: 1 if self._contains_food(e) else 0
+    self.is_free = lambda e: 1 if self._contains_free(e) else 0
+    
+    self.feature_funcs = [
+      self.description_length,
+      self.has_profile_picture,
+      self.has_links,
+      self.has_category,
+      self.has_cover_picture,
+      self.has_email,
+      self.has_food,
+      self.is_free
+    ]
+    
+    arr = []
+    for event in events:
+      feature_values = [func(event) for func in self.feature_funcs]
+      arr.append(feature_values)
+    self.feature_mat = np.asarray(arr)
 
 class TimeLocationPair:
   """ Struct containing time, location, attendance """
 
-  def __init__(self, time, time_graph, day_of_month, venue_id, attendance):
+  def __init__(self, time, time_graph, day_of_month, venue_id, attendance, event_names):
     self.time = time
     self.time_graph = time_graph
     self.day_of_month = day_of_month
     self.venue_id = venue_id
     self.attendance = attendance
+    self.event_names = event_names
 
   def to_dict(self):
     return {
@@ -87,7 +127,8 @@ class TimeLocationPair:
       "time": self.time,
       "time_graph": self.time_graph,
       "day_of_month": self.day_of_month,
-      "attendance": self.attendance
+      "attendance": self.attendance,
+      "event_names": self.event_names
     }
 
 def top_k_recommendations(events, k=10):
@@ -179,6 +220,7 @@ def top_k_recommendations(events, k=10):
       time=peak_time,
       time_graph=model_graph,
       day_of_month=peak_day,
+      event_names=[event.name for event in venues_to_events[venue_id]],
       attendance=(peak_time_value + peak_day_value)/2
     ))
 
@@ -205,10 +247,11 @@ if __name__ == "__main__":
     print "Top location-time pairs for the {} events retrieved:".format(len(events))
     print
     for rec in recs:
-      print "{} on day {} at {}:00. Predicted attendance: {}".format(
+      print "{} on day {} at {}:00. Predicted attendance: {}\nRecommended because of: {}".format(
         Venue.query.filter_by(id=rec["venue_id"]).first().name,
         rec["day_of_month"],
         rec["time"],
-        rec["attendance"]
+        rec["attendance"],
+        ", ".join([name for name in rec["event_names"]])
       )
     print
