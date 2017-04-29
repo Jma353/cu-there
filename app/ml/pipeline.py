@@ -36,10 +36,10 @@ class QuadraticModel(object):
     if not self.model:
       return [0]*len(test_set)
     return self.model(test_set.reshape(-1, 1))
-    
+
   def generate_graph(self, synthetic_data):
     test_values = self.test(synthetic_data)
-    return [synthetic_data, test_values]
+    return [list(synthetic_data), list(test_values)]
 
   def find_peak(self, test_set):
     """
@@ -79,6 +79,13 @@ class TimeLocationPair:
     self.attendance = attendance
 
   def to_dict(self):
+    print {
+      "venue_id": self.venue_id,
+      "time": self.time,
+      "time_graph": self.time_graph,
+      "day_of_month": self.day_of_month,
+      "attendance": self.attendance
+    }
     return {
       "venue_id": self.venue_id,
       "time": self.time,
@@ -132,7 +139,7 @@ def top_k_recommendations(events, k=10):
   venues_to_events = defaultdict(list)
   for event in events:
     venues_to_events[event.venue.id].append(event)
-    
+
   for venue_id in venues_to_events:
     events = venues_to_events[venue_id]
     for event in events:
