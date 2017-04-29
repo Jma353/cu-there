@@ -22,7 +22,6 @@ class Event(Base):
   venue_id  = db.Column(db.String, db.ForeignKey('venues.id'))
   venue = db.relationship('Venue')
 
-
   def __init__(self, fb_json):
     self.id              = fb_json.get('id')
     self.name            = fb_json.get('name')
@@ -40,7 +39,6 @@ class Event(Base):
     self.time_from_now   = fb_json.get('time_from_now')
     self.type            = fb_json.get('type')
     self.venue_id        = fb_json.get('venue', {}).get('id')
-
 
 class EventSchema(ModelSchema):
   class Meta:

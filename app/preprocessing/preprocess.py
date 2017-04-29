@@ -7,6 +7,7 @@ import sys
 import os
 import json
 import re
+import gc
 
 THREAD_COUNT = 5
 
@@ -28,18 +29,19 @@ class Preprocess(object):
     self.word_to_idx       = self._build_word_to_idx_dict(self.words)
     term_counts = self._build_term_counts(self.events, self.count_vec)
     self.five_words_before = self._build_k_words_before(5, self.events, term_counts, self.word_to_idx)
+    gc.collect()
     self.five_words_after  = self._build_k_words_after(5, self.events, term_counts, self.word_to_idx)
+    gc.collect()
     self.uniq_categs, self.categ_name_to_idx, self.categ_idx_to_name, self.categ_by_term = self._build_categ_by_term(self.events, self.doc_by_term)
 
-    print "doc by term: {}".format(sys.getsizeof(self.doc_by_term.shape))
-    print "events: {}".format(sys.getsizeof(self.events))
-    print "count vec: {}".format(sys.getsizeof(self.count_vec))
-    print "doc by term: {}".format(sys.getsizeof(self.doc_by_term))
-    print "words: {}".format(sys.getsizeof(self.words))
-    print "word to idx: {}".format(sys.getsizeof(self.word_to_idx))
-    # print sys.getsizeof(self.five_words_before)
-    # print sys.getsizeof(self.five_words_after)
-    print "categ by term: {}".format(sys.getsizeof(self.categ_by_term))
+    print sys.getsizeof(self.events)
+    print sys.getsizeof(self.count_vec)
+    print sys.getsizeof(self.doc_by_term)
+    print sys.getsizeof(self.words)
+    print sys.getsizeof(self.word_to_idx)
+    print sys.getsizeof(self.five_words_before)
+    print sys.getsizeof(self.five_words_after)
+    print sys.getsizeof(self.categ_by_term)
 
     print 'Preprocessing done....'
 
@@ -195,11 +197,24 @@ class Preprocess(object):
     p_f = np.reshape(p_f, (-1, p_f.shape[0]))
 
     # Find our answer
-    divisor = np.dot(p_w, p_f)
-    divisor[divisor == 0.0] = 1.0
-    about_to_log = np.divide(result / count_w, divisor)
-    about_to_log[about_to_log <= 0.0] = 1.0
-    result = np.log2(about_to_log)
+    # divisor is np.dot(p_w, p_f) + remove 0's / negatives
+    # Remove 0's from log too
+    about_to_log = np.divide(result / count_w, np.where(np.dot(p_w, p_f) == 0.0, 1.0, np.dot(p_w, p_f)))
+    result = np.log2(
+      np.where(
+        np.divide(result / count_w, np.where(
+          np.dot(p_w, p_f) == 0.0,
+          1.0,
+          np.dot(p_w, p_f))
+        ) <= 0.0,
+        1.0,
+        np.divide(result / count_w, np.where(
+          np.dot(p_w, p_f) == 0.0,
+          1.0,
+          np.dot(p_w, p_f))
+        )
+      )
+    )
     result, _, _ = svds(result, k=40)
     return result
 
