@@ -36,6 +36,10 @@ class QuadraticModel(object):
     if not self.model:
       return [0]*len(test_set)
     return self.model(test_set.reshape(-1, 1))
+    
+  def generate_graph(synthetic_data):
+    test_values = self.test(synthetic_data)
+    return [synthetic_data, test_values]
 
   def find_peak(self, test_set):
     """
@@ -146,9 +150,12 @@ def top_k_recommendations(events, k=10):
     peak_time, peak_time_value = hour_model.find_peak(synthetic_time_data)
     peak_day, peak_day_value = day_model.find_peak(synthetic_day_data)
 
+    model_graph = hour_model.generate_graph(synthetic_time_data)
+
     time_location_pairs.append(TimeLocationPair(
       venue_id=venue_id,
       time=peak_time,
+      time_graph=model_graph,
       day_of_month=peak_day,
       attendance=(peak_time_value + peak_day_value)/2
     ))
