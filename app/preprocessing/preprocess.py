@@ -31,15 +31,15 @@ class Preprocess(object):
     self.five_words_after  = self._build_k_words_after(5, self.events, term_counts, self.word_to_idx)
     self.uniq_categs, self.categ_name_to_idx, self.categ_idx_to_name, self.categ_by_term = self._build_categ_by_term(self.events, self.doc_by_term)
 
-    print self.doc_by_term.shape
-    print sys.getsizeof(self.events)
-    print sys.getsizeof(self.count_vec)
-    print sys.getsizeof(self.doc_by_term)
-    print sys.getsizeof(self.words)
-    print sys.getsizeof(self.word_to_idx)
+    print "doc by term: {}".format(sys.getsizeof(self.doc_by_term.shape))
+    print "events: {}".format(sys.getsizeof(self.events))
+    print "count vec: {}".format(sys.getsizeof(self.count_vec))
+    print "doc by term: {}".format(sys.getsizeof(self.doc_by_term))
+    print "words: {}".format(sys.getsizeof(self.words))
+    print "word to idx: {}".format(sys.getsizeof(self.word_to_idx))
     # print sys.getsizeof(self.five_words_before)
     # print sys.getsizeof(self.five_words_after)
-    print sys.getsizeof(self.categ_by_term)
+    print "categ by term: {}".format(sys.getsizeof(self.categ_by_term))
 
     print 'Preprocessing done....'
 

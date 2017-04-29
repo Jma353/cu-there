@@ -39,7 +39,10 @@ class QuadraticModel(object):
 
   def generate_graph(self, synthetic_data):
     test_values = self.test(synthetic_data)
-    return [list(synthetic_data), list(test_values)]
+    try:
+      return [list(synthetic_data), [list(i)[0] for i in list(test_values)]]
+    except TypeError:
+      return []
 
   def find_peak(self, test_set):
     """
@@ -79,13 +82,6 @@ class TimeLocationPair:
     self.attendance = attendance
 
   def to_dict(self):
-    print {
-      "venue_id": self.venue_id,
-      "time": self.time,
-      "time_graph": self.time_graph,
-      "day_of_month": self.day_of_month,
-      "attendance": self.attendance
-    }
     return {
       "venue_id": self.venue_id,
       "time": self.time,
