@@ -27,9 +27,9 @@ class Preprocess(object):
     self.doc_by_term       = self._build_doc_by_term(self._build_doc_by_term_count(self.events, self.count_vec))
     self.words             = self.count_vec.get_feature_names()
     self.word_to_idx       = self._build_word_to_idx_dict(self.words)
-    term_counts = self._build_term_counts(self.events, self.count_vec)
-    self.five_words_before = self._build_k_words_before(5, self.events, term_counts, self.word_to_idx); gc.collect()
-    self.five_words_after  = self._build_k_words_after(5, self.events, term_counts, self.word_to_idx); gc.collect()
+    self.term_counts = self._build_term_counts(self.events, self.count_vec)
+    self.five_words_before = self._build_k_words_before(5, self.events, self.term_counts, self.word_to_idx); gc.collect()
+    self.five_words_after  = self._build_k_words_after(5, self.events, self.term_counts, self.word_to_idx); gc.collect()
     self.uniq_categs, self.categ_name_to_idx, self.categ_idx_to_name, self.categ_by_term = self._build_categ_by_term(self.events, self.doc_by_term)
 
     print 'Preprocessing done....'
@@ -134,7 +134,7 @@ class Preprocess(object):
     """
     return {w:i for i,w in enumerate(words)}
 
-  def _build_k_words_near(self, k, events, term_counts, word_to_idx, tokenize, num_threads):
+  def _build_k_words_near(self, k, events, term_counts, word_to_idx, tokenize):
     """
     Build a matrix mapping words to the frequencies at
     which other words in the data-set appeared within k
@@ -144,9 +144,6 @@ class Preprocess(object):
 
     Uses the `tokenize` function to determine how to tokenize
     the description of each event.
-
-    Uses `num_threads` threads to increase the speed at which
-    this preprocessing procedure occurs.
     """
     # Our goal matrix
     num_words = len(word_to_idx)
@@ -203,10 +200,9 @@ class Preprocess(object):
         )
       )
     )
-    result, _, _ = svds(result, k=40)
     return result
 
-  def _build_k_words_before(self, k, events, term_counts, word_to_idx, num_threads=THREAD_COUNT):
+  def _build_k_words_before(self, k, events, term_counts, word_to_idx):
     """
     Build a matrix mapping words to the frequencies at
     which other words in the data-set appeared within k
@@ -214,13 +210,12 @@ class Preprocess(object):
 
     Uses the `tokenize` function to determine how to tokenize
     the description of each event.
-
-    Uses `num_threads` threads to increase the speed at which
-    this preprocessing procedure occurs.
     """
-    return self._build_k_words_near(k, events, term_counts, word_to_idx, self.tokenize, num_threads)
+    result = self._build_k_words_near(k, events, term_counts, word_to_idx, self.tokenize)
+    result, _, _ = svds(result, k=100)
+    return result
 
-  def _build_k_words_after(self, k, events, term_counts, word_to_idx, num_threads=THREAD_COUNT):
+  def _build_k_words_after(self, k, events, term_counts, word_to_idx):
     """
     Build a matrix mapping words to the frequencies at
     which other words in the data-set appeared within k
@@ -228,11 +223,10 @@ class Preprocess(object):
 
     Uses the `tokenize` function to determine how to tokenize
     the description of each event.
-
-    Uses `num_threads` threads to increase the speed at which
-    this preprocessing procedure occurs.
     """
-    return self._build_k_words_near(k, events, term_counts, word_to_idx, self.rev_tokenize, num_threads)
+    result = self._build_k_words_near(k, events, term_counts, word_to_idx, self.rev_tokenize)
+    result, _, _ = svds(result, k=100)
+    return result
 
   def tokenize(self, text):
     """
