@@ -59,6 +59,15 @@ class QuadraticModel(object):
     index_of_peak = sorted_derivs[0][0]
     return (index_of_peak, test_values[index_of_peak])
 
+class EventMetadataModel:
+  """
+  Model for event meta-features
+  """
+  model = None
+  
+  def __init__(self, events):
+    pass
+
 class TimeLocationPair:
   """ Struct containing time, location, attendance """
 
