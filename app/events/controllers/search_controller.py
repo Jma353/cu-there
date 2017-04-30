@@ -48,7 +48,7 @@ def search():
   event_ids, sim_words, sim_categs = map(list, zip(*events_info))
   event_ids = event_ids[:min(len(event_ids), 12)] # Take 12 or less
   es = queries.get_events(event_ids)
-
+  
   # ML, get recs
   recs = top_k_recommendations(es)
 
@@ -59,11 +59,21 @@ def search():
     results = [v for v in venues if v['id'] == v_id]
     return None if len(results) == 0 else results[0]
   for r in recs:
-    _venue_by_id(r['venue_id'])['events'] = r['events']
-    _venue_by_id(r['venue_id'])['suggested_time'] = r['time']
+    v = _venue_by_id(r['venue_id'])
+    v(r['venue_id'])['events'] = r['events']
+    v(r['venue_id'])['suggested_time'] = r['time']
 
-  # Time graph
-  time_graphs = [r['time_graph'] for r in recs]
+  graphs = []
+  for r in recs:
+    addition = dict()
+    addition['venue_id'] = r['venue_id']
+    addition['projected_attendence'] = r['time_graph']
+    addition['event_times'] = [
+      {
+        'event_name': e['name'],
+        'time': e['start_time']
+      } for e in r['events']]
+    graphs.append(addition)
 
   # Serialize events + add IR info
   events = [event_schema.dump(e).data for e in es]
@@ -76,7 +86,7 @@ def search():
     'success': True,
     'data': {
       'venues': venues,
-      'time_graphs': [t for t in time_graphs if t != []],
+      'graphs': graphs,
       'tags': [],
       'events': events
     }
@@ -126,11 +136,21 @@ def search_rocchio():
     results = [v for v in venues if v['id'] == v_id]
     return None if len(results) == 0 else results[0]
   for r in recs:
-    _venue_by_id(r['venue_id'])['events'] = r['events']
-    _venue_by_id(r['venue_id'])['suggested_time'] = r['time']
+    v = _venue_by_id(r['venue_id'])
+    v(r['venue_id'])['events'] = r['events']
+    v(r['venue_id'])['suggested_time'] = r['time']
 
-  # Time graph
-  time_graphs = [r['time_graph'] for r in recs]
+  graphs = []
+  for r in recs:
+    addition = dict()
+    addition['venue_id'] = r['venue_id']
+    addition['projected_attendence'] = r['time_graph']
+    addition['event_times'] = [
+      {
+        'event_name': e['name'],
+        'time': e['start_time']
+      } for e in r['events']]
+    graphs.append(addition)
 
   # Serialize events + add IR info
   events = [event_schema.dump(e).data for e in es]
@@ -143,7 +163,7 @@ def search_rocchio():
     'success': True,
     'data': {
       'venues': venues,
-      'time_graphs': [t for t in time_graphs if t != []],
+      'graphs': graphs,
       'tags': [],
       'events': events
     }

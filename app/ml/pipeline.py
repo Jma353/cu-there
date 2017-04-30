@@ -41,7 +41,7 @@ class QuadraticModel(object):
   def generate_graph(self, synthetic_data):
     test_values = self.test(synthetic_data)
     try:
-      return [list(synthetic_data), [list(i)[0] for i in list(test_values)]]
+      return [list(i)[0] for i in list(test_values)]
     except TypeError:
       return []
 
