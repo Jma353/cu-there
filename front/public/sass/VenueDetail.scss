@@ -33,9 +33,14 @@
 
 .venue-detail-title {
   @extend .md-text;
+  font-weight: 400;
   flex-basis: 100%;
   @include respond-to(handhelds) {
     font-size: 16px;
+  }
+
+  strong {
+    font-weight: 500;
   }
 }
 
@@ -43,9 +48,6 @@
   @extend .sm-text;
   flex-basis: 100%;
   color: gray;
-  @include respond-to(handhelds) {
-
-  }
   p {
     padding: 1px;
     margin: 0px;
@@ -56,4 +58,18 @@
   @extend .sm-text;
   margin-top: 15px;
   flex-basis: 100%;
+}
+
+.venue-detail-events {
+  h3 {
+    font-weight: 500;
+    margin: 1em 0 0 0;
+  }
+  p {
+    line-height: 1em;
+    margin-top: 0.5em;
+  }
+  @include respond-to(handhelds) {
+    font-size: 14px;
+  }
 }
