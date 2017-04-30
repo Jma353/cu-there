@@ -113,7 +113,7 @@ class EventDetail extends React.Component {
 
     simWords.map(function (word) {
       var pattern = new RegExp(word, 'gi');
-      eventDesc = eventDesc.replace(pattern, '<mark>' + word + '</mark>');
+      eventDesc = eventDesc.replace(pattern, '<mark class="marked-word">' + word + '</mark>');
     });
 
     return eventDesc;
@@ -123,12 +123,7 @@ class EventDetail extends React.Component {
    * Generate category string with similar category marked
    */
   markSimilarCategs(category, simCateg) {
-    if (category && simCateg) {
-      var pattern = new RegExp(simCateg, 'gi');
-      category = category.replace(pattern, '<mark>' + simCateg + '</mark>');
-    }
-
-    return category;
+    return (category == simCateg) ? ' marked-categ' : '';
   }
 
   /**
@@ -145,9 +140,10 @@ class EventDetail extends React.Component {
           <a className='event-detail-title' href={'https://www.facebook.com/events/' + this.props.data.id} target='_blank'>
             {this.props.data.name}
           </a>
-          <div className='event-detail-sim-categs'>
-            <div dangerouslySetInnerHTML={{ __html: this.markSimilarCategs(this.props.data.category, this.props.data.sim_categs) }} />
-          </div>
+          {/* Categories */}
+          <span className={'event-detail-categ' + this.markSimilarCategs(this.props.data.category, this.props.data.sim_categs)}>
+            {this.props.data.category}
+          </span>
           {/* Venue */}
           <div className='event-detail-venue'>
             <p>{this.props.data.venue_id}</p>

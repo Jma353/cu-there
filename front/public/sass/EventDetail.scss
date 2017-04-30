@@ -84,8 +84,26 @@
   text-decoration: none;
 }
 
+.event-detail-categ {
+  @extend .sm-text;
+  margin: 10px;
+  padding: 4px 10px;
+  color: $color-4;
+  background-color: $off-white;
+  border-radius: $border-radius;
+}
+
 mark {
-  background-color: $color-1;
   padding: 0 3px;
   border-radius: 3px;
+}
+
+.marked-word {
+  background-color: $color-1;
+}
+
+.marked-categ {
+  color: white;
+  background-color: $color-2;
+  padding: 4px 10px;
 }
