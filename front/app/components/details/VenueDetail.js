@@ -1,6 +1,8 @@
 import React from 'react';
 require('../../../public/sass/VenueDetail.scss');
 
+import { formatTime } from '../../utils/time.js';
+
 /**
  * Displays abbreviated information about a venue (meant to
  * be used when displaying recommended venues after searching)
@@ -20,8 +22,7 @@ class VenueDetail extends React.Component {
         <div className='venue-detail-text-container'>
           {/* Title */}
           <div className='venue-detail-title'>
-            {this.props.data.name}
-            {this.props.data.suggested_time}
+            <strong>{this.props.data.name}</strong> at {formatTime(this.props.data.suggested_time)}
           </div>
           {/* Address */}
           <div className='venue-detail-address'>
