@@ -4,6 +4,7 @@ import TextCardList from '../lists/TextCardList';
 import VenueDetailList from '../lists/VenueDetailList';
 import EventDetailList from '../lists/EventDetailList';
 import Footer from '../navigation/Footer';
+import TimeGraph from '../graphs/TimeGraph';
 require('../../../public/sass/Results.scss');
 
 /* Redux */
@@ -100,9 +101,12 @@ class Results extends React.Component {
               <TextCardList data={response.tags} title='Tags' />
             </div>
             */}
-            {times.length !== 0 ? <div className='result-times'>
-              <TextCardList data={this.formatTime(times)} title='Suggested Times' />
-            </div> : null}
+            {times.length && response.timeGraphs.length &&
+              <div className='result-times'>
+                <TextCardList data={this.formatTime(times)} title='Suggested Times' />
+                <TimeGraph data={response.timeGraphs} />
+              </div>
+            }
           </div>
           <VenueDetailList data={response.venues} title='Venues' />
           <EventDetailList data={this.props.results.events.all} title='Related Events' />

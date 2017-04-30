@@ -9,7 +9,8 @@ let initialSearchState = {
     response: {
       venues: [],
       tags: [],
-      times: []
+      times: [],
+      timeGraphs: []
     },
     events: {
       all: [],
