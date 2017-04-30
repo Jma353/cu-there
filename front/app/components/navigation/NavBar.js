@@ -1,5 +1,6 @@
 import React from 'react';
 import Search from '../search/Search';
+import { Link } from 'react-router';
 require('../../../public/sass/NavBar.scss');
 
 /**
@@ -14,7 +15,7 @@ class NavBar extends React.Component {
     return (
       <div className='navbar-container'>
         <div className='brand-item'>
-          <a href='/'>CU There</a>
+          <Link to='/'>CU There</Link>
         </div>
         <div className='search-item'>
           <Search
@@ -23,7 +24,7 @@ class NavBar extends React.Component {
             />
         </div>
         <ul className='navbar-links-container'>
-          <li className='link-item'><a href='/about'>About</a></li>
+          <li className='link-item'><Link to='/about'>About</Link></li>
         </ul>
       </div>
     );

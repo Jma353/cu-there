@@ -1,0 +1,40 @@
+@import 'variables';
+
+.about-container {
+  background-color: white;
+  margin: 40px;
+  padding: 40px;
+  border-radius: $border-radius * 4;
+
+  .back {
+    cursor: pointer;
+    color: $color-3;
+    border: none;
+    background-color: transparent;
+    @extend .sm-text;
+  }
+
+  a {
+    background-color: $color-3;
+    padding: 8px;
+    line-height: 64px;
+    border-radius: $border-radius;
+
+    &:hover {
+      background-color: $color-4;
+    }
+
+    &:active {
+      background-color: $color-5;
+    }
+  }
+
+  h3 {
+    font-weight: 500;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+}
