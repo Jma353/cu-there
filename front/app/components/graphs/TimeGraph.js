@@ -5,20 +5,33 @@ import { Line } from 'react-chartjs-2';
 class TimeGraph extends React.Component {
   render () {
     const datasets = [];
-    var index = 1;
+
+    // Handle projected attendance
     for (var i = 0; i < this.props.data.length; i++) {
-      if (this.props.data[i].length) {
-        datasets.push({
-          backgroundColor: `rgba(${102 - 10 * index}, ${168 - 10 * index}, ${172 - 10 * index}, 0.3)`,
-          label: `Dataset number ${index++}`,
-          data: this.props.data[i][1].map((y, x) => {
-            return {
-              x: x,
-              y: y
-            };
-          })
-        });
-      }
+      datasets.push({
+        fill: false,
+        backgroundColor: `rgb(${102 - 20 * i}, ${168 - 20 * i}, ${172 - 20 * i})`,
+        borderColor: `rgb(${102 - 20 * i}, ${168 - 20 * i}, ${172 - 20 * i})`,
+        borderWidth: 1,
+        label: this.props.data[i].venue_name,
+        data: this.props.data[i].projected_attendance.map((y, x) => {
+          return {
+            x: x,
+            y: y
+          };
+        })
+      });
+
+      // datasets.push({
+      //   backgroundColor: 'red',
+      //   label: this.props.data[i].venue_name + ' PEAK',
+      //   data: this.props.data[i].event_times.map((event, x) => {
+      //     return {
+      //       x: x,
+      //       y: event.time.index
+      //     };
+      //   })
+      // });
     }
 
     const data = {

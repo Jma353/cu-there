@@ -11,7 +11,7 @@ let initialSearchState = {
       venues: [],
       tags: [],
       times: [],
-      timeGraphs: []
+      graphs: []
     },
     events: {
       all: [],

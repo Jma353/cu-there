@@ -50,9 +50,9 @@ class Results extends React.Component {
               <TextCardList data={response.tags} title='Tags' />
             </div>
             */}
-            {response.timeGraphs.length &&
+            {
               <div className='result-times'>
-                <TimeGraph data={response.timeGraphs} />
+                <TimeGraph data={response.graphs} />
               </div>
             }
           </div>
