@@ -20,31 +20,32 @@ thes = Thesaurus(A, B, app.preprocessed)
 
 def process_recs(es, sim_words, sim_categs, recs):
   # Endpoint info
-  venues = queries.get_venues([r['venue_id'] for r in recs])
+  venues = queries.get_venues([r['id'] for r in recs['venues']])
   venues = [venue_schema.dump(v).data for v in venues] # Resultant
 
   def _venue_by_id(v_id):
     results = [v for v in venues if v['id'] == v_id]
     return None if len(results) == 0 else results[0]
 
-  for r in recs:
-    v = _venue_by_id(r['venue_id'])
+  for r in recs['venues']:
+    v = _venue_by_id(r['id'])
     v['events'] = r['events']
-    v['suggested_time'] = r['time']
 
-  graphs = []
-  for r in recs:
-    addition = dict()
-    addition['venue_id'] = r['venue_id']
-    addition['venue_name'] = _venue_by_id(r['venue_id'])['name']
-    addition['projected_attendance'] = r['time_graph']
-    addition['event_times'] = [
-      {
-        'event_name': e['name'],
-        'time': parser.parse(e['start_time']).hour,
-        'attendance': e['attending']
-      } for e in r['events']]
-    graphs.append(addition)
+  # for r in recs['times']
+  #   v['suggested_time'] = r['times']
+  # graphs = []
+  # for r in recs:
+  #   addition = dict()
+  #   addition['venue_id'] = r['venues']['id']
+  #   addition['venue_name'] = _venue_by_id(r['venues']['id'])['name']
+  #   addition['projected_attendance'] = r['time_graph']
+  #   addition['event_times'] = [
+  #     {
+  #       'event_name': e['name'],
+  #       'time': parser.parse(e['start_time']).hour,
+  #       'attendance': e['attending']
+  #     } for e in r['events']]
+  #   graphs.append(addition)
 
   # Serialize events + add IR info
   events = [event_schema.dump(e).data for e in es]
@@ -57,11 +58,12 @@ def process_recs(es, sim_words, sim_categs, recs):
     'success': True,
     'data': {
       'venues': venues,
-      'graphs': graphs,
-      'tags': [],
+    #   'graphs': graphs,
+      'features': recs['features'],
       'events': events
     }
   }
+
   return jsonify(response)
 
 namespace = '/search'
@@ -99,7 +101,7 @@ def search():
   # ML, get recs
   recs = top_k_recommendations(es)
 
-  return process_recs(es, sim_words, sim_categs, recs)
+  return process_recs(es, sim_words, sim_categs, recs.to_dict())
 
 @events.route(namespace + '/rocchio', methods=['GET'])
 def search_rocchio():
@@ -136,4 +138,4 @@ def search_rocchio():
   # ML, get recs
   recs = top_k_recommendations(es)
 
-  return process_recs(es, sim_words, sim_categs, recs)
+  return process_recs(es, sim_words, sim_categs, recs.to_dict())

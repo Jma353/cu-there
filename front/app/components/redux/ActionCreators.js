@@ -18,9 +18,9 @@ export function didSearch (query, categories) {
             results: {
               response: {
                 venues: resp.data.data.venues,
-                tags: resp.data.data.tags,
-                times: resp.data.data.times,
-                graphs: resp.data.data.graphs
+                features: resp.data.data.features,
+                times: [],
+                graphs: []
               },
               events: {
                 all: resp.data.data.events,
@@ -53,9 +53,9 @@ export function didChangeRelevance (query, categories, relevant, irrelevant, all
             results: {
               response: {
                 venues: resp.data.data.venues,
-                tags: resp.data.data.tags,
-                times: resp.data.data.times,
-                graphs: resp.data.data.graphs
+                features: resp.data.data.features,
+                times: [],
+                graphs: []
               },
               events: {
                 all: all,
