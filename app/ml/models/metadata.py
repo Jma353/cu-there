@@ -56,5 +56,5 @@ class MetadataModel(object):
     """
     result = {}
     for i in xrange(0, len(self.features)):
-      result[self.features[i].name] = self.model.coef_[0,i]
+      result[self.features[i].name] = self.model.coef_[i]
     return result

@@ -64,6 +64,9 @@ class Recommendation:
     
   def get_times(self):
     return self.times
+    
+  def get_features(self):
+    return self.features
 
   def to_dict(self):
     return {
