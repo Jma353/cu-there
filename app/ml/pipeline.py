@@ -69,19 +69,22 @@ class Recommendation:
     return self.features
 
   def to_dict(self):
+    """
+    This is the dictionary that gets used by search_controller
+    """
     return {
       'times': [{
-        'peak': self.times[i],
+        'peak': self.times[i], # peak time
         'graph': {
+          # x and y axes of the graph
           'x': self.time_graphs[i][0],
           'y': self.time_graphs[i][1]
         }
       } for i in xrange(0, len(self.times))],
       'venues': [{
-        'id': self.venue_ids[i],
-        'events': self.venue_events[i]
+        'id': self.venue_ids[i], # id of the venue
+        'events': self.venue_events[i] # events that got the venue recommended
       } for i in xrange(0, len(self.venue_ids))],
-      'tags': self.tags,
       'features': self.features
     }
 
