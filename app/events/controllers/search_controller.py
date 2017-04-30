@@ -17,7 +17,7 @@ B = 0.5
 # Thesaurus
 thes = Thesaurus(A, B, app.preprocessed)
 
-def process_recs(recs):
+def process_recs(es, sim_words, sim_categs, recs):
   # Endpoint info
   venues = queries.get_venues([r['venue_id'] for r in recs])
   venues = [venue_schema.dump(v).data for v in venues] # Resultant
@@ -94,7 +94,7 @@ def search():
   # ML, get recs
   recs = top_k_recommendations(es)
 
-  return process_recs(recs)
+  return process_recs(es, sim_words, sim_categs, recs)
 
 @events.route(namespace + '/rocchio', methods=['GET'])
 def search_rocchio():
@@ -131,4 +131,4 @@ def search_rocchio():
   # ML, get recs
   recs = top_k_recommendations(es)
 
-  return process_recs(recs)
+  return process_recs(es, sim_words, sim_categs, recs)
