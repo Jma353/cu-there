@@ -119,11 +119,12 @@ class EventDetail extends React.Component {
   markSimilarWords(eventDesc, simWords) {
     var words = eventDesc.split(" ");
 
-    var markedDesc = words.map(function (word) {
-      return (simWords.indexOf(word) != -1) ? '<mark>' + word + '</mark>' : word;
+    simWords.map(function (word) {
+      var pattern = new RegExp(word, 'gi');
+      eventDesc = eventDesc.replace(pattern, '<mark>' + word + '</mark>');
     });
 
-    return markedDesc.join(" ");
+    return eventDesc;
   }
 
   /**
