@@ -1,3 +1,4 @@
+import numpy as np
 from sklearn.linear_model import LinearRegression
 
 from constants import *
@@ -24,14 +25,16 @@ class MetadataModel(object):
     """
 
     self.features = [
-      Feature(DESCRIPTION_LENGTH, lambda e: len(e.description)),
+      Feature(DESCRIPTION_LENGTH, lambda e: len(e.description) if e.description is not None else 0),
       Feature(HAS_PROFILE_PICTURE, lambda e: 1 if e.profile_picture is not None else 0),
-      Feature(HAS_LINKS, lambda e: 1 if "http://" in e.description.lower() else 0),
+      Feature(HAS_LINKS, lambda e: 1 if e.description is not None and "http://" in e.description.lower() else 0),
       Feature(HAS_CATEGORY, lambda e: 1 if e.category is not None else 0),
       Feature(HAS_COVER_PICTURE, lambda e: 1 if e.cover_picture is not None else 0),
-      Feature(HAS_EMAIL, lambda e: 1 if "@" in e.description.lower() else 0),
-      Feature(HAS_FOOD, lambda e: 1 if e.description.lower().split() or "food" in e.name.lower().split() else 0),
-      Feature(IS_FREE, lambda e: 1 if e.description.lower().split() or "free" in e.name.lower().split() else 0)
+      Feature(HAS_EMAIL, lambda e: 1 if e.description is not None and "@" in e.description.lower() else 0),
+      Feature(HAS_FOOD, lambda e: 1 if e.description is not None and \
+        e.name is not None and "food" in e.description.lower().split() or "food" in e.name.lower().split() else 0),
+      Feature(IS_FREE, lambda e: 1 if e.description is not None and \
+        e.name is not None and "free" in e.description.lower().split() or "free" in e.name.lower().split() else 0)
     ]
 
     indicators = []
@@ -39,11 +42,11 @@ class MetadataModel(object):
       feature_values = [feature.apply(event) for feature in self.features]
       indicators.append(feature_values)
     feature_mat = np.asarray(indicators)
-    attendance = np.asarray([event.attendance for event in events])
+    attendance = np.asarray([event.attending for event in events])
     self.model = LinearRegression()
     self.model.fit(feature_mat, attendance)
     
-  def coefs(self):
+  def features_coefs(self):
     """
     Returns feature names and their importances (coefficients). e.g.
     

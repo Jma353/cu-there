@@ -161,6 +161,17 @@ def top_k_recommendations(events, k=10):
 
     rec.add_venue(venue_id, venues_to_events[venue_id])
     rec.add_time(peak_time, model_graph)
+
+  # Step 4: Meta-features and tag recommendations
+  
+  m = MetadataModel(events)
+  features_coefs = m.features_coefs()
+  
+  # For now, let's return the top three features. We can play around with this or generate a number programmatically
+  
+  top_three_feature_names = sorted(features_coefs.keys(), key=features_coefs.get, reverse=True)[:3]
+  for feature_name in top_three_feature_names:
+    rec.add_feature(feature_name)
   
   return rec
 
@@ -179,10 +190,15 @@ if __name__ == "__main__":
     rec = top_k_recommendations(events)
 
     # print recs
-    print "Top venues:".format(len(events))
+    print "Top venues:"
     print
     for venue_id in rec.get_venue_ids():
       print Venue.query.filter_by(id=venue_id).first().name
     print
     for time in rec.get_times():
       print time
+    print
+    print "Top features:"
+    print
+    for feature_name in rec.get_features():
+      print feature_name
