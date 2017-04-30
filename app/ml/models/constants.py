@@ -1,0 +1,8 @@
+DESCRIPTION_LENGTH = "description_length"
+HAS_PROFILE_PICTURE = "has_profile_picture"
+HAS_LINKS = "has_links"
+HAS_CATEGORY = "has_category"
+HAS_COVER_PICTURE = "has_cover_picture"
+HAS_EMAIL = "has_email"
+HAS_FOOD = "has_food"
+IS_FREE = "is_free"
