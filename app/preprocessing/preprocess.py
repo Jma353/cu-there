@@ -1,6 +1,9 @@
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from collections import defaultdict
 from scipy.sparse.linalg import svds
+from gensim.models.ldamodel import LdaModel
+from gensim import corpora
+
 import collections
 import numpy as np
 import sys
@@ -10,6 +13,19 @@ import re
 import gc
 
 THREAD_COUNT = 5
+
+class EventsCorpus(object):
+  def __init__(self, events):
+    self.events = events
+    docs = []
+    for event in self.events:
+      if event["description"] is not None:
+        docs.append(event["description"].lower().split())
+    self.dictionary = corpora.Dictionary(docs)
+  def __iter__(self):
+    for event in self.events:
+      if event["description"] is not None:
+        yield self.dictionary.doc2bow(event["description"].lower().split())
 
 class Preprocess(object):
   """
@@ -23,6 +39,8 @@ class Preprocess(object):
     Constructor, where all data-structures are built
     """
     self.events            = self._build_events_list()
+    self.corpus            = self._build_corpus(self.events)
+    self.topic_model       = self._build_topic_model(self.events)
     self.count_vec         = self._build_count_vec()
     self.doc_by_term       = self._build_doc_by_term(self._build_doc_by_term_count(self.events, self.count_vec))
     self.words             = self.count_vec.get_feature_names()
@@ -227,6 +245,20 @@ class Preprocess(object):
     result = self._build_k_words_near(k, events, term_counts, word_to_idx, self.rev_tokenize)
     result, _, _ = svds(result, k=100)
     return result
+    
+  def _build_corpus(self, events):
+    """
+    Builds a gensim corpus (used to convert expanded queries to a
+    bag of words during topic modeling).
+    """
+    return EventsCorpus(events)
+    
+  def _build_topic_model(self, events, n_topics=10):
+    """
+    Builds a latent Dirichlet allocation (LDA) topic model
+    based on the doc term matrix.
+    """
+    return LdaModel(self.corpus, num_topics=n_topics)
 
   def tokenize(self, text):
     """
