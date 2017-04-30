@@ -1,5 +1,15 @@
 from sklearn.linear_model import LinearRegression
 
+from constants import *
+
+class Feature(object):
+  def __init__(self, name, func):
+    self.name = name
+    self.func = func
+    
+  def apply(self, event):
+    return self.func(event)
+
 class MetadataModel(object):
   """
   Model for event meta-features.
@@ -8,67 +18,40 @@ class MetadataModel(object):
   """
   model = None
 
-  def _contains_links(e):
-    """
-    Does the event description contain a link?
-    """
-    return "http://" in e.description.lower()
-
-  def _contains_email(e):
-    """
-    Does the event description contain an email?
-    """
-    return "@" in e.description.lower()
-
-  def _contains_food(e):
-    """
-    Does the event description or title mention food?
-    """
-    return "food" in e.description.lower().split() or "food" in e.name.lower().split()
-
-  def _contains_free(e):
-    """
-    Does the event description or title mention the word "free"?
-    """
-    return "free" in e.description.lower().split() or "free" in e.name.lower().split()
-
   def __init__(self, events):
     """
     Initializes a linear regression model based on predefined features of a set of events.
     """
 
-    self.description_length = lambda e: len(e.description)
-    self.has_profile_picture = lambda e: 1 if e.profile_picture is not None else 0
-    self.has_links = lambda e: 1 if self._contains_links(e) else 0
-    self.has_category = lambda e: 1 if e.category is not None else 0
-    self.has_cover_picture = lambda e: 1 if e.cover_picture is not None else 0
-    self.has_email = lambda e: 1 if self._contains_email(e) else 0
-    self.has_food = lambda e: 1 if self._contains_food(e) else 0
-    self.is_free = lambda e: 1 if self._contains_free(e) else 0
-
-    self.feature_funcs = [
-      self.description_length,
-      self.has_profile_picture,
-      self.has_links,
-      self.has_category,
-      self.has_cover_picture,
-      self.has_email,
-      self.has_food,
-      self.is_free
+    self.features = [
+      Feature(DESCRIPTION_LENGTH, lambda e: len(e.description)),
+      Feature(HAS_PROFILE_PICTURE, lambda e: 1 if e.profile_picture is not None else 0),
+      Feature(HAS_LINKS, lambda e: 1 if "http://" in e.description.lower() else 0),
+      Feature(HAS_CATEGORY, lambda e: 1 if e.category is not None else 0),
+      Feature(HAS_COVER_PICTURE, lambda e: 1 if e.cover_picture is not None else 0),
+      Feature(HAS_EMAIL, lambda e: 1 if "@" in e.description.lower() else 0),
+      Feature(HAS_FOOD, lambda e: 1 if e.description.lower().split() or "food" in e.name.lower().split() else 0),
+      Feature(IS_FREE, lambda e: 1 if e.description.lower().split() or "free" in e.name.lower().split() else 0)
     ]
 
-    arr = []
+    indicators = []
     for event in events:
-      feature_values = [func(event) for func in self.feature_funcs]
-      arr.append(feature_values)
-    feature_mat = np.asarray(arr)
+      feature_values = [feature.apply(event) for feature in self.features]
+      indicators.append(feature_values)
+    feature_mat = np.asarray(indicators)
     attendance = np.asarray([event.attendance for event in events])
     self.model = LinearRegression()
     self.model.fit(feature_mat, attendance)
     
-  def test(self, event):
-    feature_values = [func(event) for func in self.feature_funcs]
-    return self.model.predict(feature_values)
-    
   def coefs(self):
-    return self.model.coef_[0,:]
+    """
+    Returns feature names and their importances (coefficients). e.g.
+    
+    {"has_food": 0.8,
+     "is_free": 13.7,
+      ...}
+    """
+    result = {}
+    for i in xrange(0, len(self.features)):
+      result[self.features[i].name] = self.model.coef_[0,i]
+    return result
