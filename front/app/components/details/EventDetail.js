@@ -148,26 +148,26 @@ class EventDetail extends React.Component {
           {/* Date */}
           <div className='event-detail-date'>
             <div className='icon event-date-icon'></div>
-            <p>{this.formatEventTime(this.props.data.start_time, this.props.data.end_time)}</p>
+            <p className='event-sub-info'>{this.formatEventTime(this.props.data.start_time, this.props.data.end_time)}</p>
           </div>
           {/* Venue */}
           <div className='event-detail-venue'>
             <div className='icon event-venue-icon'></div>
-            <p>{'TBD'}</p> {/* TODO: Get actual venue using this.props.data.venue_id */}
+            <p className='event-sub-info'>{'TBD'}</p> {/* TODO: Get actual venue using this.props.data.venue_id */}
+          </div>
+          {/* Stats */}
+          <div className='event-detail-stats'>
+            <div className='icon event-stats-icon'></div>
+            <p className='event-sub-info'>
+              {this.props.data.attending + ' Attending · '}
+              {this.props.data.maybe + ' Maybe · '}
+              {this.props.data.declined + ' Declined · '}
+              {this.props.data.noreply + ' No Reply'}
+            </p>
           </div>
           {/* Description */}
           <div className='event-detail-description'>
             <div dangerouslySetInnerHTML={{ __html: this.markSimilarWords(this.props.data.description, this.props.data.sim_words) }} />
-          </div>
-          {/* Stats */}
-          <div className='event-detail-stats'>
-            {'Attending: ' + this.props.data.attending}
-            <br/>
-            {'No Reply: ' + this.props.data.noreply}
-            <br/>
-            {'Declined: ' + this.props.data.declined}
-            <br/>
-            {'Maybe: ' + this.props.data.maybe}
           </div>
         </div>
         <button

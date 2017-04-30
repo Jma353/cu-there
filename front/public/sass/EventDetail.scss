@@ -70,11 +70,24 @@
   background: url('../images/LocationIcon.png');
 }
 
+.event-detail-stats {
+  display: inline-flex;
+  color: gray;
+}
+
+.event-stats-icon {
+  background: url('../images/StatsIcon.png');
+}
+
 .icon {
   margin: auto 10px auto 0;
   background-size: 100% 100%;
   width: $icon-size;
   height: $icon-size;
+}
+
+.event-sub-info {
+  margin: 15px 0;
 }
 
 .event-detail-description {
@@ -83,10 +96,6 @@
   width: 100%;
   // max-height: 40px;
   // overflow: hidden;
-}
-
-.event-detail-stats {
-  margin: 15px 0;
 }
 
 .event-detail-dismiss {
