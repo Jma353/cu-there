@@ -106,15 +106,7 @@ class EventDetail extends React.Component {
   }
 
   /**
-   * Tokenize text and remove punctuations
-   */
-  tokenize (text) {
-    // TODO
-    return
-  }
-
-  /**
-   * Generate html of event description with similar words marked
+   * Generate event description string with similar words marked
    */
   markSimilarWords(eventDesc, simWords) {
     var words = eventDesc.split(" ");
@@ -125,6 +117,18 @@ class EventDetail extends React.Component {
     });
 
     return eventDesc;
+  }
+
+  /**
+   * Generate category string with similar category marked
+   */
+  markSimilarCategs(category, simCateg) {
+    if (category && simCateg) {
+      var pattern = new RegExp(simCateg, 'gi');
+      category = category.replace(pattern, '<mark>' + simCateg + '</mark>');
+    }
+
+    return category;
   }
 
   /**
@@ -139,8 +143,11 @@ class EventDetail extends React.Component {
         <div className='event-detail-text-container'>
           {/* Title */}
           <a className='event-detail-title' href={'https://www.facebook.com/events/' + this.props.data.id} target='_blank'>
-            {this.props.data.name} - {this.props.data.category}
+            {this.props.data.name}
           </a>
+          <div className='event-detail-sim-categs'>
+            <div dangerouslySetInnerHTML={{ __html: this.markSimilarCategs(this.props.data.category, this.props.data.sim_categs) }} />
+          </div>
           {/* Venue */}
           <div className='event-detail-venue'>
             <p>{this.props.data.venue_id}</p>
@@ -163,15 +170,6 @@ class EventDetail extends React.Component {
             <br/>
             {'Maybe: ' + this.props.data.maybe}
           </div>
-          {/* Similar Words */}
-          <div className='event-detail-sim-words'>
-            {'Related Words: ' + this.setDefaultText(this.props.data.sim_words.join(', '))}
-          </div>
-          {/* Similar Categories */}
-          <div className='event-detail-sim-words'>
-            {'Related Categories: ' + this.setDefaultText(this.props.data.sim_categs)}
-          </div>
-
         </div>
         <button
           className='button event-detail-dismiss fa fa-times'
