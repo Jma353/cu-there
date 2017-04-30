@@ -33,7 +33,8 @@ def process_recs(es, sim_words, sim_categs, recs):
   for r in recs:
     addition = dict()
     addition['venue_id'] = r['venue_id']
-    addition['projected_attendence'] = r['time_graph']
+    addition['venue_name'] = _venue_by_id(r['venue_id'])['name']
+    addition['projected_attendance'] = r['time_graph']
     addition['event_times'] = [
       {
         'event_name': e['name'],
