@@ -111,22 +111,6 @@ def top_k_recommendations(events, k=10):
     mean_attendance_time = zip(mean_buckets.keys(), mean_buckets.values())
     return np.asarray(mean_attendance_time)
 
-  def train_data(events, func):
-    """ 
-    Creates training data for attendance vs. `func` where `func` is a function
-    of the event time. 
-    """
-    attendance = [event.attending for event in events]
-    time = [func(event.start_time) for event in events]
-    attendance_time = zip(time, attendance)
-    return _average_attendance_by_time(attendance_time)
-
-  def hour_model_data(events):
-    """
-    Returns a training set for the hour component of TimeModel.
-    """
-    return train_data(events, utils.get_hour)
-
   # Step 1: Group events by venue
 
   for i in xrange(0, len(events)):
@@ -149,7 +133,7 @@ def top_k_recommendations(events, k=10):
   venues_to_models = {}
   for venue_id in venues_to_events:
     hour_model = TimeModel(feature_func=utils.get_hour)
-    hour_train_data = hour_model_data(venues_to_events[venue_id])
+    hour_train_data = utils.hour_model_data(venues_to_events[venue_id])
     if hour_train_data != []:
       hour_model.train(hour_train_data, venues_to_events[venue_id])
     venues_to_models[venue_id] = hour_model
@@ -165,7 +149,7 @@ def top_k_recommendations(events, k=10):
     peak_time, peak_time_value = hour_model.find_peak(synthetic_time_data)
     model_graph = hour_model.generate_graph(synthetic_time_data)
 
-    rec.add_venue(venue_id, venues_to_events[venue_id])
+    rec.add_venue(venue_id, [event.id for event in venues_to_events[venue_id]])
     rec.add_time(peak_time, model_graph)
 
   # Step 4: Meta-features and tag recommendations
