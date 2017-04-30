@@ -18,7 +18,8 @@ export function didSearch (query, categories) {
               response: {
                 venues: resp.data.data.venues,
                 tags: resp.data.data.tags,
-                times: resp.data.data.times
+                times: resp.data.data.times,
+                timeGraphs: resp.data.data.time_graphs
               },
               events: {
                 all: resp.data.data.events,
@@ -52,7 +53,8 @@ export function didChangeRelevance (query, categories, relevant, irrelevant, all
               response: {
                 venues: resp.data.data.venues,
                 tags: resp.data.data.tags,
-                times: resp.data.data.times
+                times: resp.data.data.times,
+                timeGraphs: resp.data.data.time_graphs
               },
               events: {
                 all: all,
