@@ -5,8 +5,8 @@ def topic_regression(expanded_query, gensim_corpus, lda_model, k = 50):
   """
   Takes a query that has been expanded using thesaurus generation,
   a Gensim corpus, a Gensim LDA model, and a parameter k. Finds the topic of the query,
-  finds the k documents (events) that are most relevant to this topic, and
-  performs time regression (using TimeModel) using these events as the training set.
+  finds the k documents (events) that are most relevant to this topic, and returns
+  a trained TimeModel object.
   """
   doc_bow = gensim_corpus.dictionary.doc2bow(expanded_query.lower().split())
   topic_distribution = lda_model[doc_bow]
@@ -23,4 +23,8 @@ def topic_regression(expanded_query, gensim_corpus, lda_model, k = 50):
   top_docs_max_topic = sorted(lda_model, key = lambda d: abs(dict(d).get(max_topic, 0)), reverse=True)
   top_k = top_docs_max_topic[:k]
   
-  # TODO: get events corresponding to top_k, create a TimeModel with these and get the peaks of the model
+  events = [] # TODO: get events corresponding to top_k
+  train_data = hour_model_data(venues_to_events[venue_id])
+  time_model = TimeModel()
+  time_model.train(hour_train_data, venues_to_events[venue_id])
+  return time_model
