@@ -4,122 +4,14 @@ from collections import defaultdict
 import json
 import math
 import numpy as np
+
 from app.events.models.event import Event, EventSchema
-import polyfit
-from utils import *
-from sklearn.linear_model import LinearRegression
+from models.metadata import MetadataModel
+from models.time import TimeModel
+from models.tags import TagModel
+import utils
 
 event_schema = EventSchema()
-
-class QuadraticModel(object):
-  """ Model for a polynomial of degree 2.
-      feature_func is the function used to extract the independent variable from an event
-      (for example, get_hour).
-
-      Contains a train, test, and find_peak function.
-  """
-  model = None
-  feature_func = None
-  events = []
-
-  def __init__(self, feature_func):
-    self.feature_func = feature_func
-    self.events = []
-
-  def train(self, train_set, events):
-    """ Trains model. """
-    if self.events == []:
-      self.events = events
-    self.model = polyfit.create_fit(train_set)
-    return self.model
-
-  def test(self, test_set):
-    """ Tests model. """
-    if not self.model:
-      return [0]*len(test_set)
-    return self.model(test_set.reshape(-1, 1))
-
-  def generate_graph(self, synthetic_data):
-    test_values = self.test(synthetic_data)
-    try:
-      return [list(i)[0] for i in list(test_values)]
-    except TypeError:
-      return []
-
-  def find_peak(self, test_set):
-    """
-    Finds peak using first derivative test.
-    Returns tuple (t, v) representing the peak time and peak value.
-    """
-    test_values = self.test(test_set)
-
-    # TESTING CODE - do not uncomment in production
-    import matplotlib.pyplot as plt
-    plt.scatter([self.feature_func(event.start_time) for event in self.events], [event.attending for event in self.events])
-    plt.plot(test_set, test_values)
-    plt.show()
-
-    derivs = [(i, test_values[i] - test_values[i-1]) for i in xrange(1, len(test_values))]
-    sorted_derivs = sorted(derivs, key=lambda t:math.fabs(t[1])) # This yields derivatives with smallest absolute value
-    index_of_peak = sorted_derivs[0][0]
-    return (index_of_peak, test_values[index_of_peak])
-
-class EventMetadataModel:
-  """
-  Model for event meta-features
-  """
-  model = None
-
-  def _contains_links(e):
-    return "http://" in e.description.lower()
-
-  def _contains_email(e):
-    return "@" in e.description.lower()
-
-  def _contains_food(e):
-    return "food" in e.description.lower().split() or "food" in e.name.lower().split()
-
-  def _contains_free(e):
-    return "free" in e.description.lower().split() or "free" in e.name.lower().split()
-
-  def __init__(self, events):
-    # Functions for generating features (indicator variables, numeric variables, etc.)
-
-    self.description_length = lambda e: len(e.description)
-    self.has_profile_picture = lambda e: 1 if e.profile_picture is not None else 0
-    self.has_links = lambda e: 1 if self._contains_links(e) else 0
-    self.has_category = lambda e: 1 if e.category is not None else 0
-    self.has_cover_picture = lambda e: 1 if e.cover_picture is not None else 0
-    self.has_email = lambda e: 1 if self._contains_email(e) else 0
-    self.has_food = lambda e: 1 if self._contains_food(e) else 0
-    self.is_free = lambda e: 1 if self._contains_free(e) else 0
-
-    self.feature_funcs = [
-      self.description_length,
-      self.has_profile_picture,
-      self.has_links,
-      self.has_category,
-      self.has_cover_picture,
-      self.has_email,
-      self.has_food,
-      self.is_free
-    ]
-
-    arr = []
-    for event in events:
-      feature_values = [func(event) for func in self.feature_funcs]
-      arr.append(feature_values)
-    feature_mat = np.asarray(arr)
-    attendance = np.asarray([event.attendance for event in events])
-    self.model = LinearRegression()
-    self.model.fit(feature_mat, attendance)
-    
-  def test(self, event):
-    feature_values = [func(event) for func in self.feature_funcs]
-    return self.model.predict(feature_values)
-    
-  def coefs(self):
-    return self.model.coef_[0,:]
 
 class TimeLocationPair:
   """ Struct containing time, location, attendance """
@@ -128,7 +20,6 @@ class TimeLocationPair:
     # Grab event information
     self.time = kwargs.get('time')
     self.time_graph = kwargs.get('time_graph')
-    self.day_of_month = kwargs.get('day_of_month')
     self.venue_id = kwargs.get('venue_id')
     self.attendance = kwargs.get('attendance')
     self.events = kwargs.get('events')
@@ -138,15 +29,16 @@ class TimeLocationPair:
       "venue_id": self.venue_id,
       "time": self.time,
       "time_graph": self.time_graph,
-      "day_of_month": self.day_of_month,
       "attendance": self.attendance,
       "events": [event_schema.dump(e).data for e in self.events]
     }
 
 def top_k_recommendations(events, k=10):
 
-  def _bucketify(attendance_time):
-    """ Helper function for returning average attendance for each discrete time value. """
+  def _average_attendance_by_time(attendance_time):
+    """ 
+    Helper function for returning average attendance for each discrete time value. 
+    """
     buckets = defaultdict(list)
 
     for i in xrange(8, 24):
@@ -165,20 +57,20 @@ def top_k_recommendations(events, k=10):
     return np.asarray(mean_attendance_time)
 
   def train_data(events, func):
-    """ Creates training data for attendance vs. `func` where `func` is a function
-        of the event time. """
+    """ 
+    Creates training data for attendance vs. `func` where `func` is a function
+    of the event time. 
+    """
     attendance = [event.attending for event in events]
     time = [func(event.start_time) for event in events]
     attendance_time = zip(time, attendance)
-    return _bucketify(attendance_time)
+    return _average_attendance_by_time(attendance_time)
 
   def hour_model_data(events):
-    """Returns a training set for the hour component of TimeModel."""
-    return train_data(events, get_hour)
-
-  def day_model_data(events):
-    """Returns a training set for the day-of-month component of TimeModel."""
-    return train_data(events, get_day)
+    """
+    Returns a training set for the hour component of TimeModel.
+    """
+    return train_data(events, utils.get_hour)
 
   # Step 1: Group events by venue
 
@@ -201,39 +93,27 @@ def top_k_recommendations(events, k=10):
 
   venues_to_models = {}
   for venue_id in venues_to_events:
-    hour_model = QuadraticModel(feature_func=get_hour)
-    day_model = QuadraticModel(feature_func=get_day)
+    hour_model = TimeModel(feature_func=utils.get_hour)
     hour_train_data = hour_model_data(venues_to_events[venue_id])
-    day_train_data = day_model_data(venues_to_events[venue_id])
-    if hour_train_data != [] or day_train_data != []:
-      if hour_train_data != []:
-        hour_model.train(hour_train_data, venues_to_events[venue_id])
-      if day_train_data != []:
-        day_model.train(day_train_data, venues_to_events[venue_id])
-      venues_to_models[venue_id] = {"hour": hour_model, "day": day_model}
+    if hour_train_data != []:
+      hour_model.train(hour_train_data, venues_to_events[venue_id])
+    venues_to_models[venue_id] = hour_model
 
   # Step 3: Find peaks of models (yielding time-location pairs)
 
   time_location_pairs = []
   for venue_id in venues_to_models:
-    model_bundle = venues_to_models[venue_id]
-    hour_model, day_model = model_bundle["hour"], model_bundle["day"]
-
+    hour_model = venues_to_models[venue_id]
     synthetic_time_data = np.asarray([i for i in xrange(0, 24)])
-    synthetic_day_data = np.asarray([i for i in xrange(0, 31)])
-
     peak_time, peak_time_value = hour_model.find_peak(synthetic_time_data)
-    peak_day, peak_day_value = day_model.find_peak(synthetic_day_data)
-
     model_graph = hour_model.generate_graph(synthetic_time_data)
 
     time_location_pairs.append(TimeLocationPair(
       venue_id     = venue_id,
       time         = peak_time,
       time_graph   = model_graph,
-      day_of_month = peak_day,
       events  = [event for event in venues_to_events[venue_id]],
-      attendance   = (peak_time_value + peak_day_value) / 2
+      attendance   = peak_time_value
     ))
 
   # Step 4: Output top time-location pairs
@@ -259,9 +139,8 @@ if __name__ == "__main__":
     print "Top location-time pairs for the {} events retrieved:".format(len(events))
     print
     for rec in recs:
-      print "{} on day {} at {}:00. Predicted attendance: {}\nRecommended because of: {}".format(
+      print "{} at {}:00. Predicted attendance: {}\nRecommended because of: {}".format(
         Venue.query.filter_by(id=rec["venue_id"]).first().name,
-        rec["day_of_month"],
         rec["time"],
         rec["attendance"],
         ", ".join([name for name in rec["event_names"]])
