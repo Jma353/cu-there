@@ -1,5 +1,5 @@
 from . import *
-from datetime import datetime
+from dateutil import parser
 
 # IR / ML
 from app.events.models import queries
@@ -32,9 +32,6 @@ def process_recs(es, sim_words, sim_categs, recs):
     v['events'] = r['events']
     v['suggested_time'] = r['time']
 
-  def _hour_from_string(s):
-    return datetime.strptime(s, '%Y-%m-%dT%H:%M:%S-0400').hour
-
   graphs = []
   for r in recs:
     addition = dict()
@@ -44,7 +41,7 @@ def process_recs(es, sim_words, sim_categs, recs):
     addition['event_times'] = [
       {
         'event_name': e['name'],
-        'time': _hour_from_string(e['start_time'])
+        'time': parser.parse(e['start_time']).hour
       } for e in r['events']]
     graphs.append(addition)
 

@@ -22,16 +22,18 @@ class TimeGraph extends React.Component {
         })
       });
 
-      // datasets.push({
-      //   backgroundColor: 'red',
-      //   label: this.props.data[i].venue_name + ' PEAK',
-      //   data: this.props.data[i].event_times.map((event, x) => {
-      //     return {
-      //       x: x,
-      //       y: event.time.index
-      //     };
-      //   })
-      // });
+      datasets.push({
+        fill: false,
+        backgroundColor: 'red',
+        borderWidth: 1,
+        label: this.props.data[i].venue_name + ' PEAK',
+        data: this.props.data[i].event_times.map((event, x) => {
+          return {
+            x: event.time,
+            y: event.attendance || 0
+          };
+        })
+      });
     }
 
     const data = {
@@ -49,6 +51,9 @@ class TimeGraph extends React.Component {
                 type: 'linear',
                 position: 'bottom'
               }]
+            },
+            legend: {
+              display: true
             }
           }}
           />
