@@ -23,6 +23,7 @@
 }
 
 .event-detail-text-container {
+  display: grid;
   width: 85%;
   margin-left: 5%;
 
@@ -39,13 +40,22 @@
   }
 }
 
+.event-detail-date {
+  display: inline-flex;
+  color: gray;
+}
+
+.event-date-icon {
+  background: url('../images/TimeIcon.png');
+}
+
 .event-detail-venue {
   @extend .sm-text;
+  display: inline-flex;
   width: 100%;
   @include respond-to(handhelds) {
 
   }
-  flex-direction: column;
   align-content: flex-start;
 
   color: gray;
@@ -54,6 +64,17 @@
     padding: 1px;
     margin: 0px;
   }
+}
+
+.event-venue-icon {
+  background: url('../images/LocationIcon.png');
+}
+
+.icon {
+  margin: auto 10px auto 0;
+  background-size: 100% 100%;
+  width: $icon-size;
+  height: $icon-size;
 }
 
 .event-detail-description {
@@ -65,7 +86,7 @@
 }
 
 .event-detail-stats {
-  margin: 15px auto;
+  margin: 15px 0;
 }
 
 .event-detail-dismiss {

@@ -141,18 +141,20 @@ class EventDetail extends React.Component {
           {/* Title */}
           <a className='event-detail-title' href={'https://www.facebook.com/events/' + this.props.data.id} target='_blank'>
             {this.props.data.name}
+            {/* Categories */}
+            <span className={'event-detail-categ' + this.markSimilarCategs(this.props.data.category, this.props.data.sim_categs)}>
+              {this.props.data.category}
+            </span>
           </a>
-          {/* Categories */}
-          <span className={'event-detail-categ' + this.markSimilarCategs(this.props.data.category, this.props.data.sim_categs)}>
-            {this.props.data.category}
-          </span>
-          {/* Venue */}
-          <div className='event-detail-venue'>
-            <p>{this.props.data.venue_id}</p>
-          </div>
           {/* Date */}
           <div className='event-detail-date'>
+            <div className='icon event-date-icon'></div>
             <p>{this.formatEventTime(this.props.data.start_time, this.props.data.end_time)}</p>
+          </div>
+          {/* Venue */}
+          <div className='event-detail-venue'>
+            <div className='icon event-venue-icon'></div>
+            <p>{'TBD'}</p> {/* TODO: Get actual venue using this.props.data.venue_id */}
           </div>
           {/* Description */}
           <div className='event-detail-description'>
