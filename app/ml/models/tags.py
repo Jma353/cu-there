@@ -5,6 +5,7 @@ class TagModel:
   Model for learning based on event tags.
   """
   model = None
+  tags = []
   
   def train(self, events):
     """ 
@@ -12,11 +13,15 @@ class TagModel:
     Creates an indicator variable for each tag and builds a matrix of training data using these variables.
     Trains a linear regression model on this data.
     """
+    self.model = None
+    self.tags = []
     tag_set = set()
     
     for event in events:
       for tag in event.tags:
         tag_set.add(tag)
+        
+    self.tags = list(tag_set)
     
     indicators = []
     for event in events:
@@ -34,4 +39,14 @@ class TagModel:
     self.model.fit(indicators, attendance)
     
   def coefs(self):
-    return self.model.coef_[0,:]
+    """
+    Returns tags and their importances (coefficients). e.g.
+    
+    {'free admission': 3.0,
+     'open to public': 0.7,
+      ...}
+    """
+    result = {}
+    for i in xrange(0, len(self.tags)):
+      result[self.tags[i]] = self.model.coef_[0,i]
+    return result
