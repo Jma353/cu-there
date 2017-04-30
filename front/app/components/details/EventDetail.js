@@ -138,14 +138,13 @@ class EventDetail extends React.Component {
           <img src={this.props.data.profile_picture} />
         </div>
         <div className='event-detail-text-container'>
-          {/* Title */}
-          <a className='event-detail-title' href={'https://www.facebook.com/events/' + this.props.data.id} target='_blank'>
-            {this.props.data.name}
-            {/* Categories */}
+          {/* Title + Categories */}
+          <div>
+            <a className='event-detail-title' href={'https://www.facebook.com/events/' + this.props.data.id} target='_blank'>{this.props.data.name}</a>
             <span className={'event-detail-categ' + this.markSimilarCategs(this.props.data.category, this.props.data.sim_categs)}>
               {this.props.data.category}
             </span>
-          </a>
+          </div>
           {/* Date */}
           <div className='event-detail-date'>
             <div className='icon event-date-icon'></div>
