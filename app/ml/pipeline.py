@@ -90,27 +90,6 @@ class Recommendation:
 
 def top_k_recommendations(events, k=10):
 
-  def _average_attendance_by_time(attendance_time):
-    """ 
-    Helper function for returning average attendance for each discrete time value. 
-    """
-    buckets = defaultdict(list)
-
-    for i in xrange(8, 24):
-      for pair in attendance_time:
-        if pair[0] == i:
-          buckets[i].append(pair[1])
-    mean_buckets = defaultdict(int)
-
-    for i in xrange(8, 24):
-      if len(buckets[i]) > 0:
-        mean_buckets[i] = sum(buckets[i])/len(buckets[i])
-
-    # We now have the max attendance for each time
-
-    mean_attendance_time = zip(mean_buckets.keys(), mean_buckets.values())
-    return np.asarray(mean_attendance_time)
-
   # Step 1: Group events by venue
 
   for i in xrange(0, len(events)):

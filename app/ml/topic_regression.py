@@ -51,7 +51,8 @@ def topic_regression(events, event_index, gensim_corpus, lda_model, k = 50):
       
   top_k = top_docs[:k]
   top_k_events = [
-    Event.query.filter_by(id=events[get_index_in_corpus(gensim_index, doc)]["id"]) for doc in top_k]
+    Event.query.filter_by(id=events[get_index_in_corpus(gensim_corpus, doc)]["id"]).all() for doc in top_k
+  ]
   
   train_data = utils.hour_model_data(top_k_events)
   time_model = TimeModel()
