@@ -53,17 +53,14 @@ def search():
   recs = top_k_recommendations(es)
 
   # Endpoint info
-  # Time that are distinctly optimal
-  times = [r['time'] for r in recs]
-  # Grab venues and make them dictionaries
   venues = queries.get_venues([r['venue_id'] for r in recs])
   venues = [venue_schema.dump(v).data for v in venues] # Resultant
-  # Add events to venues
   def _venue_by_id(v_id):
     results = [v for v in venues if v['id'] == v_id]
     return None if len(results) == 0 else results[0]
   for r in recs:
     _venue_by_id(r['venue_id'])['events'] = r['events']
+    _venue_by_id(r['venue_id'])['suggested_time'] = r['time']
 
   # Time graph
   time_graphs = [r['time_graph'] for r in recs]
@@ -79,7 +76,6 @@ def search():
     'success': True,
     'data': {
       'venues': venues,
-      'times': times,
       'time_graphs': [t for t in time_graphs if t != []],
       'tags': [],
       'events': events
@@ -124,21 +120,17 @@ def search_rocchio():
   recs = top_k_recommendations(es)
 
   # Endpoint info
-  times = [r['time'] for r in recs]
-  # Grab venues and make them dictionaries
   venues = queries.get_venues([r['venue_id'] for r in recs])
   venues = [venue_schema.dump(v).data for v in venues] # Resultant
-  # Add events to venues
   def _venue_by_id(v_id):
     results = [v for v in venues if v['id'] == v_id]
     return None if len(results) == 0 else results[0]
   for r in recs:
     _venue_by_id(r['venue_id'])['events'] = r['events']
+    _venue_by_id(r['venue_id'])['suggested_time'] = r['time']
 
-  print
-  print 'Venues found:'
-  for v in venues:
-    print v.name
+  # Time graph
+  time_graphs = [r['time_graph'] for r in recs]
 
   # Serialize events + add IR info
   events = [event_schema.dump(e).data for e in es]
@@ -151,7 +143,6 @@ def search_rocchio():
     'success': True,
     'data': {
       'venues': venues,
-      'times': times,
       'time_graphs': [t for t in time_graphs if t != []],
       'tags': [],
       'events': events
