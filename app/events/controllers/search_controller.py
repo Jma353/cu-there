@@ -41,7 +41,7 @@ def process_recs(es, sim_words, sim_categs, recs):
     addition['event_times'] = [
       {
         'event_name': e['name'],
-        'time': parser.parse(e['start_time']).hour
+        'time': parser.parse(e['start_time']).hour,
         'attendance': e['attending']
       } for e in r['events']]
     graphs.append(addition)
