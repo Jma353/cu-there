@@ -22,7 +22,7 @@ class VenueDetail extends React.Component {
         <div className='venue-detail-text-container'>
           {/* Title */}
           <div className='venue-detail-title'>
-            <strong>{this.props.data.name}</strong> at {formatTime(this.props.data.suggested_time)}
+            <a className='venue-detail-name' href={'http://maps.google.com/?q=' + this.props.data.latitude + ',' + this.props.data.longitude} target='_blank'><strong>{this.props.data.name}</strong></a> at {formatTime(this.props.data.suggested_time)}
           </div>
           {/* Address */}
           <div className='venue-detail-address'>

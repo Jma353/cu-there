@@ -44,6 +44,11 @@
   }
 }
 
+.venue-detail-name .venue-detail-name:hover, .venue-detail-name:link, .venue-detail-name:visited, .venue-detail-name:active {
+  color: $black;
+  text-decoration: none;
+}
+
 .venue-detail-address {
   @extend .sm-text;
   flex-basis: 100%;
