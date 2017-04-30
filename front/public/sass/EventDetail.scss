@@ -60,8 +60,8 @@
   @extend .sm-text;
   margin-top: 15px;
   width: 100%;
-  max-height: 40px;
-  overflow: hidden;
+  // max-height: 40px;
+  // overflow: hidden;
 }
 
 .event-detail-stats {
@@ -82,4 +82,8 @@
 .event-detail-title .event-detail-title:hover, .event-detail-title:link, .event-detail-title:visited, .event-detail-title:active {
   color: $black;
   text-decoration: none;
+}
+
+mark {
+  background-color: yellow;
 }

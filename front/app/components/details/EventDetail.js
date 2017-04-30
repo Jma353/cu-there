@@ -106,6 +106,27 @@ class EventDetail extends React.Component {
   }
 
   /**
+   * Tokenize text and remove punctuations
+   */
+  tokenize (text) {
+    // TODO
+    return
+  }
+
+  /**
+   * Generate html of event description with similar words marked
+   */
+  markSimilarWords(eventDesc, simWords) {
+    var words = eventDesc.split(" ");
+
+    var markedDesc = words.map(function (word) {
+      return (simWords.indexOf(word) != -1) ? '<mark>' + word + '</mark>' : word;
+    });
+
+    return markedDesc.join(" ");
+  }
+
+  /**
    * Render
    */
   render () {
@@ -129,7 +150,7 @@ class EventDetail extends React.Component {
           </div>
           {/* Description */}
           <div className='event-detail-description'>
-            {this.props.data.description}
+            <div dangerouslySetInnerHTML={{ __html: this.markSimilarWords(this.props.data.description, this.props.data.sim_words) }} />
           </div>
           {/* Stats */}
           <div className='event-detail-stats'>
