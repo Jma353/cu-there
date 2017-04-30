@@ -59,9 +59,8 @@ def search():
     results = [v for v in venues if v['id'] == v_id]
     return None if len(results) == 0 else results[0]
   for r in recs:
-    v = _venue_by_id(r['venue_id'])
-    v['events'] = r['events']
-    v['suggested_time'] = r['time']
+    _venue_by_id(r['venue_id'])['events'] = r['events']
+    _venue_by_id(r['venue_id'])['suggested_time'] = r['time']
 
   # Time graph
   time_graphs = [r['time_graph'] for r in recs]
@@ -127,9 +126,8 @@ def search_rocchio():
     results = [v for v in venues if v['id'] == v_id]
     return None if len(results) == 0 else results[0]
   for r in recs:
-    v = _venue_by_id(r['venue_id'])
-    v['events'] = r['events']
-    v['suggested_time'] = r['time']
+    _venue_by_id(r['venue_id'])['events'] = r['events']
+    _venue_by_id(r['venue_id'])['suggested_time'] = r['time']
 
   # Time graph
   time_graphs = [r['time_graph'] for r in recs]
