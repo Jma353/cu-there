@@ -169,6 +169,7 @@ class EventDetail extends React.Component {
           </div>
           {/* Description */}
           <div className='event-detail-description'>
+            <h3>Details</h3>
             <div dangerouslySetInnerHTML={{ __html: this.markSimilarWords(this.props.data.description, this.props.data.sim_words) }} />
           </div>
         </div>

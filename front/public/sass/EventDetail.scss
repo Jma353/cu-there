@@ -92,10 +92,14 @@
 
 .event-detail-description {
   @extend .sm-text;
-  margin-top: 15px;
   width: 100%;
   // max-height: 40px;
   // overflow: hidden;
+
+  h3 {
+    margin: 10px 0;
+    font-weight: 500;
+  }
 }
 
 .event-detail-dismiss {
