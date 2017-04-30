@@ -13,24 +13,73 @@ import utils
 
 event_schema = EventSchema()
 
-class TimeLocationPair:
-  """ Struct containing time, location, attendance """
+class Recommendation:
+  """ 
+  Struct containing recommendations for times, venues, tags, etc.
+  """
 
   def __init__(self, **kwargs):
-    # Grab event information
-    self.time = kwargs.get('time')
-    self.time_graph = kwargs.get('time_graph')
-    self.venue_id = kwargs.get('venue_id')
-    self.attendance = kwargs.get('attendance')
-    self.events = kwargs.get('events')
+    """
+    Initializes internal data structures.
+    """
+    self.times = []
+    self.time_graphs = []
+    self.venue_ids = []
+    self.venue_events = []
+    self.tags = []
+    self.features = []
+
+  def add_time(self, peak_time, time_graph):
+    """
+    Adds a peak time and the time graph it came from.
+    :param peak_time: an int
+    :param time_graph: a list of lists. first list: x values, second list: y values
+    """
+    self.times.append(peak_time)
+    self.time_graphs.append(time_graph)
+    
+  def add_venue(self, venue_id, events):
+    """
+    Adds a venue and the events that contributed to that venue being recommended.
+    :param venue_id: a string
+    :param events: a list of event names
+    """
+    self.venue_ids.append(venue_id)
+    self.venue_events.append(events)
+    
+  def add_tag(self, tag):
+    """
+    Adds a tag.
+    """
+    self.tags.append(tag)
+
+  def add_feature(self, feature_name):
+    """
+    Adds a feature.
+    """
+    self.features.append(feature_name)
+    
+  def get_venue_ids(self):
+    return self.venue_ids
+    
+  def get_times(self):
+    return self.times
 
   def to_dict(self):
     return {
-      "venue_id": self.venue_id,
-      "time": self.time,
-      "time_graph": self.time_graph,
-      "attendance": self.attendance,
-      "events": [event_schema.dump(e).data for e in self.events]
+      'times': [{
+        'peak': self.times[i],
+        'graph': {
+          'x': self.time_graphs[i][0],
+          'y': self.time_graphs[i][1]
+        }
+      } for i in xrange(0, len(self.times))],
+      'venues': [{
+        'id': self.venue_ids[i],
+        'events': self.venue_events[i]
+      } for i in xrange(0, len(self.venue_ids))],
+      'tags': self.tags,
+      'features': self.features
     }
 
 def top_k_recommendations(events, k=10):
@@ -99,27 +148,21 @@ def top_k_recommendations(events, k=10):
       hour_model.train(hour_train_data, venues_to_events[venue_id])
     venues_to_models[venue_id] = hour_model
 
-  # Step 3: Find peaks of models (yielding time-location pairs)
+  # Step 3: Find peaks of models
 
   time_location_pairs = []
+  rec = Recommendation()
+  
   for venue_id in venues_to_models:
     hour_model = venues_to_models[venue_id]
     synthetic_time_data = np.asarray([i for i in xrange(0, 24)])
     peak_time, peak_time_value = hour_model.find_peak(synthetic_time_data)
     model_graph = hour_model.generate_graph(synthetic_time_data)
 
-    time_location_pairs.append(TimeLocationPair(
-      venue_id     = venue_id,
-      time         = peak_time,
-      time_graph   = model_graph,
-      events  = [event for event in venues_to_events[venue_id]],
-      attendance   = peak_time_value
-    ))
-
-  # Step 4: Output top time-location pairs
-
-  sorted_pairs = sorted(time_location_pairs, key=lambda t: t.attendance, reverse=True)
-  return [pair.to_dict() for pair in sorted_pairs[:k]]
+    rec.add_venue(venue_id, venues_to_events[venue_id])
+    rec.add_time(peak_time, model_graph)
+  
+  return rec
 
 if __name__ == "__main__":
   # Testing
@@ -133,16 +176,13 @@ if __name__ == "__main__":
 
     events = Event.query.all()
     events = [event for event in events if query in event.name.lower()]
-    recs = top_k_recommendations(events)
+    rec = top_k_recommendations(events)
 
     # print recs
-    print "Top location-time pairs for the {} events retrieved:".format(len(events))
+    print "Top venues:".format(len(events))
     print
-    for rec in recs:
-      print "{} at {}:00. Predicted attendance: {}\nRecommended because of: {}".format(
-        Venue.query.filter_by(id=rec["venue_id"]).first().name,
-        rec["time"],
-        rec["attendance"],
-        ", ".join([name for name in rec["event_names"]])
-      )
+    for venue_id in rec.get_venue_ids():
+      print Venue.query.filter_by(id=venue_id).first().name
     print
+    for time in rec.get_times():
+      print time
