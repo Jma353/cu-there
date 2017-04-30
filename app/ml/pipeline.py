@@ -4,10 +4,11 @@ from collections import defaultdict
 import json
 import math
 import numpy as np
-
-from app.events.models.event import Event
+from app.events.models.event import Event, EventSchema
 import polyfit
 from utils import *
+
+event_schema = EventSchema()
 
 class QuadraticModel(object):
   """ Model for a polynomial of degree 2.
@@ -68,13 +69,13 @@ class EventMetadataModel:
   """
   model = None
   feature_mat = None
-  
+
   def _contains_links(e):
     return True
 
   def _contains_email(e):
     return True
-    
+
   def _contains_food(e):
     return True
 
@@ -83,7 +84,7 @@ class EventMetadataModel:
 
   def __init__(self, events):
     # Functions for generating features (indicator variables, numeric variables, etc.)
-    
+
     self.description_length = lambda e: len(e.description)
     self.has_profile_picture = lambda e: 1 if e.profile_picture is not None else 0
     self.has_links = lambda e: 1 if self._contains_links(e) else 0
@@ -92,7 +93,7 @@ class EventMetadataModel:
     self.has_email = lambda e: 1 if self._contains_email(e) else 0
     self.has_food = lambda e: 1 if self._contains_food(e) else 0
     self.is_free = lambda e: 1 if self._contains_free(e) else 0
-    
+
     self.feature_funcs = [
       self.description_length,
       self.has_profile_picture,
@@ -103,7 +104,7 @@ class EventMetadataModel:
       self.has_food,
       self.is_free
     ]
-    
+
     arr = []
     for event in events:
       feature_values = [func(event) for func in self.feature_funcs]
@@ -113,13 +114,14 @@ class EventMetadataModel:
 class TimeLocationPair:
   """ Struct containing time, location, attendance """
 
-  def __init__(self, time, time_graph, day_of_month, venue_id, attendance, event_names):
-    self.time = time
-    self.time_graph = time_graph
-    self.day_of_month = day_of_month
-    self.venue_id = venue_id
-    self.attendance = attendance
-    self.event_names = event_names
+  def __init__(self, **kwargs):
+    # Grab event information
+    self.time = kwargs.get('time')
+    self.time_graph = kwargs.get('time_graph')
+    self.day_of_month = kwargs.get('day_of_month')
+    self.venue_id = kwargs.get('venue_id')
+    self.attendance = kwargs.get('attendance')
+    self.events = kwargs.get('events')
 
   def to_dict(self):
     return {
@@ -128,7 +130,7 @@ class TimeLocationPair:
       "time_graph": self.time_graph,
       "day_of_month": self.day_of_month,
       "attendance": self.attendance,
-      "event_names": self.event_names
+      "events": [event_schema.dump(e).data for e in self.events]
     }
 
 def top_k_recommendations(events, k=10):
@@ -216,12 +218,12 @@ def top_k_recommendations(events, k=10):
     model_graph = hour_model.generate_graph(synthetic_time_data)
 
     time_location_pairs.append(TimeLocationPair(
-      venue_id=venue_id,
-      time=peak_time,
-      time_graph=model_graph,
-      day_of_month=peak_day,
-      event_names=[event.name for event in venues_to_events[venue_id]],
-      attendance=(peak_time_value + peak_day_value)/2
+      venue_id     = venue_id,
+      time         = peak_time,
+      time_graph   = model_graph,
+      day_of_month = peak_day,
+      events  = [event for event in venues_to_events[venue_id]],
+      attendance   = (peak_time_value + peak_day_value) / 2
     ))
 
   # Step 4: Output top time-location pairs
