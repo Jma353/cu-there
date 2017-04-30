@@ -7,3 +7,7 @@
   @include respond-to(handhelds) { display: none; }
   @include respond-to(medium-screens) { display: none; }
 }
+
+.venue-detail-container:hover {
+  background-color: $off-white;
+}
