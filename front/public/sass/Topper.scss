@@ -6,6 +6,7 @@
   min-height: 400px;
   background-size: cover;
   background-position: center;
+  background-attachment: fixed;
 }
 
 .filter {
@@ -43,6 +44,7 @@
   display: flex;
   padding: 100px 0px 40px 0px;
   color: $white;
+  font-family: $loveya;
 }
 
 .briefing {

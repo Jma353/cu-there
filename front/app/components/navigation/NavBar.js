@@ -15,7 +15,7 @@ class NavBar extends React.Component {
     return (
       <div className='navbar-container'>
         <div className='brand-item'>
-          <a href='/'>CU There</a>
+          <Link to='/'>CU There</Link>
         </div>
         <div className='search-item'>
           <Search
