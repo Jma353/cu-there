@@ -56,7 +56,7 @@ def topic_regression(events, event_index, gensim_corpus, lda_model, k = 20):
   
   train_data = utils.hour_model_data(top_k_events)
   time_model = TimeModel(feature_func=utils.get_hour)
-  time_model.train(hour_train_data, top_k_events)
+  time_model.train(train_data, top_k_events)
   return time_model
   
 topic_regression(preprocessed.events, 0, preprocessed.corpus, preprocessed.topic_model)
