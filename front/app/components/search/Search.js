@@ -65,7 +65,7 @@ class Search extends React.Component {
   /**
    * Handle submission of search query
    */
-  handleSubmit (event) {
+  handleSubmit () {
     if (this.state.value) {
       window.location.href = `/results?q=${this.state.value}&categs=${this.state.categories}`;
     }
@@ -142,6 +142,8 @@ class Search extends React.Component {
   handleCategoryAdd (c) {
     this.setState({
       categories: this.state.categories.concat([c])
+    }, () => {
+      this.handleSubmit();
     });
   }
 
@@ -153,6 +155,8 @@ class Search extends React.Component {
     categories.splice(i, 1);
     this.setState({
       categories: categories
+    }, () => {
+      this.handleSubmit();
     });
   }
 
