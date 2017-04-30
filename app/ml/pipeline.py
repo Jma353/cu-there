@@ -7,6 +7,7 @@ import numpy as np
 from app.events.models.event import Event, EventSchema
 import polyfit
 from utils import *
+from sklearn.linear_model import LinearRegression
 
 event_schema = EventSchema()
 
@@ -53,10 +54,10 @@ class QuadraticModel(object):
     test_values = self.test(test_set)
 
     # TESTING CODE - do not uncomment in production
-    #import matplotlib.pyplot as plt
-    #plt.scatter([self.feature_func(event.start_time) for event in self.events], [event.attending for event in self.events])
-    #plt.plot(test_set, test_values)
-    #plt.show()
+    import matplotlib.pyplot as plt
+    plt.scatter([self.feature_func(event.start_time) for event in self.events], [event.attending for event in self.events])
+    plt.plot(test_set, test_values)
+    plt.show()
 
     derivs = [(i, test_values[i] - test_values[i-1]) for i in xrange(1, len(test_values))]
     sorted_derivs = sorted(derivs, key=lambda t:math.fabs(t[1])) # This yields derivatives with smallest absolute value
@@ -68,19 +69,18 @@ class EventMetadataModel:
   Model for event meta-features
   """
   model = None
-  feature_mat = None
 
   def _contains_links(e):
-    return True
+    return "http://" in e.description.lower()
 
   def _contains_email(e):
-    return True
+    return "@" in e.description.lower()
 
   def _contains_food(e):
-    return True
+    return "food" in e.description.lower().split() or "food" in e.name.lower().split()
 
   def _contains_free(e):
-    return True
+    return "free" in e.description.lower().split() or "free" in e.name.lower().split()
 
   def __init__(self, events):
     # Functions for generating features (indicator variables, numeric variables, etc.)
@@ -109,7 +109,17 @@ class EventMetadataModel:
     for event in events:
       feature_values = [func(event) for func in self.feature_funcs]
       arr.append(feature_values)
-    self.feature_mat = np.asarray(arr)
+    feature_mat = np.asarray(arr)
+    attendance = np.asarray([event.attendance for event in events])
+    self.model = LinearRegression()
+    self.model.fit(feature_mat, attendance)
+    
+  def test(self, event):
+    feature_values = [func(event) for func in self.feature_funcs]
+    return self.model.predict(feature_values)
+    
+  def coefs(self):
+    return self.model.coef_[0,:]
 
 class TimeLocationPair:
   """ Struct containing time, location, attendance """
