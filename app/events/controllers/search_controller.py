@@ -1,4 +1,5 @@
 from . import *
+from datetime import datetime
 
 # IR / ML
 from app.events.models import queries
@@ -21,13 +22,18 @@ def process_recs(es, sim_words, sim_categs, recs):
   # Endpoint info
   venues = queries.get_venues([r['venue_id'] for r in recs])
   venues = [venue_schema.dump(v).data for v in venues] # Resultant
+
   def _venue_by_id(v_id):
     results = [v for v in venues if v['id'] == v_id]
     return None if len(results) == 0 else results[0]
+
   for r in recs:
     v = _venue_by_id(r['venue_id'])
     v['events'] = r['events']
     v['suggested_time'] = r['time']
+
+  def _hour_from_string(s):
+    return datetime.strptime(s, '%Y-%m-%dT%H:%M:%S-0400').hour
 
   graphs = []
   for r in recs:
@@ -38,7 +44,7 @@ def process_recs(es, sim_words, sim_categs, recs):
     addition['event_times'] = [
       {
         'event_name': e['name'],
-        'time': e['start_time']
+        'time': _hour_from_string(['start_time'])
       } for e in r['events']]
     graphs.append(addition)
 
