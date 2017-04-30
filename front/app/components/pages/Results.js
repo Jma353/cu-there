@@ -34,8 +34,8 @@ class Results extends React.Component {
   formatTime (times) {
     var formattedTimes = [];
 
-    times = times.map(function(e) {
-      return e.split(":");
+    times = times.map(function (e) {
+      return e.split(':');
     });
 
     // Sort times array
