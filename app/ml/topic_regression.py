@@ -15,7 +15,7 @@ def get_index_in_corpus(corpus, doc):
     else:
       i += 1
 
-def topic_regression(events, event_index, gensim_corpus, lda_model, k = 50):
+def topic_regression(events, event_index, gensim_corpus, lda_model, k = 20):
   """
   Takes a query that has been expanded using thesaurus generation,
   a Gensim corpus, a Gensim LDA model, and a parameter k. Finds the topic of the query,
@@ -51,12 +51,12 @@ def topic_regression(events, event_index, gensim_corpus, lda_model, k = 50):
       
   top_k = top_docs[:k]
   top_k_events = [
-    Event.query.filter_by(id=events[get_index_in_corpus(gensim_corpus, doc)]["id"]).all() for doc in top_k
+    Event.query.filter_by(id=events[get_index_in_corpus(gensim_corpus, doc)]["id"]).first() for doc in top_k
   ]
   
   train_data = utils.hour_model_data(top_k_events)
-  time_model = TimeModel()
-  time_model.train(hour_train_data, venues_to_events[venue_id])
+  time_model = TimeModel(feature_func=utils.get_hour)
+  time_model.train(hour_train_data, top_k_events)
   return time_model
   
 topic_regression(preprocessed.events, 0, preprocessed.corpus, preprocessed.topic_model)

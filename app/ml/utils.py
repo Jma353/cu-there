@@ -1,4 +1,6 @@
 from datetime import datetime
+from collections import defaultdict
+import numpy as np
 
 def get_hour(time_string):
   date_time = datetime.strptime(time_string[:-5], '%Y-%m-%dT%H:%M:%S')
