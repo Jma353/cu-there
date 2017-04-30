@@ -125,6 +125,8 @@ class EventDetail extends React.Component {
    * Generate category string with similar category marked
    */
   markSimilarCategs(category, simCateg) {
+    if (!category) return 'no-categ';
+
     return (category == simCateg) ? ' marked-categ' : '';
   }
 
