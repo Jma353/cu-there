@@ -116,6 +116,8 @@ class EventDetail extends React.Component {
       eventDesc = eventDesc.replace(pattern, '<mark class="marked-word">' + word + '</mark>');
     });
 
+    eventDesc = eventDesc.replace(/\n/g, '<br />');
+
     return eventDesc;
   }
 
