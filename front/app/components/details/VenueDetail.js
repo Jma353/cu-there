@@ -21,6 +21,7 @@ class VenueDetail extends React.Component {
           {/* Title */}
           <div className='venue-detail-title'>
             {this.props.data.name}
+            {this.props.data.suggested_time}
           </div>
           {/* Address */}
           <div className='venue-detail-address'>
@@ -30,6 +31,15 @@ class VenueDetail extends React.Component {
           {/* Description */}
           <div className='venue-detail-description'>
             {this.props.data.about}
+          </div>
+          {/* Related events */}
+          <div className='venue-detail-events'>
+            <h3>Related Events</h3>
+            {this.props.data.events.map((e, i) => {
+              return (
+                <p key={i}>{e.name}</p>
+              );
+            })}
           </div>
         </div>
       </div>

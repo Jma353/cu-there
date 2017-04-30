@@ -7,6 +7,7 @@ let initialSearchState = {
   categories: [],
   results: {
     response: {
+      eventNames: [],
       venues: [],
       tags: [],
       times: [],

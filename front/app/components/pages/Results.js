@@ -78,12 +78,6 @@ class Results extends React.Component {
   render () {
     const response = this.props.results.response;
     const categories = this.props.location.query.categs;
-    // Quick time formatting
-    const times = response.times.map((time, i) => {
-      return time + ':00';
-    }).filter((time) => {
-      return time !== '1:00';
-    });
 
     return (
       <div>
@@ -101,9 +95,8 @@ class Results extends React.Component {
               <TextCardList data={response.tags} title='Tags' />
             </div>
             */}
-            {times.length && response.timeGraphs.length &&
+            {response.timeGraphs.length &&
               <div className='result-times'>
-                <TextCardList data={this.formatTime(times)} title='Suggested Times' />
                 <TimeGraph data={response.timeGraphs} />
               </div>
             }
