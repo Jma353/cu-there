@@ -89,7 +89,7 @@ def process_recs(es, sim_words, sim_categs, recs):
 
   new_pairs = []
   for pair in recs['pairs']:
-    pair['venue_name'] = get_venues(pair['venue_id'])[0]
+    pair['venue_name'] = queries.get_venues(pair['venue_id'])[0]
     del pair['venue_id']
     new_pairs.append(pair)
 
