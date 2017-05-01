@@ -118,15 +118,16 @@ def top_k_recommendations(events, k=10):
   # Times
   
   synthetic_time_data = np.asarray([i for i in xrange(0, 24)])
-  time_model = topic_regression.topic_time_model(
+  time_models = topic_regression.topic_time_models(
     preprocessed.events,
-    preprocessed.events.index(events[0]),
+    [e["id"] for e in preprocessed.events].index(events[0].id),
     preprocessed.corpus,
     preprocessed.topic_model
   )
-  peak_time, peak_time_value = time_model.find_peak(synthetic_time_data)
-  model_graph = time_model.generate_graph(synthetic_time_data)
-  rec.add_time(peak_time, model_graph)
+  for time_model in time_models:
+    peak_time, peak_time_value = time_model.find_peak(synthetic_time_data)
+    model_graph = time_model.generate_graph(synthetic_time_data)
+    rec.add_time(peak_time, model_graph)
 
   # Meta-features and tag recommendations
   
