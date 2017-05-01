@@ -59,10 +59,14 @@ def process_recs(es, sim_words, sim_categs, recs):
     results = [v for v in venues if v['id'] == v_id]
     return None if len(results) == 0 else results[0]
 
+  def _event_by_id(e_id):
+    results = [e for e in es if e.id == e_id]
+    return None if len(results) == 0 else results[0]
+
   for i in xrange(len(recs['venues'])):
     r = recs['venues'][i]
     v = _venue_by_id(r['id'])
-    v['events'] = r['events']
+    v['events'] = [_event_by_id(e_id).name for e_id in r['events']]
     v['suggested_time'] = recs['times'][i]['peak']
 
   graphs = []

@@ -1,4 +1,6 @@
 from . import *
+from venue import VenueSchema
+from marshmallow import fields
 
 class Event(Base):
   __tablename__ = 'events'
@@ -41,5 +43,6 @@ class Event(Base):
     self.venue_id        = fb_json.get('venue', {}).get('id')
 
 class EventSchema(ModelSchema):
-  class Meta:
+  class Meta(ModelSchema.Meta):
     model = Event
+  venue = fields.Nested(VenueSchema)
