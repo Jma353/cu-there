@@ -27,9 +27,7 @@ class RelatedWordsCell extends React.Component {
         </li>
       );
 
-    return (
-      {cell}
-    );
+    return cell;
   }
 }
 

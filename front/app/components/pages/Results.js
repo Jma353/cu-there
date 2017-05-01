@@ -34,13 +34,12 @@ class Results extends React.Component {
   render () {
     const response = this.props.results.response;
     const categories = this.props.location.query.categs;
-
     return (
       <div>
         <NavBar
           query={this.props.location.query.q}
           categories={categories && categories.split(',')}
-          initialRelatedWords={this.props.location.query.related_words}
+          initialRelatedWords={this.props.location.query.related_words.split(',')}
           relatedWords={response.relatedWords}
           />
         <div className='results-header'>

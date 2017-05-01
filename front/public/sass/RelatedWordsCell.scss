@@ -1,0 +1,43 @@
+@import 'variables';
+
+.related-words-item {
+  margin: 4px;
+  color: white;
+  display: flex;
+  float: left;
+  margin: 4px;
+  border-radius: $border-radius;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+
+  span {
+    padding-right: 2px;
+    font-weight: 500;
+  }
+
+  button {
+    cursor: pointer;
+    border: none;
+    background-color: transparent;
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+}
+
+.related-words-used {
+  background-color: $color-5;
+  padding: 6px 0px 6px 6px;
+  button:hover {
+    color: white;
+  }
+}
+
+.related-words-unused {
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 6px 6px 6px 6px;
+  button:hover {
+    color: white;
+  }
+}

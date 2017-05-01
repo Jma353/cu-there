@@ -24,15 +24,28 @@ class Search extends React.Component {
    */
   constructor (props) {
     super(props);
+    this.componentConfig(props, {});
+  }
 
+  componentConfig (data, relatedWords) {
+    this.state = {
+      value: data.initialValue || '',
+      suggestions: [],
+      suggestionIndex: -1,
+      categories: data.initialCategories || [],
+      usedRelatedWords: relatedWords.usedRelatedWords || [],
+      unusedRelatedWords: relatedWords.unusedRelatedWords || []
+    };
+  }
+
+  componentWillReceiveProps (nextProps) {
     // Arrays we're building
     let usedRelatedWords = [];
     let unusedRelatedWords = [];
 
     // Shorter names
-    console.log(this.props);
-    let initialRelatedWords = this.props.initialRelatedWords || [];
-    let relatedWords = this.props.relatedWords || [];
+    let initialRelatedWords = nextProps.initialRelatedWords || [];
+    let relatedWords = nextProps.relatedWords || [];
 
     // Build used
     for (let i = 0; i < initialRelatedWords.length; i++) {
@@ -47,15 +60,11 @@ class Search extends React.Component {
         unusedRelatedWords.push(relatedWords[i]);
       }
     }
-
-    this.state = {
-      value: this.props.initialValue || '',
-      suggestions: [],
-      suggestionIndex: -1,
-      categories: this.props.initialCategories || [],
-      usedRelatedWords: usedRelatedWords,
-      unusedRelatedWords: unusedRelatedWords
-    };
+    this.componentConfig(
+      nextProps, {
+        usedRelatedWords: usedRelatedWords,
+        unusedRelatedWords: unusedRelatedWords
+      });
   }
 
   /**
@@ -227,7 +236,14 @@ class Search extends React.Component {
   render () {
     const buttonProps = {
       className: 'submit fa fa-search',
-      onClick: () => this.handleSubmit()
+      onClick: () => {
+        this.setState({
+          usedRelatedWords: [],
+          unusedRelatedWords: []
+        }, () => {
+          this.handleSubmit();
+        });
+      }
     };
 
     const submitButton = this.props.light

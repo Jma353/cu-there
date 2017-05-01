@@ -27,8 +27,8 @@ class RelatedWordsBar extends React.Component {
   render () {
     let usedInfos = this.props.used.map(w => { return { word: w, used: true }; });
     let unusedInfos = this.props.unused.map(w => { return { word: w, used: false }; });
-    let usedWordCells = usedInfos.map(this.generateCell);
-    let unusedWordCells = unusedInfos.map(this.generateCell);
+    let usedWordCells = usedInfos.map((info, i) => this.generateCell(info, i));
+    let unusedWordCells = unusedInfos.map((info, i) => this.generateCell(info, i));
     return (
       <ul className='related-words-list'>
         {usedWordCells}

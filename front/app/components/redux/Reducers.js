@@ -11,7 +11,8 @@ let initialSearchState = {
       venues: [],
       tags: [],
       times: [],
-      graphs: []
+      graphs: [],
+      relatedWords: []
     },
     events: {
       all: [],

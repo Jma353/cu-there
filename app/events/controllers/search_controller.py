@@ -68,14 +68,15 @@ def process_recs(es, sim_words, sim_categs, to_return_related_words, recs):
   for i in xrange(len(recs['venues'])):
     r = recs['venues'][i]
     v = _venue_by_id(r['id'])
-    v['events'] = [_event_by_id(e_id).name for e_id in r['events'] if _event_by_id(e_id) is not None]
+    v['events'] = r['events']
 
   graphs = []
 
   for r in recs['times']:
     graphs.append({
       'regression': r['graph']['data'],
-      'peak': r['peak']
+      'peak': r['peak'],
+      'peak_value': r['peak_attendance']
     })
 
   # Serialize events + add IR info
@@ -114,8 +115,8 @@ def search():
   related_words = [] if request.args.get('related_words') is None else request.args.get('related_words').split(',')
 
   # Related words
-  q = q + ' '.join(related_words)
   to_return_related_words = thes.grab_sim_words(q, 3)
+  q = q + ' ' + ' '.join(related_words)
 
   # IR, get events
   sim_words, sim_categs, es = generate_ir_results(
@@ -143,8 +144,8 @@ def search_feedback():
   related_words = [] if request.args.get('related_words') is None else request.args.get('related_words').split(',')
 
   # Related words
-  q = q + ' '.join(related_words)
   to_return_related_words = thes.grab_sim_words(q, 3)
+  q = q + ' ' + ' '.join(related_words)
 
   # IR, get events
   sim_words, sim_categs, es = generate_ir_results(

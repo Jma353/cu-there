@@ -79,7 +79,7 @@ class Recommendation:
     return {
       'times': [{
         'peak': self.times[i], # peak time
-        'peak_attendance': self.peak_attendances[i],
+        'peak_attendance': self.peak_attendances[i][0],
         'graph': {
           'data': self.time_graphs[i]
         }
@@ -95,11 +95,11 @@ def top_k_recommendations(events, k=10):
   
   # Venues
   
-  def venue_avg_attendance(d, key):
-    return sum([e.attending for e in d[key]])/len(d[key])
+  def venue_avg_weighted_attendance(d, key):
+    return sum([e.weighted_attending for e in d[key]])/len(d[key])
 
-  #for i in xrange(0, len(events)):
-  #  events[i].attending = events[i].attending*math.e**(-1*i)
+  for i in xrange(0, len(events)):
+    events[i].weighted_attending = events[i].attending*math.e**(-1*i)
 
   venues_to_events = defaultdict(list)
   for event in events:
@@ -110,10 +110,10 @@ def top_k_recommendations(events, k=10):
 
   for venue_id in venues_to_events:
     events = venues_to_events[venue_id]
-    #for event in events:
-      #event.attending *= math.fabs((len(events) - median_event_length) + 0.1)**(-0.5)
+    for event in events:
+      event.weighted_attending *= math.fabs((len(events) - median_event_length) + 0.1)**(-0.5)
 
-  top_venues = sorted(venues_to_events.keys(), key=lambda k: venue_avg_attendance(venues_to_events, k), reverse=True)
+  top_venues = sorted(venues_to_events.keys(), key=lambda k: venue_avg_weighted_attendance(venues_to_events, k), reverse=True)
   rec = Recommendation()
   for venue_id in top_venues[:k]:
     rec.add_venue(venue_id, [event.name for event in venues_to_events[venue_id]])
@@ -121,8 +121,10 @@ def top_k_recommendations(events, k=10):
   # Times
   
   synthetic_time_data = np.asarray([i for i in xrange(0, 24)])
+  print events[0].id
   time_models = topic_regression.topic_time_models(
     preprocessed.events,
+    preprocessed.ids_to_topics,
     [e["id"] for e in preprocessed.events].index(events[0].id),
     preprocessed.corpus,
     preprocessed.topic_model

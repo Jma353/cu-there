@@ -90,11 +90,12 @@ class Thesaurus(object):
     print 'Found words related to query:'
     for o in other_werds:
       print o
-    return q_sp + other_werds
+    return other_werds
 
   def add_sim_words(self, query, k):
     """
     Adds the top k similar words to the query `query` and
     returns a new query in string form
     """
-    return ' '.join(self.grab_sim_words(query, k))
+    q_sp = re.split(r'\s+',query)
+    return q_sp + ' ' + ' '.join(self.grab_sim_words(query, k))
