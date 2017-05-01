@@ -101,7 +101,7 @@ def process_recs(es, sim_words, sim_categs, recs):
       'graphs': graphs,
       'features': recs['features'],
       'events': events,
-      'pairs': new_pair
+      'pairs': new_pairs
     }
   }
 
