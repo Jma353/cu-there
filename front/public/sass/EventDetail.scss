@@ -3,10 +3,19 @@
 .event-detail-container {
   position: relative;
   display: flex;
-  padding: 10px 0px;
   flex-direction: row;
   flex-wrap: wrap;
-  border-top: 1px solid $border-gray;
+  padding: 20px;
+  margin-bottom: 20px;
+  border: 1px solid $border-gray;
+  border-radius: $border-radius;
+
+  transition: all 0.35s;
+  box-shadow: 4px 4px 8px rgba(50, 50, 50, 0.1);
+  &:hover {
+    box-shadow: 4px 4px 24px rgba(50, 50, 50, 0.3);
+    transform: translate(-2px, -2px);
+  }
 }
 
 .event-detail-img {

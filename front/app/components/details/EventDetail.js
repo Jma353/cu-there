@@ -132,7 +132,7 @@ class EventDetail extends React.Component {
    */
   formatFeatures (features) {
     features = features.map(function (feature) {
-      return "<span class='features'>" + feature + '</span>';
+      return '<span class="features">' + feature.toUpperCase().replace(/_/g, ' ') + '</span>';
     });
 
     return features.join('');
