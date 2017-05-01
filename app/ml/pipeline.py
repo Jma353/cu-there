@@ -14,7 +14,7 @@ import utils
 event_schema = EventSchema()
 
 class Recommendation:
-  """ 
+  """
   Struct containing recommendations for times, venues, tags, etc.
   """
 
@@ -37,7 +37,7 @@ class Recommendation:
     """
     self.times.append(peak_time)
     self.time_graphs.append(time_graph)
-    
+
   def add_venue(self, venue_id, events):
     """
     Adds a venue and the events that contributed to that venue being recommended.
@@ -46,7 +46,7 @@ class Recommendation:
     """
     self.venue_ids.append(venue_id)
     self.venue_events.append(events)
-    
+
   def add_tag(self, tag):
     """
     Adds a tag.
@@ -58,13 +58,13 @@ class Recommendation:
     Adds a feature.
     """
     self.features.append(feature_name)
-    
+
   def get_venue_ids(self):
     return self.venue_ids
-    
+
   def get_times(self):
     return self.times
-    
+
   def get_features(self):
     return self.features
 
@@ -76,9 +76,7 @@ class Recommendation:
       'times': [{
         'peak': self.times[i], # peak time
         'graph': {
-          # x and y axes of the graph
-          'x': self.time_graphs[i][0],
-          'y': self.time_graphs[i][1]
+          'data': self.time_graphs[i]
         }
       } for i in xrange(0, len(self.times))],
       'venues': [{
@@ -121,7 +119,7 @@ def top_k_recommendations(events, k=10):
 
   time_location_pairs = []
   rec = Recommendation()
-  
+
   for venue_id in venues_to_models:
     hour_model = venues_to_models[venue_id]
     synthetic_time_data = np.asarray([i for i in xrange(0, 24)])
@@ -132,16 +130,16 @@ def top_k_recommendations(events, k=10):
     rec.add_time(peak_time, model_graph)
 
   # Step 4: Meta-features and tag recommendations
-  
+
   m = MetadataModel(events)
   features_coefs = m.features_coefs()
-  
+
   # For now, let's return the top three features. We can play around with this or generate a number programmatically
-  
+
   top_three_feature_names = sorted(features_coefs.keys(), key=features_coefs.get, reverse=True)[:3]
   for feature_name in top_three_feature_names:
     rec.add_feature(feature_name)
-  
+
   return rec
 
 if __name__ == "__main__":
