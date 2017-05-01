@@ -13,22 +13,23 @@ class TimeGraph extends React.Component {
         backgroundColor: `rgba(${102 - 20 * i}, ${168 - 20 * i}, ${172 - 20 * i}, 0.5)`,
         borderColor: `rgba(${102 - 20 * i}, ${168 - 20 * i}, ${172 - 20 * i}, 0.5)`,
         borderWidth: 1,
-        data: this.props.data[i].map((y, x) => { return { x: x, y: y }; })
+        pointRadius: 0,
+        pointHitRadius: 0,
+        data: this.props.data[i].regression.map((y, x) => { return { x: x, y: y }; })
+      });
+
+      const peak = this.props.data[i].peak;
+      datasets.push({
+        fill: false,
+        backgroundColor: 'red',
+        borderWidth: 1,
+        label: 'PEAK',
+        data: [{
+          x: peak,
+          y: 0
+        }]
       });
     }
-
-      // datasets.push({
-      //   fill: false,
-      //   backgroundColor: 'red',
-      //   borderWidth: 1,
-      //   label: this.props.data[i].venue_name + ' PEAK',
-      //   data: this.props.data[i].event_times.map((event, x) => {
-      //     return {
-      //       x: event.time,
-      //       y: event.attendance || 0
-      //     };
-      //   })
-      // });
 
     const data = {
       datasets: datasets
@@ -44,10 +45,15 @@ class TimeGraph extends React.Component {
               xAxes: [{
                 type: 'linear',
                 position: 'bottom'
+              }],
+              yAxes: [{
+                ticks: {
+                  min: 0
+                }
               }]
             },
             legend: {
-              display: true
+              display: false
             }
           }}
           />
