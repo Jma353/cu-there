@@ -94,7 +94,8 @@ def process_recs(es, sim_words, sim_categs, recs):
       'venues': venues,
       'graphs': graphs,
       'features': recs['features'],
-      'events': events
+      'events': events,
+      'pairs': recs['pairs']
     }
   }
 
