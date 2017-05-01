@@ -113,7 +113,7 @@ def top_k_recommendations(events, k=10):
   top_venues = sorted(venues_to_events.keys(), key=lambda k: venue_avg_attendance(venues_to_events, k), reverse=True)
   rec = Recommendation()
   for venue_id in top_venues[:k]:
-    rec.add_venue(venue_id, venues_to_events[venue_id])
+    rec.add_venue(venue_id, [event.name for event in venues_to_events[venue_id]])
   
   # Times
   
