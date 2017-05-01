@@ -13,6 +13,7 @@ class VenueDetail extends React.Component {
    * Render
    */
   render () {
+    console.log(this.props.data.suggested_time);
     return (
       <div className='venue-detail-container'>
         {/* Image */}
@@ -22,7 +23,14 @@ class VenueDetail extends React.Component {
         <div className='venue-detail-text-container'>
           {/* Title */}
           <div className='venue-detail-title'>
-            <a className='venue-detail-name' href={'http://maps.google.com/?q=' + this.props.data.latitude + ',' + this.props.data.longitude} target='_blank'><strong>{this.props.data.name}</strong></a> at {formatTime(this.props.data.suggested_time)}
+            <a
+              className='venue-detail-name'
+              href={'http://maps.google.com/?q=' + this.props.data.latitude + ',' + this.props.data.longitude}
+              target='_blank'>
+              <strong>
+                {this.props.data.name}
+              </strong>
+            </a> at {formatTime(this.props.data.suggested_time)}
           </div>
           {/* Address */}
           <div className='venue-detail-address'>

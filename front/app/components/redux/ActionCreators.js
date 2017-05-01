@@ -20,7 +20,7 @@ export function didSearch (query, categories) {
                 venues: resp.data.data.venues,
                 features: resp.data.data.features,
                 times: [],
-                graphs: []
+                graphs: resp.data.data.graphs
               },
               events: {
                 all: resp.data.data.events,
@@ -55,7 +55,7 @@ export function didChangeRelevance (query, categories, relevant, irrelevant, all
                 venues: resp.data.data.venues,
                 features: resp.data.data.features,
                 times: [],
-                graphs: []
+                graphs: resp.data.data.graphs
               },
               events: {
                 all: all,

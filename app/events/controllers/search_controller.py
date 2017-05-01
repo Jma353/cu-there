@@ -31,9 +31,12 @@ def process_recs(es, sim_words, sim_categs, recs):
     v = _venue_by_id(r['id'])
     v['events'] = r['events']
 
-  # for r in recs['times']
-  #   v['suggested_time'] = r['times']
-  # graphs = []
+  graphs = []
+
+  for r in recs['times']:
+    v['suggested_time'] = r['peak']
+    graphs.append(r['graph']['data'])
+
   # for r in recs:
   #   addition = dict()
   #   addition['venue_id'] = r['venues']['id']
@@ -58,7 +61,7 @@ def process_recs(es, sim_words, sim_categs, recs):
     'success': True,
     'data': {
       'venues': venues,
-    #   'graphs': graphs,
+      'graphs': graphs,
       'features': recs['features'],
       'events': events
     }
