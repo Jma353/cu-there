@@ -41,6 +41,7 @@ class Preprocess(object):
     self.events            = self._build_events_list()
     self.corpus            = self._build_corpus(self.events)
     self.topic_model       = self._build_topic_model(self.events)
+    self.ids_to_topics     = self._build_event_ids_to_topics()
     self.count_vec         = self._build_count_vec()
     self.doc_by_term       = self._build_doc_by_term(self._build_doc_by_term_count(self.events, self.count_vec))
     self.words             = self.count_vec.get_feature_names()
@@ -259,6 +260,16 @@ class Preprocess(object):
     based on the doc term matrix.
     """
     return LdaModel(self.corpus, num_topics=n_topics)
+    
+  def _build_event_ids_to_topics(self):
+    i = 0
+    result = {}
+    for doc in self.corpus:
+      event = self.events[i]
+      topics = self.topic_model[doc]
+      result[event["id"]] = sorted(topics, key=lambda t: t[1], reverse=True)[0][0]
+      i += 1
+    return result
 
   def tokenize(self, text):
     """
