@@ -37,6 +37,7 @@
   list-style: none;
   flex-basis: 5%;
   justify-content: flex-end;
+  padding-left: 8px;
   @include respond-to(handhelds) {
     flex-basis: 0%;
     display: none;
@@ -46,4 +47,7 @@
 .link-item {
   @extend .sm-text;
   display: block;
+  a {
+    padding: 16px;
+  }
 }

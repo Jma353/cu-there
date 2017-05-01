@@ -30,15 +30,6 @@ class Results extends React.Component {
   }
 
   /**
-   * Format features
-   */
-  formatFeatures (features) {
-    return features.map(function (f) {
-      return f.toUpperCase().replace(/_/g, ' ');
-    });
-  }
-
-  /**
    * Render
    */
   render () {
@@ -56,7 +47,9 @@ class Results extends React.Component {
                 <TimeGraph data={response.graphs} />
               </div>
               <div className='result-features'>
-                <TextCardList data={this.formatFeatures(response.features)} title='Suggested Features' />
+                <TextCardList
+                  data={response.features}
+                  title='Increase attendance by including...' />
               </div>
             </div>
             <VenueDetailList data={response.venues} title='Venues' />

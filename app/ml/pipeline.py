@@ -10,6 +10,7 @@ from app.events.models.event import Event, EventSchema
 from models.metadata import MetadataModel
 from models.time import TimeModel
 from models.tags import TagModel
+from models.constants import *
 import coupling
 import topic_regression
 import utils
@@ -147,7 +148,7 @@ def top_k_recommendations(events, k=10):
 
   top_three_feature_names = sorted(features_coefs.keys(), key=features_coefs.get, reverse=True)[:3]
   for feature_name in top_three_feature_names:
-    rec.add_feature(feature_name)
+    rec.add_feature(feature_descriptions[feature_name])
 
   rec.pairs = coupling.suggest_pairs(events, rec.times, rec.venue_ids)
 

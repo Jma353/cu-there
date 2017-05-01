@@ -26,7 +26,15 @@ class NavBar extends React.Component {
             />
         </div>
         <ul className='navbar-links-container'>
-          <li className='link-item'><Link to='/about'>About</Link></li>
+          <li className='link-item'>
+            <a href='http://cu-there-v2.herokuapp.com' target='_blank'>V2</a>
+          </li>
+          <li className='link-item'>
+            <a href='http://cu-there-v1.herokuapp.com' target='_blank'>V1</a>
+          </li>
+          <li className='link-item'>
+            <Link to='/about'>About</Link>
+          </li>
         </ul>
       </div>
     );
