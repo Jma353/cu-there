@@ -254,7 +254,7 @@ class Preprocess(object):
     """
     return EventsCorpus(events)
     
-  def _build_topic_model(self, events, n_topics=10):
+  def _build_topic_model(self, events, n_topics=25):
     """
     Builds a latent Dirichlet allocation (LDA) topic model
     based on the doc term matrix.
