@@ -60,7 +60,10 @@ class Results extends React.Component {
               </div>
             </div>
             <VenueDetailList data={response.venues} title='Venues' />
-            <EventDetailList data={this.props.results.events.all} title='Related Events' />
+            <EventDetailList
+              data={this.props.results.events.all}
+              title='Related Events'
+              relatedWords={this.props.location.query.related_words} />
           </div>
           <Footer />
         </div>

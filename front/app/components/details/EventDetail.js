@@ -47,7 +47,7 @@ class EventDetail extends React.Component {
         relevant,
         irrelevant,
         all,
-        this.props.location.query.related_words
+        this.props.relatedWords
       )
     );
   }
