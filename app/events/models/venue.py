@@ -35,5 +35,5 @@ class Venue(Base):
     self.emails          = ';'.join((fb_json.get('emails') or []))
 
 class VenueSchema(ModelSchema):
-  class Meta:
+  class Meta(ModelSchema.Meta):
     model = Venue

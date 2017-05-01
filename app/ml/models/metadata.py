@@ -2,14 +2,7 @@ import numpy as np
 from sklearn.linear_model import LinearRegression
 
 from constants import *
-
-class Feature(object):
-  def __init__(self, name, func):
-    self.name = name
-    self.func = func
-    
-  def apply(self, event):
-    return self.func(event)
+from app.features import *
 
 class MetadataModel(object):
   """
@@ -24,18 +17,7 @@ class MetadataModel(object):
     Initializes a linear regression model based on predefined features of a set of events.
     """
 
-    self.features = [
-      Feature(DESCRIPTION_LENGTH, lambda e: len(e.description) if e.description is not None else 0),
-      Feature(HAS_PROFILE_PICTURE, lambda e: 1 if e.profile_picture is not None else 0),
-      Feature(HAS_LINKS, lambda e: 1 if e.description is not None and "http://" in e.description.lower() else 0),
-      Feature(HAS_CATEGORY, lambda e: 1 if e.category is not None else 0),
-      Feature(HAS_COVER_PICTURE, lambda e: 1 if e.cover_picture is not None else 0),
-      Feature(HAS_EMAIL, lambda e: 1 if e.description is not None and "@" in e.description.lower() else 0),
-      Feature(HAS_FOOD, lambda e: 1 if e.description is not None and \
-        e.name is not None and "food" in e.description.lower().split() or "food" in e.name.lower().split() else 0),
-      Feature(IS_FREE, lambda e: 1 if e.description is not None and \
-        e.name is not None and "free" in e.description.lower().split() or "free" in e.name.lower().split() else 0)
-    ]
+    self.features = FEATURES
 
     indicators = []
     for event in events:
@@ -45,11 +27,11 @@ class MetadataModel(object):
     attendance = np.asarray([event.attending for event in events])
     self.model = LinearRegression()
     self.model.fit(feature_mat, attendance)
-    
+
   def features_coefs(self):
     """
     Returns feature names and their importances (coefficients). e.g.
-    
+
     {"has_food": 0.8,
      "is_free": 13.7,
       ...}
