@@ -1,5 +1,6 @@
 # Imports
 import os
+import dill
 from flask import Flask, render_template, jsonify, make_response
 from flask_sqlalchemy import SQLAlchemy
 from preprocessing.preprocess import Preprocess
@@ -13,7 +14,12 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 db = SQLAlchemy(app)
 
 # Preprocess matrices and such
-preprocessed = Preprocess()
+preprocessed = None
+if os.path.isfile('preprocessed.p'):
+  preprocessed = dill.load(open('preprocessed.p', 'rb'))
+else:
+  preprocessed = Preprocess()
+  dill.dump(preprocessed, open('preprocessed.p', 'wb'))
 
 # Import + Register Blueprints
 from app.events import events as events

@@ -3,8 +3,11 @@ apiclient==1.0.3
 appdirs==1.4.0
 argh==0.26.2
 autoenv==1.0.0
+boto==2.46.1
+bz2file==0.98
 click==6.7
 cycler==0.10.0
+dill==0.2.6
 enum-compat==0.0.2
 enum34==1.1.6
 facebook-sdk==2.0.0
@@ -15,6 +18,7 @@ Flask-SQLAlchemy==2.1
 gensim==2.0.0
 gevent==1.2.1
 google-api-python-client==1.6.2
+greenlet==0.4.12
 gunicorn==19.7.1
 haversine==0.4.5
 httplib2==0.10.3
@@ -42,7 +46,9 @@ requests==2.13.0
 rsa==3.4.2
 scikit-learn==0.18.1
 scipy==0.19.0
+six==1.10.0
 sklearn==0.0
+smart-open==1.5.2
 SQLAlchemy==1.1.5
 uritemplate==3.0.0
 urllib3==1.20
