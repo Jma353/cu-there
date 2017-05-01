@@ -79,7 +79,7 @@ class Recommendation:
     return {
       'times': [{
         'peak': self.times[i], # peak time
-        'peak_attendance': self.peak_attendances[i],
+        'peak_attendance': self.peak_attendances[i][0],
         'graph': {
           'data': self.time_graphs[i]
         }
