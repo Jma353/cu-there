@@ -46,7 +46,7 @@ class VenueDetail extends React.Component {
             <h3>Related Events</h3>
             {this.props.data.events.map((e, i) => {
               return (
-                <p key={i}>{e.name}</p>
+                <p key={i}>{e}</p>
               );
             })}
           </div>
