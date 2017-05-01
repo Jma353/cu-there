@@ -131,6 +131,17 @@ class EventDetail extends React.Component {
   }
 
   /**
+   * Generate category string with similar category marked
+   */
+  formatFeatures(features) {
+    features = features.map(function (feature) {
+      return '<span class="features">' + feature + '</span>'
+    });
+
+    return features.join("")
+  }
+
+  /**
    * Render
    */
   render () {
@@ -171,6 +182,10 @@ class EventDetail extends React.Component {
           <div className='event-detail-description'>
             <h3>Details</h3>
             <div dangerouslySetInnerHTML={{ __html: this.markSimilarWords(this.props.data.description, this.props.data.sim_words) }} />
+          </div>
+          {/* Features */}
+          <div className='event-detail-features'>
+            <div dangerouslySetInnerHTML={{ __html: this.formatFeatures(this.props.data.features) }} />
           </div>
         </div>
         <button

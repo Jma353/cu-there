@@ -6,6 +6,8 @@ from app.events.models import queries
 from app.ir.ir_engine import *
 from app.ir.thesaurus import *
 from app.ml.pipeline import *
+from app.features import *
+from app.ml.models.constants import *
 
 # MARK - All data-structures
 
@@ -66,7 +68,7 @@ def process_recs(es, sim_words, sim_categs, recs):
   for i in xrange(len(recs['venues'])):
     r = recs['venues'][i]
     v = _venue_by_id(r['id'])
-    v['events'] = [_event_by_id(e_id).name for e_id in r['events']]
+    v['events'] = [_event_by_id(e_id).name for e_id in r['events'] if _event_by_id(e_id) is not None]
 
   graphs = []
 
@@ -78,9 +80,11 @@ def process_recs(es, sim_words, sim_categs, recs):
 
   # Serialize events + add IR info
   events = [event_schema.dump(e).data for e in es]
+
   for i in xrange(0, len(events)):
     events[i]['sim_words'] = sim_words[i]
     events[i]['sim_categs'] = sim_categs[i]
+    events[i]['features'] = [feature.name for feature in FEATURES if feature.apply(es[i]) == 1]
 
   # Prepare response
   response = {

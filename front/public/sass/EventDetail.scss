@@ -145,3 +145,16 @@ mark {
 .no-categ {
   padding: 0;
 }
+
+.event-detail-features {
+  margin: 20px 20px 10px 0;
+}
+
+.features {
+  margin-right: 10px;
+  padding: 2px 6px;
+  color: $color-4;
+  background-color: white;
+  border-radius: $border-radius;
+  border: 1px solid $color-4;
+}
