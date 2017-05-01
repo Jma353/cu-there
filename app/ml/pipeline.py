@@ -95,8 +95,8 @@ def top_k_recommendations(events, k=10):
   def venue_avg_attendance(d, key):
     return sum([e.attending for e in d[key]])/len(d[key])
 
-  for i in xrange(0, len(events)):
-    events[i].attending = events[i].attending*math.e**(-1*i)
+  #for i in xrange(0, len(events)):
+  #  events[i].attending = events[i].attending*math.e**(-1*i)
 
   venues_to_events = defaultdict(list)
   for event in events:
@@ -107,8 +107,8 @@ def top_k_recommendations(events, k=10):
 
   for venue_id in venues_to_events:
     events = venues_to_events[venue_id]
-    for event in events:
-      event.attending *= math.fabs((len(events) - median_event_length) + 0.1)**(-0.5)
+    #for event in events:
+      #event.attending *= math.fabs((len(events) - median_event_length) + 0.1)**(-0.5)
 
   top_venues = sorted(venues_to_events.keys(), key=lambda k: venue_avg_attendance(venues_to_events, k), reverse=True)
   rec = Recommendation()
