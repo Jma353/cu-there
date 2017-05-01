@@ -163,7 +163,7 @@ class EventDetail extends React.Component {
           {/* Venue */}
           <div className='event-detail-venue'>
             <div className='icon event-venue-icon' />
-            <p className='event-sub-info'>{this.props.data.venue.name}</p>
+            <p><a className='event-sub-info location' href={'http://maps.google.com/?q=' + this.props.data.venue.latitude + ',' + this.props.data.venue.longitude} target='_blank'>{this.props.data.venue.name}</a></p>
           </div>
           {/* Stats */}
           <div className='event-detail-stats'>
