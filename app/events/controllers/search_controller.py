@@ -75,7 +75,8 @@ def process_recs(es, sim_words, sim_categs, recs):
   for r in recs['times']:
     graphs.append({
       'regression': r['graph']['data'],
-      'peak': r['peak']
+      'peak': r['peak'],
+      'peak_value': r['peak_attendance']
     })
 
   # Serialize events + add IR info
