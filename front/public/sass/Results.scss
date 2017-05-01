@@ -58,7 +58,7 @@ $loading-spinner-size: 45px;
   width: $loading-spinner-size;
   height: $loading-spinner-size;
   border-radius: $loading-spinner-size / 2;
-  border: 3px solid $color-3;
+  border: 2px solid $color-3;
 }
 
 @keyframes spin {
