@@ -5,10 +5,12 @@ import json
 import math
 import numpy as np
 
+from app import preprocessed
 from app.events.models.event import Event, EventSchema
 from models.metadata import MetadataModel
 from models.time import TimeModel
 from models.tags import TagModel
+import topic_regression
 import utils
 
 event_schema = EventSchema()
@@ -87,8 +89,11 @@ class Recommendation:
     }
 
 def top_k_recommendations(events, k=10):
-
-  # Step 1: Group events by venue
+  
+  # Venues
+  
+  def venue_avg_attendance(d, key):
+    return sum([e.attending for e in d[key]])/len(d[key])
 
   for i in xrange(0, len(events)):
     events[i].attending = events[i].attending*math.e**(-1*i)
@@ -105,32 +110,26 @@ def top_k_recommendations(events, k=10):
     for event in events:
       event.attending *= math.fabs((len(events) - median_event_length) + 0.1)**(-0.5)
 
-  # Step 2: Create time models for each event group
-
-  venues_to_models = {}
-  for venue_id in venues_to_events:
-    hour_model = TimeModel(feature_func=utils.get_hour)
-    hour_train_data = utils.hour_model_data(venues_to_events[venue_id])
-    if hour_train_data != []:
-      hour_model.train(hour_train_data, venues_to_events[venue_id])
-    venues_to_models[venue_id] = hour_model
-
-  # Step 3: Find peaks of models
-
-  time_location_pairs = []
+  top_venues = sorted(venues_to_events.keys(), key=lambda k: venue_avg_attendance(venues_to_events, k), reverse=True)
   rec = Recommendation()
+  for venue_id in top_venues[:k]:
+    rec.add_venue(venue_id, venues_to_events[venue_id])
+  
+  # Times
+  
+  synthetic_time_data = np.asarray([i for i in xrange(0, 24)])
+  time_model = topic_regression.topic_time_model(
+    preprocessed.events,
+    preprocessed.events.index(events[0]),
+    preprocessed.corpus,
+    preprocessed.topic_model
+  )
+  peak_time, peak_time_value = time_model.find_peak(synthetic_time_data)
+  model_graph = time_model.generate_graph(synthetic_time_data)
+  rec.add_time(peak_time, model_graph)
 
-  for venue_id in venues_to_models:
-    hour_model = venues_to_models[venue_id]
-    synthetic_time_data = np.asarray([i for i in xrange(0, 24)])
-    peak_time, peak_time_value = hour_model.find_peak(synthetic_time_data)
-    model_graph = hour_model.generate_graph(synthetic_time_data)
-
-    rec.add_venue(venue_id, [event.id for event in venues_to_events[venue_id]])
-    rec.add_time(peak_time, model_graph)
-
-  # Step 4: Meta-features and tag recommendations
-
+  # Meta-features and tag recommendations
+  
   m = MetadataModel(events)
   features_coefs = m.features_coefs()
 
