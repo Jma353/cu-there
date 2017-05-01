@@ -45,7 +45,7 @@ class VenueDetail extends React.Component {
             <h3>Related Events</h3>
             {this.props.data.events.map((e, i) => {
               return (
-                <p key={i}>{e}</p>
+                <p key={i}><a className='related-events' href={'https://www.facebook.com/events/' + e[0]} target='_blank'>{e[1]}</a></p>
               );
             })}
           </div>
