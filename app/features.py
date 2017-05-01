@@ -9,7 +9,6 @@ class Feature(object):
     return self.func(event)
 
 FEATURES = [
-  Feature(DESCRIPTION_LENGTH, lambda e: len(e.description) if e.description is not None else 0),
   Feature(HAS_PROFILE_PICTURE, lambda e: 1 if e.profile_picture is not None else 0),
   Feature(HAS_LINKS, lambda e: 1 if e.description is not None and "http://" in e.description.lower() else 0),
   Feature(HAS_CATEGORY, lambda e: 1 if e.category is not None else 0),
