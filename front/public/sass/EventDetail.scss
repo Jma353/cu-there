@@ -118,6 +118,10 @@
   text-decoration: none;
 }
 
+.event-detail-title:hover {
+  text-decoration: underline;
+}
+
 .event-detail-categ {
   @extend .sm-text;
   margin: 10px;
