@@ -13,12 +13,55 @@
 .result-text-card-lists {
   display: flex;
   flex-direction: row;
-}
-
-.result-tags {
-  flex-basis: 50%;
+  .time-graph {
+    padding: 20px 0px 0px 0px;
+    display: block;
+    @include respond-to(handhelds) {
+      display: none;
+    }
+  }
 }
 
 .result-times {
   flex-basis: 50%;
+  @include respond-to(handhelds) {
+    flex-basis: 0%;
+  }
+}
+
+.result-features {
+  flex-basis: 50%;
+  @include respond-to(handhelds) {
+    flex-basis: 100%;
+  }
+}
+
+$loading-spinner-size: 45px;
+
+.spinner {
+  position: absolute;
+  display: block;
+  width: $loading-spinner-size;
+  height: $loading-spinner-size;
+  top: calc(50vh);
+  left: calc(50vw);
+  animation: spin 0.5s infinite linear;
+}
+
+.mask {
+  width: $loading-spinner-size / 2;
+  height: $loading-spinner-size / 2;
+  overflow: hidden;
+}
+
+.maskedCircle {
+  width: $loading-spinner-size;
+  height: $loading-spinner-size;
+  border-radius: $loading-spinner-size / 2;
+  border: 2px solid $color-3;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }

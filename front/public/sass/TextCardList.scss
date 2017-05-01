@@ -3,18 +3,17 @@
 .text-card-list-container {
   display: flex;
   background: $white;
-  padding: 40px 0px 0px 0px;
+  padding: 20px 0px 0px 0px;
   flex-direction: column;
   flex-basis: 100%;
 }
 
 .text-card-list-title {
-  @extend .lg-text;
   display: flex;
   justify-content: flex-start;
   color: $black;
   @include respond-to(handhelds) {
-    font-size: 24px;
+    font-size: 16px;
   }
 }
 

@@ -14,10 +14,10 @@ class About extends React.Component {
         <p><a href='https://github.com/jma353/cu-there' target='_blank'><i className='fa fa-github' aria-hidden='true' /> GitHub Page</a></p>
         <h3>Authors</h3>
         <ul>
-          <li>Annie Cheng</li>
-          <li>Joseph Antonakakis</li>
-          <li>Amit Mizrahi</li>
-          <li>Daniel Li</li>
+          <li>Annie Cheng - ac962</li>
+          <li>Joseph Antonakakis - jma353</li>
+          <li>Amit Mizrahi - am2269</li>
+          <li>Daniel Li - dl743</li>
         </ul>
       </div>
     );

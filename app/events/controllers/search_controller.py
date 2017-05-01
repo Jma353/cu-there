@@ -87,6 +87,12 @@ def process_recs(es, sim_words, sim_categs, to_return_related_words, recs):
     events[i]['sim_categs'] = sim_categs[i]
     events[i]['features'] = [feature.name for feature in FEATURES if feature.apply(es[i]) == 1]
 
+  new_pairs = []
+  for pair in recs['pairs']:
+    pair['venue_name'] = queries.get_venues([pair['venue_id']])[0].name
+    del pair['venue_id']
+    new_pairs.append(pair)
+
   # Prepare response
   response = {
     'success': True,
@@ -95,7 +101,8 @@ def process_recs(es, sim_words, sim_categs, to_return_related_words, recs):
       'graphs': graphs,
       'features': recs['features'],
       'events': events,
-      'related_words': to_return_related_words
+      'related_words': to_return_related_words,
+      'pairs': new_pairs
     }
   }
 
