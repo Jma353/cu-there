@@ -75,6 +75,15 @@
   }
 }
 
+.location .location:hover, .location:link, .location:visited, .location:active {
+  color: gray;
+  text-decoration: none;
+}
+
+.location:hover {
+  text-decoration: underline;
+}
+
 .event-venue-icon {
   background: url('../images/LocationIcon.png');
 }
