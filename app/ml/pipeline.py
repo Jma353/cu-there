@@ -10,6 +10,7 @@ from app.events.models.event import Event, EventSchema
 from models.metadata import MetadataModel
 from models.time import TimeModel
 from models.tags import TagModel
+import coupling
 import topic_regression
 import utils
 
@@ -71,6 +72,9 @@ class Recommendation:
 
   def get_features(self):
     return self.features
+    
+  def get_pairs(self):
+    return self.pairs
 
   def to_dict(self):
     """
@@ -88,7 +92,8 @@ class Recommendation:
         'id': self.venue_ids[i], # id of the venue
         'events': self.venue_events[i] # events that got the venue recommended
       } for i in xrange(0, len(self.venue_ids))],
-      'features': self.features
+      'features': self.features,
+      'pairs': coupling.suggest_pairs(events, self.times, self.venue_ids)
     }
 
 def top_k_recommendations(events, k=10):
@@ -174,3 +179,7 @@ if __name__ == "__main__":
     print
     for feature_name in rec.get_features():
       print feature_name
+    print "Top pairs:"
+    print
+    for pair in rec.to_dict()["pairs"]:
+      print "{} at {}".format(Venue.query.filter_by(id=pair["venue_id"]).first().name, pair["time"])
