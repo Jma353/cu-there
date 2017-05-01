@@ -115,11 +115,12 @@ npm run dev
 
 ````bash
 git checkout heroku
+git merge master
 cd front
-webpack -p
+webpack
 cd ..
 git add .
 git commit -m "Heroku push"
-git push origin master
 git push --force heroku heroku:master
+git checkout master
 ````
