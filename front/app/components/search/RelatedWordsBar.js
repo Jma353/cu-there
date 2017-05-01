@@ -30,10 +30,13 @@ class RelatedWordsBar extends React.Component {
     let usedWordCells = usedInfos.map((info, i) => this.generateCell(info, i));
     let unusedWordCells = unusedInfos.map((info, i) => this.generateCell(info, i));
     return (
-      <ul className='related-words-list'>
-        {usedWordCells}
-        {unusedWordCells}
-      </ul>
+      <div className='related-words-bar'>
+        <span className='related-words-label'>Related Words:</span>
+        <ul className='related-words-list'>
+          {usedWordCells}
+          {unusedWordCells}
+        </ul>
+      </div>
     );
   }
 }
