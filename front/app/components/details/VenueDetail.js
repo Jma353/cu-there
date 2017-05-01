@@ -13,7 +13,6 @@ class VenueDetail extends React.Component {
    * Render
    */
   render () {
-    console.log(this.props.data.suggested_time);
     return (
       <div className='venue-detail-container'>
         {/* Image */}
@@ -30,7 +29,7 @@ class VenueDetail extends React.Component {
               <strong>
                 {this.props.data.name}
               </strong>
-            </a> at {formatTime(this.props.data.suggested_time)}
+            </a>
           </div>
           {/* Address */}
           <div className='venue-detail-address'>

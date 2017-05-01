@@ -166,7 +166,7 @@ class EventDetail extends React.Component {
           {/* Venue */}
           <div className='event-detail-venue'>
             <div className='icon event-venue-icon'></div>
-            <p className='event-sub-info'>{'TBD'}</p> {/* TODO: Get actual venue using this.props.data.venue_id */}
+            <p className='event-sub-info'>{this.props.data.venue.name}</p>
           </div>
           {/* Stats */}
           <div className='event-detail-stats'>

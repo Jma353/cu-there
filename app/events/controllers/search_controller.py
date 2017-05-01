@@ -69,7 +69,6 @@ def process_recs(es, sim_words, sim_categs, recs):
     r = recs['venues'][i]
     v = _venue_by_id(r['id'])
     v['events'] = [_event_by_id(e_id).name for e_id in r['events'] if _event_by_id(e_id) is not None]
-    v['suggested_time'] = recs['times'][i]['peak']
 
   graphs = []
 
