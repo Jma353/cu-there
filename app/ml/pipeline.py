@@ -121,6 +121,7 @@ def top_k_recommendations(events, k=10):
   # Times
   
   synthetic_time_data = np.asarray([i for i in xrange(0, 24)])
+  print events[0].id
   time_models = topic_regression.topic_time_models(
     preprocessed.events,
     preprocessed.ids_to_topics,

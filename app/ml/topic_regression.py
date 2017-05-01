@@ -17,7 +17,15 @@ def get_index_in_corpus(corpus, doc):
     else:
       i += 1
 
-def topic_time_models(events, events_to_topics, event_index, gensim_corpus, lda_model, k = 20, n_topics=3):
+def topic_time_models(
+  events,
+  events_to_topics, 
+  event_index, 
+  gensim_corpus, 
+  lda_model, 
+  k = 20, 
+  n_topics=3
+):
   """
   Takes a query that has been expanded using thesaurus generation,
   a Gensim corpus, a Gensim LDA model, and a parameter k. Finds the topic of the query,
@@ -29,17 +37,19 @@ def topic_time_models(events, events_to_topics, event_index, gensim_corpus, lda_
   topic_freqs = defaultdict(int)
   for event in events_to_topics:
     topic_freqs[events_to_topics[event]] += 1
-  print topic_freqs
   
   i = 0
   doc_bow = None
   for doc in gensim_corpus:
     if i == event_index:
       doc_bow = doc
+      break
     else:
       i += 1
       
+  print doc_bow
   topic_distribution = lda_model[doc_bow]
+  print topic_distribution
   
   max = 0
   max_topic = -1
@@ -65,6 +75,8 @@ def topic_time_models(events, events_to_topics, event_index, gensim_corpus, lda_
     top_k_events = [
       Event.query.filter_by(id=id).first() for id in top_k
     ]
+    
+    print 
   
     train_data = utils.hour_model_data(top_k_events)
     time_model = TimeModel(feature_func=utils.get_hour)
