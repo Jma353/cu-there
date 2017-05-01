@@ -1,0 +1,15 @@
+@import 'variables';
+
+.related-words-list {
+  padding: 0px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.related-words-bar {
+  color: white;
+  display: flex;
+  width: 80%;
+  padding: 0px;
+}

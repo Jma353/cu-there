@@ -10,7 +10,10 @@ class EventDetailList extends React.Component {
   }
 
   generateDetail (event, i) {
-    return <EventDetail data={event} key={i} />;
+    return <EventDetail
+      data={event}
+      key={i}
+      relatedWords={this.props.relatedWords} />;
   }
 
   render () {

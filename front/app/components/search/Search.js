@@ -5,6 +5,7 @@ require('../../../public/sass/Search.scss');
 
 import SuggestionList from '../lists/SuggestionList';
 import CategoryBar from './CategoryBar';
+import RelatedWordsBar from './RelatedWordsBar';
 
 import LightButton from '../buttons/LightButton';
 require('../../../public/sass/LightButton.scss');
@@ -23,12 +24,56 @@ class Search extends React.Component {
    */
   constructor (props) {
     super(props);
+    this.componentConfig(props, {});
+  }
+
+  componentConfig (data, relatedWords) {
     this.state = {
-      value: this.props.initialValue || '',
+      value: data.initialValue || '',
       suggestions: [],
       suggestionIndex: -1,
-      categories: this.props.initialCategories || []
+      categories: data.initialCategories || [],
+      usedRelatedWords: relatedWords.usedRelatedWords || [],
+      unusedRelatedWords: relatedWords.unusedRelatedWords || []
     };
+  }
+
+  componentWillReceiveProps (nextProps) {
+    // Arrays we're building
+    let usedRelatedWords = [];
+    let unusedRelatedWords = [];
+
+    // Shorter names
+    let initialRelatedWords = nextProps.initialRelatedWords || [];
+    let relatedWords = nextProps.relatedWords || [];
+
+    // Build used
+    for (let i = 0; i < initialRelatedWords.length; i++) {
+      if (relatedWords.includes(initialRelatedWords[i])) {
+        usedRelatedWords.push(initialRelatedWords[i]);
+      }
+    }
+
+    // Build unused
+    for (let i = 0; i < relatedWords.length; i++) {
+      if (!usedRelatedWords.includes(relatedWords[i])) {
+        unusedRelatedWords.push(relatedWords[i]);
+      }
+    }
+    this.componentConfig(
+      nextProps, {
+        usedRelatedWords: usedRelatedWords,
+        unusedRelatedWords: unusedRelatedWords
+      });
+  }
+
+  handleFreshSearch () {
+    this.setState({
+      usedRelatedWords: [],
+      unusedRelatedWords: []
+    }, () => {
+      this.handleSubmit();
+    });
   }
 
   /**
@@ -67,7 +112,7 @@ class Search extends React.Component {
    */
   handleSubmit () {
     if (this.state.value) {
-      window.location.href = `/results?q=${this.state.value}&categs=${this.state.categories}`;
+      window.location.href = `/results?q=${this.state.value}&categs=${this.state.categories}&related_words=${this.state.usedRelatedWords}`;
     }
   }
 
@@ -85,7 +130,7 @@ class Search extends React.Component {
     }
 
     if (event.key === 'Enter') {
-      if (suggestionIndex < 0) this.handleSubmit(event);
+      if (suggestionIndex < 0) this.handleFreshSearch();
       else {
         this.handleSelectSuggestion(suggestionIndex);
       }
@@ -136,6 +181,8 @@ class Search extends React.Component {
     });
   }
 
+  // MARK - Handle category operations
+
   /**
    * Handle add category
    */
@@ -160,13 +207,47 @@ class Search extends React.Component {
     });
   }
 
+  // MARK - Handle related word use / removal
+
+  /**
+   * Handle use a word
+   */
+  handleUseRelatedWord (i) {
+    let used = this.state.usedRelatedWords.slice();
+    let unused = this.state.unusedRelatedWords.slice();
+    used.push(unused.splice(i, 1));
+    this.setState({
+      usedRelatedWords: used,
+      unusedRelatedWords: unused
+    }, () => {
+      this.handleSubmit();
+    });
+  }
+
+  /**
+   * Handle remove a word from being used
+   */
+  handleRemoveRelatedWord (i) {
+    let used = this.state.usedRelatedWords.slice();
+    let unused = this.state.unusedRelatedWords.slice();
+    unused.push(used.splice(i, 1));
+    this.setState({
+      usedRelatedWords: used,
+      unusedRelatedWords: unused
+    }, () => {
+      this.handleSubmit();
+    });
+  }
+
   /**
    * Render
    */
   render () {
     const buttonProps = {
       className: 'submit fa fa-search',
-      onClick: () => this.handleSubmit()
+      onClick: () => {
+        this.handleFreshSearch();
+      }
     };
 
     const submitButton = this.props.light
@@ -195,6 +276,14 @@ class Search extends React.Component {
               onItemClick={(i) => this.handleSelectSuggestion(i)}
               /> : null}
         </div>
+        {/* Related Words Picker Bar */}
+        <RelatedWordsBar
+          used={this.state.usedRelatedWords}
+          unused={this.state.unusedRelatedWords}
+          handleUseWord={(i) => { this.handleUseRelatedWord(i); }}
+          handleRemoveWord={(i) => { this.handleRemoveRelatedWord(i); }}
+          />
+        {/* Category Selection Bar */}
         <CategoryBar
           categories={this.state.categories}
           availableCategories={this.props.availableCategories}

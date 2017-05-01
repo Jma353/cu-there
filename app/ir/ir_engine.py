@@ -33,6 +33,7 @@ class IREngine(object):
     self.rel = rel
     self.irrel = irrel
     self.events = events
+    self.event_id_to_idx = {e['id']:i for i, e in enumerate(self.events)}
     self.n_events = len(self.events)
     self.query_vec = query_vec
     self.doc_by_term = doc_by_term
@@ -254,18 +255,21 @@ class IREngine(object):
     """
     query_part, rel_part, irrel_part = 0, 0, 0
 
+    print rel
+    print irrel
+
     # Calculate query_part
     query_part = a * self.query_vec
 
     # Calculate rel_part
     if rel:
-      rel_vecs = [self.doc_by_term[r] for r in rel]
+      rel_vecs = [self.doc_by_term[self.event_id_to_idx[r]] for r in rel]
       rel_vecs = np.sum(rel_vecs, axis=0)
       rel_part = b * (rel_vecs / float(len(rel)))
 
     # Calculate irrel_part
     if irrel:
-      irrel_vecs = [self.doc_by_term[r] for r in irrel]
+      irrel_vecs = [self.doc_by_term[self.event_id_to_idx[r]] for r in irrel]
       irrel_vecs = np.sum(irrel_vecs, axis=0)
       irrel_part = c * (irrel_vecs / float(len(irrel)))
 

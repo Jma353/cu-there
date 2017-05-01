@@ -4,4 +4,10 @@
   height: 10vh;
   padding: 0% 10%;
   background-color: $off-white;
+
+  p {
+    color: $dark-gray;
+    font-weight: 500;
+    padding-top: 24px;
+  }
 }

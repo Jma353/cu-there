@@ -16,8 +16,8 @@ event_schema = EventSchema()
 venue_schema = VenueSchema()
 
 # Variables for linear combo
-A = 0.5
-B = 0.5
+A = 0.6
+B = 0.4
 
 # Thesaurus
 thes = Thesaurus(A, B, app.preprocessed)
@@ -38,7 +38,9 @@ def generate_ir_results(**kwargs):
     doc_by_term=app.preprocessed.doc_by_term,
     count_vec=app.preprocessed.count_vec,
     categ_by_term=app.preprocessed.categ_by_term,
-    categ_name_to_idx=app.preprocessed.categ_name_to_idx
+    categ_name_to_idx=app.preprocessed.categ_name_to_idx,
+    rel=relevant,
+    irrel=irrelevant
   )
 
   # Note: just use rocchio function with empty relevant/irrelevant lists
@@ -52,7 +54,7 @@ def generate_ir_results(**kwargs):
 
 # MARK - Process ML recommendations
 
-def process_recs(es, sim_words, sim_categs, recs):
+def process_recs(es, sim_words, sim_categs, to_return_related_words, recs):
   # Endpoint info
   venues = queries.get_venues([r['id'] for r in recs['venues']])
   venues = [venue_schema.dump(v).data for v in venues] # Resultant
@@ -85,7 +87,7 @@ def process_recs(es, sim_words, sim_categs, recs):
   for i in xrange(0, len(events)):
     events[i]['sim_words'] = sim_words[i]
     events[i]['sim_categs'] = sim_categs[i]
-    events[i]['features'] = [feature.name for feature in FEATURES if feature.apply(es[i]) == 1]
+    events[i]['features'] = [feature.name for feature in FEATURES if feature.apply(es[i]) == 1 and feature.name != DESCRIPTION_LENGTH]
 
   new_pairs = []
   for pair in recs['pairs']:
@@ -101,6 +103,7 @@ def process_recs(es, sim_words, sim_categs, recs):
       'graphs': graphs,
       'features': recs['features'],
       'events': events,
+      'related_words': to_return_related_words,
       'pairs': new_pairs
     }
   }
@@ -117,10 +120,12 @@ def search():
   """
   # Grab the parameters
   q = '' if request.args.get('q') is None else request.args.get('q')
-  categs = [] if request.args.get('categs') is None else request.args.get('categs').split(",")
+  categs = [] if request.args.get('categs') is None else request.args.get('categs').split(',')
+  related_words = [] if request.args.get('related_words') is None else request.args.get('related_words').split(',')
 
-  # Update query by extending it with similar words
-  q = thes.add_sim_words(q, 3)
+  # Related words
+  to_return_related_words = thes.grab_sim_words(q, 3)
+  q = q + ' ' + ' '.join(related_words)
 
   # IR, get events
   sim_words, sim_categs, es = generate_ir_results(
@@ -132,7 +137,7 @@ def search():
   recs = top_k_recommendations(es)
 
   # Formatting, rocess recommendations
-  return process_recs(es, sim_words, sim_categs, recs.to_dict())
+  return process_recs(es, sim_words, sim_categs, to_return_related_words, recs.to_dict())
 
 
 @events.route(namespace + '/rocchio', methods=['GET'])
@@ -144,10 +149,12 @@ def search_feedback():
   q          = request.args.get('q')
   relevant   = request.args.getlist('relevant') # ids
   irrelevant = request.args.getlist('irrelevant') # ids
-  categs = [] if request.args.get('categs') is None else request.args.get('categs').split(",")
+  categs = [] if request.args.get('categs') is None else request.args.get('categs').split(',')
+  related_words = [] if request.args.get('related_words') is None else request.args.get('related_words').split(',')
 
-  # Update query by extending it with similar words
-  q = thes.add_sim_words(q, 3)
+  # Related words
+  to_return_related_words = thes.grab_sim_words(q, 3)
+  q = q + ' ' + ' '.join(related_words)
 
   # IR, get events
   sim_words, sim_categs, es = generate_ir_results(
@@ -161,4 +168,4 @@ def search_feedback():
   recs = top_k_recommendations(es)
 
   # Formatting, rocess recommendations
-  return process_recs(es, sim_words, sim_categs, recs.to_dict())
+  return process_recs(es, sim_words, sim_categs, to_return_related_words, recs.to_dict())

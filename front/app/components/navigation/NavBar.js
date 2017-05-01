@@ -21,6 +21,8 @@ class NavBar extends React.Component {
           <Search
             initialValue={this.props.query}
             initialCategories={this.props.categories}
+            initialRelatedWords={this.props.initialRelatedWords}
+            relatedWords={this.props.relatedWords}
             />
         </div>
         <ul className='navbar-links-container'>

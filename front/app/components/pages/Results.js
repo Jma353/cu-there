@@ -23,18 +23,27 @@ class Results extends React.Component {
     this.props.dispatch(
       actionCreators.didSearch(
         this.props.location.query.q,
-        this.props.location.query.categs
+        this.props.location.query.categs,
+        this.props.location.query.related_words
       )
     );
+  }
+
+  /**
+   * Format features
+   */
+  formatFeatures (features) {
+    return features.map(function (f) {
+      return f.toUpperCase().replace(/_/g, ' ');
+    });
   }
 
   /**
    * Render
    */
   render () {
-    const response = this.props.results.response;
+    const response = this.props.results.response || {};
     const categories = this.props.location.query.categs;
-
     const results = this.props.results.response
       ? (
         <div>
@@ -47,11 +56,14 @@ class Results extends React.Component {
                 <TimeGraph data={response.graphs} />
               </div>
               <div className='result-features'>
-                <TextCardList data={response.features} title='Suggested Features' />
+                <TextCardList data={this.formatFeatures(response.features)} title='Suggested Features' />
               </div>
             </div>
             <VenueDetailList data={response.venues} title='Venues' />
-            <EventDetailList data={this.props.results.events.all} title='Related Events' />
+            <EventDetailList
+              data={this.props.results.events.all}
+              title='Related Events'
+              relatedWords={this.props.location.query.related_words} />
           </div>
           <Footer />
         </div>
@@ -62,18 +74,18 @@ class Results extends React.Component {
           </div>
         </div>
       );
-
     return (
       <div>
         <NavBar
           query={this.props.location.query.q}
           categories={categories && categories.split(',')}
+          initialRelatedWords={this.props.location.query.related_words.split(',')}
+          relatedWords={response.relatedWords}
           />
         {results}
       </div>
     );
   }
-
 }
 
 /** Map the redux state to this component's props */
