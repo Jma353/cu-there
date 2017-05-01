@@ -25,19 +25,21 @@ class Recommendation:
     Initializes internal data structures.
     """
     self.times = []
+    self.peak_attendances = []
     self.time_graphs = []
     self.venue_ids = []
     self.venue_events = []
     self.tags = []
     self.features = []
 
-  def add_time(self, peak_time, time_graph):
+  def add_time(self, peak_time, peak_attendance, time_graph):
     """
     Adds a peak time and the time graph it came from.
     :param peak_time: an int
     :param time_graph: a list of lists. first list: x values, second list: y values
     """
     self.times.append(peak_time)
+    self.peak_attendances.append(peak_attendance)
     self.time_graphs.append(time_graph)
 
   def add_venue(self, venue_id, events):
@@ -77,6 +79,7 @@ class Recommendation:
     return {
       'times': [{
         'peak': self.times[i], # peak time
+        'peak_attendance': self.peak_attendances[i],
         'graph': {
           'data': self.time_graphs[i]
         }
@@ -125,9 +128,9 @@ def top_k_recommendations(events, k=10):
     preprocessed.topic_model
   )
   for time_model in time_models:
-    peak_time, peak_time_value = time_model.find_peak(synthetic_time_data)
+    peak_time, peak_attendance = time_model.find_peak(synthetic_time_data)
     model_graph = time_model.generate_graph(synthetic_time_data)
-    rec.add_time(peak_time, model_graph)
+    rec.add_time(peak_time, peak_attendance, model_graph)
 
   # Meta-features and tag recommendations
   
