@@ -7,6 +7,8 @@ from app.ir.ir_engine import *
 from app.ir.thesaurus import *
 from app.ml.pipeline import *
 
+# MARK - All data-structures
+
 # Serialization
 event_schema = EventSchema()
 venue_schema = VenueSchema()
@@ -17,6 +19,36 @@ B = 0.5
 
 # Thesaurus
 thes = Thesaurus(A, B, app.preprocessed)
+
+# MARK - Generate IR results
+
+def generate_ir_results(**kwargs):
+  q = kwargs.get('q', '')
+  categs = kwargs.get('categs', [])
+  relevant = kwargs.get('relevant', [])
+  irrelevant = kwargs.get('irrelevant', [])
+
+  # IR, get events
+  ir_engine = IREngine(
+    query=q,
+    categs=categs,
+    events=app.preprocessed.events,
+    doc_by_term=app.preprocessed.doc_by_term,
+    count_vec=app.preprocessed.count_vec,
+    categ_by_term=app.preprocessed.categ_by_term,
+    categ_name_to_idx=app.preprocessed.categ_name_to_idx
+  )
+
+  # Note: just use rocchio function with empty relevant/irrelevant lists
+  events_info = ir_engine.get_rocchio_categ_ranked_results()
+  event_ids, sim_words, sim_categs = map(list, zip(*events_info))
+  event_ids = event_ids[:min(len(event_ids), 12)] # Take 12 or less
+  es = queries.get_events(event_ids)
+
+  # Everything we need
+  return sim_words, sim_categs, es
+
+# MARK - Process ML recommendations
 
 def process_recs(es, sim_words, sim_categs, recs):
   # Endpoint info
@@ -82,25 +114,15 @@ def search():
   q = thes.add_sim_words(q, 3)
 
   # IR, get events
-  ir_engine = IREngine(
-    query=q,
-    categs=categs,
-    events=app.preprocessed.events,
-    doc_by_term=app.preprocessed.doc_by_term,
-    count_vec=app.preprocessed.count_vec,
-    categ_by_term=app.preprocessed.categ_by_term,
-    categ_name_to_idx=app.preprocessed.categ_name_to_idx
+  sim_words, sim_categs, es = generate_ir_results(
+    q=q,
+    categs=categs
   )
-
-  # Note: just use rocchio function with empty relevant/irrelevant lists
-  events_info = ir_engine.get_rocchio_categ_ranked_results()
-  event_ids, sim_words, sim_categs = map(list, zip(*events_info))
-  event_ids = event_ids[:min(len(event_ids), 12)] # Take 12 or less
-  es = queries.get_events(event_ids)
 
   # ML, get recs
   recs = top_k_recommendations(es)
 
+  # Formatting, rocess recommendations
   return process_recs(es, sim_words, sim_categs, recs.to_dict())
 
 @events.route(namespace + '/rocchio', methods=['GET'])
@@ -114,28 +136,20 @@ def search_rocchio():
   irrelevant = request.args.getlist('irrelevant') # ids
   categs = [] if request.args.get('categs') is None else request.args.get('categs').split(",")
 
+
   # Update query by extending it with similar words
   q = thes.add_sim_words(q, 3)
 
   # IR, get events
-  ir_engine = IREngine(
-    query=q,
+  sim_words, sim_categs, es = generate_ir_results(
+    q=q,
     categs=categs,
-    events=app.preprocessed.events,
-    doc_by_term=app.preprocessed.doc_by_term,
     relevant=relevant,
-    irrelevant=irrelevant,
-    count_vec=app.preprocessed.count_vec,
-    categ_by_term=app.preprocessed.categ_by_term,
-    categ_name_to_idx=app.preprocessed.categ_name_to_idx
+    irrelevant=irrelevant
   )
-
-  events_info = ir_engine.get_rocchio_categ_ranked_results()
-  event_ids, sim_words, sim_categs = map(list, zip(*events_info))
-  event_ids = event_ids[:min(len(event_ids), 12)] # Take 12 or less
-  es = queries.get_events(event_ids)
 
   # ML, get recs
   recs = top_k_recommendations(es)
 
+  # Formatting, rocess recommendations
   return process_recs(es, sim_words, sim_categs, recs.to_dict())
