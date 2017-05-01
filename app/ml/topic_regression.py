@@ -4,6 +4,8 @@ from app.events.models.event import Event
 from app import preprocessed
 import utils
 
+from collections import defaultdict
+
 def get_index_in_corpus(corpus, doc):
   """
   Gets the .index() of a doc in the corpus
@@ -23,6 +25,11 @@ def topic_time_models(events, events_to_topics, event_index, gensim_corpus, lda_
   a trained TimeModel object.
   """
   # Get doc with event index out of corpus
+  
+  topic_freqs = defaultdict(int)
+  for event in events_to_topics:
+    topic_freqs[events_to_topics[event]] += 1
+  print topic_freqs
   
   i = 0
   doc_bow = None
