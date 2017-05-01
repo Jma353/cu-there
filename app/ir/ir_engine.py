@@ -113,7 +113,11 @@ class IREngine(object):
     """
     Tokenize text into list of words and stem words
     """
-    return re.findall(r'[a-z]+', text.lower()) if text else []
+    text = text.lower()
+    reg = r'(((http|https)\:\/\/(([a-z|0-9]+)\.)*([a-z|0-9]+)\.([a-z|0-9]+)(\/([a-z|0-9]+))*))|([\w\.-]+@[\w\.-]+)'
+    emails_links_regex = re.compile(reg)
+    text = re.sub(emails_links_regex, '', text)
+    return re.findall(r'[a-z]+', text)
 
   def build_inverted_index(self, events):
     """
