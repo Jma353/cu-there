@@ -8,10 +8,9 @@
   flex: 1;
   margin: 30px;
   border-radius: $border-radius;
-  border: 1px solid $light-gray;
   background: $white;
 
-  box-shadow: 4px 4px 24px rgba(50, 50, 50, 0.5);
+  box-shadow: 4px 4px 24px rgba(50, 50, 50, 0.3);
 
   &:hover {
     box-shadow: 24px 24px 96px rgba(50, 50, 50, 0.5);
