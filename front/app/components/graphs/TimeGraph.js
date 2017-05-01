@@ -67,6 +67,16 @@ class TimeGraph extends React.Component {
             },
             legend: {
               display: false
+            },
+            tooltips: {
+              callbacks: {
+                title: function (tooltipItem, data) {
+                  return null;
+                },
+                label: function (tooltipItem, data) {
+                  return 'Peak: ' + formatTime(tooltipItem.xLabel);
+                }
+              }
             }
           }}
           />
