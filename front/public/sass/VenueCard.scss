@@ -2,14 +2,19 @@
 
 .venue-card {
   cursor: pointer;
-  max-width: 270px;
-  min-width: 270px;
+  max-width: 300px;
+  min-width: 300px;
   height: auto;
   flex: 1;
-  margin: 40px;
+  margin: 30px;
   border-radius: $border-radius;
   border: 1px solid $light-gray;
   background: $white;
+}
+
+.venue-card .venue-card:hover, .venue-card:link, .venue-card:visited, .venue-card:active {
+  color: $black;
+  text-decoration: none;
 }
 
 .venue-info-item {

@@ -11,7 +11,7 @@ class VenueCard extends React.Component {
    */
   render () {
     return (
-      <div className='venue-card'>
+      <a className='venue-card' href={'http://maps.google.com/?q=' + this.props.data.latitude + ',' + this.props.data.longitude} target='_blank'>
         <div className='venue-img-item'>
           <img src={this.props.data.profile_picture} />
         </div>
@@ -19,9 +19,10 @@ class VenueCard extends React.Component {
           {this.props.data.name}
         </div>
         <div className='venue-info-address'>
-          {this.props.data.street}
+          {this.props.data.street}<br/>
+          {this.props.data.city}, {this.props.data.state} {this.props.data.zip}
         </div>
-      </div>
+      </a>
     );
   }
 }
