@@ -78,3 +78,8 @@
     font-size: 14px;
   }
 }
+
+.related-events .related-events:hover, .related-events:link, .related-events:visited, .related-events:active {
+  color: $black;
+  text-decoration: none;
+}

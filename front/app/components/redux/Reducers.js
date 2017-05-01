@@ -5,20 +5,7 @@
 let initialSearchState = {
   query: '',
   categories: [],
-  results: {
-    response: {
-      eventNames: [],
-      venues: [],
-      features: [],
-      times: [],
-      graphs: []
-    },
-    events: {
-      all: [],
-      relevant: [],
-      irrelevant: []
-    }
-  }
+  results: {}
 };
 
 /**

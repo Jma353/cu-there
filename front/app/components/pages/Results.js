@@ -32,9 +32,36 @@ class Results extends React.Component {
    * Render
    */
   render () {
-    console.log(this.props);
     const response = this.props.results.response;
     const categories = this.props.location.query.categs;
+
+    const results = this.props.results.response
+      ? (
+        <div>
+          <div className='results-header'>
+            <p>{`Showing ${Object.keys(response.venues).length} venues`}</p>
+          </div>
+          <div className='results'>
+            <div className='result-text-card-lists'>
+              <div className='result-times'>
+                <TimeGraph data={response.graphs} />
+              </div>
+              <div className='result-features'>
+                <TextCardList data={response.features} title='Suggested Features' />
+              </div>
+            </div>
+            <VenueDetailList data={response.venues} title='Venues' />
+            <EventDetailList data={this.props.results.events.all} title='Related Events' />
+          </div>
+          <Footer />
+        </div>
+      ) : (
+        <div className='spinner'>
+          <div className='mask'>
+            <div className='maskedCircle' />
+          </div>
+        </div>
+      );
 
     return (
       <div>
@@ -42,22 +69,7 @@ class Results extends React.Component {
           query={this.props.location.query.q}
           categories={categories && categories.split(',')}
           />
-        <div className='results-header'>
-          <p>{`Showing ${Object.keys(response.venues).length} venues`}</p>
-        </div>
-        <div className='results'>
-          <div className='result-text-card-lists'>
-            <div className='result-times'>
-              <TimeGraph data={response.graphs} />
-            </div>
-            <div className='result-features'>
-              <TextCardList data={response.features} title='Suggested Features' />
-            </div>
-          </div>
-          <VenueDetailList data={response.venues} title='Venues' />
-          <EventDetailList data={this.props.results.events.all} title='Related Events' />
-        </div>
-        <Footer />
+        {results}
       </div>
     );
   }

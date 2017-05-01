@@ -12,7 +12,7 @@ class TextCardList extends React.Component {
     return (
       <div className='text-card-list-container'>
         <div className='text-card-list-title'>
-          {this.props.title}
+          <h2>{this.props.title}</h2>
         </div>
         <div className='text-card-list-content'>
           {this.props.cards}
