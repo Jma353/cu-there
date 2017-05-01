@@ -102,13 +102,6 @@ class CategoryBar extends React.Component {
   }
 
   /**
-   * Handle submit
-   */
-  handleSubmit (e) {
-    // TODO
-  }
-
-  /**
    * Handle select suggestion
    */
   handleSelectSuggestion (i) {

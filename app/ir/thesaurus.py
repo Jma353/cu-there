@@ -55,7 +55,7 @@ class Thesaurus(object):
     beta  = self.batch_cosine_sim(five_before, self.p.five_words_before)
 
     # Linear combination
-    result = self.A * alpha + self.B * beta 
+    result = self.A * alpha + self.B * beta
 
     # Grab all words' indexes not corresponding to `word`'s index
     ranking = [r for r in result.argsort()[::-1] if r != word_to_idx[word]]
@@ -77,17 +77,25 @@ class Thesaurus(object):
     denom[denom == 0.0] = 1
     return dot_prod / denom
 
-  def add_sim_words(self, query, k):
+  def grab_sim_words(self, query, k):
     """
-    Adds the top k similar words to the query `query` and
-    returns a new query in string form
+    Grabs top k similar words from the query `query` and
+    returns an array
     """
     q_sp = re.split(r'\s+',query)
     other_werds = []
     for w in q_sp:
       other_werds.extend(self.related_words(w)[:k])
     other_werds = list(set(other_werds)) # Remove duplicates
-    print 'Found new words to add to your query!'
+    print 'Found words related to query:'
     for o in other_werds:
       print o
-    return ' '.join(q_sp + other_werds)
+    return other_werds
+
+  def add_sim_words(self, query, k):
+    """
+    Adds the top k similar words to the query `query` and
+    returns a new query in string form
+    """
+    q_sp = re.split(r'\s+',query)
+    return q_sp + ' ' + ' '.join(self.grab_sim_words(query, k))

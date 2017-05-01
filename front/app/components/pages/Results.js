@@ -23,7 +23,8 @@ class Results extends React.Component {
     this.props.dispatch(
       actionCreators.didSearch(
         this.props.location.query.q,
-        this.props.location.query.categs
+        this.props.location.query.categs,
+        this.props.location.query.related_words
       )
     );
   }
@@ -31,19 +32,18 @@ class Results extends React.Component {
   /**
    * Format features
    */
-   formatFeatures(features) {
-     return features.map(function (f) {
-       return f.toUpperCase().replace(/_/g, " ");
-     });
-   }
+  formatFeatures (features) {
+    return features.map(function (f) {
+      return f.toUpperCase().replace(/_/g, ' ');
+    });
+  }
 
   /**
    * Render
    */
   render () {
-    const response = this.props.results.response;
+    const response = this.props.results.response || {};
     const categories = this.props.location.query.categs;
-
     const results = this.props.results.response
       ? (
         <div>
@@ -71,18 +71,18 @@ class Results extends React.Component {
           </div>
         </div>
       );
-
     return (
       <div>
         <NavBar
           query={this.props.location.query.q}
           categories={categories && categories.split(',')}
+          initialRelatedWords={this.props.location.query.related_words.split(',')}
+          relatedWords={response.relatedWords}
           />
         {results}
       </div>
     );
   }
-
 }
 
 /** Map the redux state to this component's props */
