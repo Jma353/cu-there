@@ -10,31 +10,25 @@ class TimeGraph extends React.Component {
     for (var i = 0; i < this.props.data.length; i++) {
       datasets.push({
         fill: false,
-        backgroundColor: `rgb(${102 - 20 * i}, ${168 - 20 * i}, ${172 - 20 * i})`,
-        borderColor: `rgb(${102 - 20 * i}, ${168 - 20 * i}, ${172 - 20 * i})`,
+        backgroundColor: `rgba(${102 - 20 * i}, ${168 - 20 * i}, ${172 - 20 * i}, 0.5)`,
+        borderColor: `rgba(${102 - 20 * i}, ${168 - 20 * i}, ${172 - 20 * i}, 0.5)`,
         borderWidth: 1,
-        label: this.props.data[i].venue_name,
-        data: this.props.data[i].projected_attendance.map((y, x) => {
-          return {
-            x: x,
-            y: y
-          };
-        })
-      });
-
-      datasets.push({
-        fill: false,
-        backgroundColor: 'red',
-        borderWidth: 1,
-        label: this.props.data[i].venue_name + ' PEAK',
-        data: this.props.data[i].event_times.map((event, x) => {
-          return {
-            x: event.time,
-            y: event.attendance || 0
-          };
-        })
+        data: this.props.data[i].map((y, x) => { return { x: x, y: y }; })
       });
     }
+
+      // datasets.push({
+      //   fill: false,
+      //   backgroundColor: 'red',
+      //   borderWidth: 1,
+      //   label: this.props.data[i].venue_name + ' PEAK',
+      //   data: this.props.data[i].event_times.map((event, x) => {
+      //     return {
+      //       x: event.time,
+      //       y: event.attendance || 0
+      //     };
+      //   })
+      // });
 
     const data = {
       datasets: datasets

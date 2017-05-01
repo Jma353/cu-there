@@ -7,6 +7,8 @@ from app.ir.ir_engine import *
 from app.ir.thesaurus import *
 from app.ml.pipeline import *
 
+# MARK - All data-structures
+
 # Serialization
 event_schema = EventSchema()
 venue_schema = VenueSchema()
@@ -18,66 +20,13 @@ B = 0.5
 # Thesaurus
 thes = Thesaurus(A, B, app.preprocessed)
 
-def process_recs(es, sim_words, sim_categs, recs):
-  # Endpoint info
-  venues = queries.get_venues([r['venue_id'] for r in recs])
-  venues = [venue_schema.dump(v).data for v in venues] # Resultant
+# MARK - Generate IR results
 
-  def _venue_by_id(v_id):
-    results = [v for v in venues if v['id'] == v_id]
-    return None if len(results) == 0 else results[0]
-
-  for r in recs:
-    v = _venue_by_id(r['venue_id'])
-    v['events'] = r['events']
-    v['suggested_time'] = r['time']
-
-  graphs = []
-  for r in recs:
-    addition = dict()
-    addition['venue_id'] = r['venue_id']
-    addition['venue_name'] = _venue_by_id(r['venue_id'])['name']
-    addition['projected_attendance'] = r['time_graph']
-    addition['event_times'] = [
-      {
-        'event_name': e['name'],
-        'time': parser.parse(e['start_time']).hour,
-        'attendance': e['attending']
-      } for e in r['events']]
-    graphs.append(addition)
-
-  # Serialize events + add IR info
-  events = [event_schema.dump(e).data for e in es]
-  for i in xrange(0, len(events)):
-    events[i]['sim_words'] = sim_words[i]
-    events[i]['sim_categs'] = sim_categs[i]
-
-  # Prepare response
-  response = {
-    'success': True,
-    'data': {
-      'venues': venues,
-      'graphs': graphs,
-      'tags': [],
-      'events': events
-    }
-  }
-  return jsonify(response)
-
-namespace = '/search'
-
-@events.route(namespace, methods=['GET'])
-def search():
-  """
-  Vanilla search (no relevance feedback)
-  based on a search query `q`
-  """
-  # Grab the parameters
-  q = '' if request.args.get('q') is None else request.args.get('q')
-  categs = [] if request.args.get('categs') is None else request.args.get('categs').split(",")
-
-  # Update query by extending it with similar words
-  q = thes.add_sim_words(q, 3)
+def generate_ir_results(**kwargs):
+  q = kwargs.get('q', '')
+  categs = kwargs.get('categs', [])
+  relevant = kwargs.get('relevant', [])
+  irrelevant = kwargs.get('irrelevant', [])
 
   # IR, get events
   ir_engine = IREngine(
@@ -96,15 +45,82 @@ def search():
   event_ids = event_ids[:min(len(event_ids), 12)] # Take 12 or less
   es = queries.get_events(event_ids)
 
+  # Everything we need
+  return sim_words, sim_categs, es
+
+# MARK - Process ML recommendations
+
+def process_recs(es, sim_words, sim_categs, recs):
+  # Endpoint info
+  venues = queries.get_venues([r['id'] for r in recs['venues']])
+  venues = [venue_schema.dump(v).data for v in venues] # Resultant
+
+  def _venue_by_id(v_id):
+    results = [v for v in venues if v['id'] == v_id]
+    return None if len(results) == 0 else results[0]
+
+  for i in xrange(len(recs['venues'])):
+    r = recs['venues'][i]
+    v = _venue_by_id(r['id'])
+    v['events'] = r['events']
+    v['suggested_time'] = recs['times'][i]['peak']
+
+  graphs = []
+
+  for r in recs['times']:
+    graphs.append(r['graph']['data'])
+
+  # Serialize events + add IR info
+  events = [event_schema.dump(e).data for e in es]
+  for i in xrange(0, len(events)):
+    events[i]['sim_words'] = sim_words[i]
+    events[i]['sim_categs'] = sim_categs[i]
+
+  # Prepare response
+  response = {
+    'success': True,
+    'data': {
+      'venues': venues,
+      'graphs': graphs,
+      'features': recs['features'],
+      'events': events
+    }
+  }
+
+  return jsonify(response)
+
+namespace = '/search'
+
+@events.route(namespace, methods=['GET'])
+def search():
+  """
+  Vanilla search (no relevance feedback)
+  based on a search query `q`
+  """
+  # Grab the parameters
+  q = '' if request.args.get('q') is None else request.args.get('q')
+  categs = [] if request.args.get('categs') is None else request.args.get('categs').split(",")
+
+  # Update query by extending it with similar words
+  q = thes.add_sim_words(q, 3)
+
+  # IR, get events
+  sim_words, sim_categs, es = generate_ir_results(
+    q=q,
+    categs=categs
+  )
+
   # ML, get recs
   recs = top_k_recommendations(es)
 
-  return process_recs(es, sim_words, sim_categs, recs)
+  # Formatting, rocess recommendations
+  return process_recs(es, sim_words, sim_categs, recs.to_dict())
+
 
 @events.route(namespace + '/rocchio', methods=['GET'])
-def search_rocchio():
+def search_feedback():
   """
-  Search with Rocchio relevance feedback
+  Search with Rocchio relevance feedback + relevant words
   """
   # Grab the parameters
   q          = request.args.get('q')
@@ -116,24 +132,15 @@ def search_rocchio():
   q = thes.add_sim_words(q, 3)
 
   # IR, get events
-  ir_engine = IREngine(
-    query=q,
+  sim_words, sim_categs, es = generate_ir_results(
+    q=q,
     categs=categs,
-    events=app.preprocessed.events,
-    doc_by_term=app.preprocessed.doc_by_term,
     relevant=relevant,
-    irrelevant=irrelevant,
-    count_vec=app.preprocessed.count_vec,
-    categ_by_term=app.preprocessed.categ_by_term,
-    categ_name_to_idx=app.preprocessed.categ_name_to_idx
+    irrelevant=irrelevant
   )
-
-  events_info = ir_engine.get_rocchio_categ_ranked_results()
-  event_ids, sim_words, sim_categs = map(list, zip(*events_info))
-  event_ids = event_ids[:min(len(event_ids), 12)] # Take 12 or less
-  es = queries.get_events(event_ids)
 
   # ML, get recs
   recs = top_k_recommendations(es)
 
-  return process_recs(es, sim_words, sim_categs, recs)
+  # Formatting, rocess recommendations
+  return process_recs(es, sim_words, sim_categs, recs.to_dict())

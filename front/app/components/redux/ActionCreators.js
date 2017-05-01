@@ -18,8 +18,8 @@ export function didSearch (query, categories) {
             results: {
               response: {
                 venues: resp.data.data.venues,
-                tags: resp.data.data.tags,
-                times: resp.data.data.times,
+                features: resp.data.data.features,
+                times: [],
                 graphs: resp.data.data.graphs
               },
               events: {
@@ -53,8 +53,8 @@ export function didChangeRelevance (query, categories, relevant, irrelevant, all
             results: {
               response: {
                 venues: resp.data.data.venues,
-                tags: resp.data.data.tags,
-                times: resp.data.data.times,
+                features: resp.data.data.features,
+                times: [],
                 graphs: resp.data.data.graphs
               },
               events: {
