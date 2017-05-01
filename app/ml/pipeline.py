@@ -93,7 +93,7 @@ class Recommendation:
         'events': self.venue_events[i] # events that got the venue recommended
       } for i in xrange(0, len(self.venue_ids))],
       'features': self.features,
-      'pairs': coupling.suggest_pairs(events, self.times, self.venue_ids)
+      'pairs': self.pairs
     }
 
 def top_k_recommendations(events, k=10):
@@ -150,6 +150,8 @@ def top_k_recommendations(events, k=10):
   for feature_name in top_three_feature_names:
     rec.add_feature(feature_name)
 
+  rec.pairs = coupling.suggest_pairs(events, rec.times, rec.venue_ids)
+
   return rec
 
 if __name__ == "__main__":
@@ -165,7 +167,7 @@ if __name__ == "__main__":
     events = Event.query.all()
     events = [event for event in events if query in event.name.lower()]
     rec = top_k_recommendations(events)
-
+    
     # print recs
     print "Top venues:"
     print
