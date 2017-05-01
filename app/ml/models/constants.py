@@ -1,4 +1,3 @@
-DESCRIPTION_LENGTH = "description_length"
 HAS_PROFILE_PICTURE = "has_profile_picture"
 HAS_LINKS = "has_links"
 HAS_CATEGORY = "has_category"
