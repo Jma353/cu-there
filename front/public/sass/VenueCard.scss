@@ -10,6 +10,15 @@
   border-radius: $border-radius;
   border: 1px solid $light-gray;
   background: $white;
+
+  box-shadow: 4px 4px 24px rgba(50, 50, 50, 0.5);
+
+  &:hover {
+    box-shadow: 24px 24px 96px rgba(50, 50, 50, 0.5);
+    transform: translate(-12px, -12px);
+  }
+
+  transition: all 0.35s;
 }
 
 .venue-card .venue-card:hover, .venue-card:link, .venue-card:visited, .venue-card:active {
