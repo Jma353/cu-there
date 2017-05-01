@@ -37,8 +37,8 @@ class TimeGraph extends React.Component {
     };
 
     return (
-      <div>
-        <p>Time Graph</p>
+      <div className='time-graph'>
+        <h2>Time Graph</h2>
         <Line
           data={data}
           options={{
