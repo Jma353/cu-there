@@ -52,7 +52,7 @@ def generate_ir_results(**kwargs):
 
 # MARK - Process ML recommendations
 
-def process_recs(es, sim_words, sim_categs, recs):
+def process_recs(es, sim_words, sim_categs, to_return_related_words, recs):
   # Endpoint info
   venues = queries.get_venues([r['id'] for r in recs['venues']])
   venues = [venue_schema.dump(v).data for v in venues] # Resultant
@@ -93,7 +93,8 @@ def process_recs(es, sim_words, sim_categs, recs):
       'venues': venues,
       'graphs': graphs,
       'features': recs['features'],
-      'events': events
+      'events': events,
+      'related_words': to_return_related_words
     }
   }
 
@@ -109,10 +110,12 @@ def search():
   """
   # Grab the parameters
   q = '' if request.args.get('q') is None else request.args.get('q')
-  categs = [] if request.args.get('categs') is None else request.args.get('categs').split(",")
+  categs = [] if request.args.get('categs') is None else request.args.get('categs').split(',')
+  related_words = [] if request.args.get('related_words') is None else request.args.get('related_words').split(',')
 
-  # Update query by extending it with similar words
-  q = thes.add_sim_words(q, 3)
+  # Related words
+  q = q + ' '.join(related_words)
+  to_return_related_words = thes.grab_sim_words(q, 3)
 
   # IR, get events
   sim_words, sim_categs, es = generate_ir_results(
@@ -124,7 +127,7 @@ def search():
   recs = top_k_recommendations(es)
 
   # Formatting, rocess recommendations
-  return process_recs(es, sim_words, sim_categs, recs.to_dict())
+  return process_recs(es, sim_words, sim_categs, to_return_related_words, recs.to_dict())
 
 
 @events.route(namespace + '/rocchio', methods=['GET'])
@@ -137,9 +140,11 @@ def search_feedback():
   relevant   = request.args.getlist('relevant') # ids
   irrelevant = request.args.getlist('irrelevant') # ids
   categs = [] if request.args.get('categs') is None else request.args.get('categs').split(",")
+  related_words = [] if request.args.get('related_words') is None else request.args.get('related_words').split(',')
 
-  # Update query by extending it with similar words
-  q = thes.add_sim_words(q, 3)
+  # Related words
+  q = q + ' '.join(related_words)
+  to_return_related_words = thes.grab_sim_words(q, 3)
 
   # IR, get events
   sim_words, sim_categs, es = generate_ir_results(
@@ -153,4 +158,4 @@ def search_feedback():
   recs = top_k_recommendations(es)
 
   # Formatting, rocess recommendations
-  return process_recs(es, sim_words, sim_categs, recs.to_dict())
+  return process_recs(es, sim_words, sim_categs, to_return_related_words, recs.to_dict())

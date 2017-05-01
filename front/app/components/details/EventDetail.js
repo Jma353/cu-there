@@ -46,7 +46,8 @@ class EventDetail extends React.Component {
         this.props.categories,
         relevant,
         irrelevant,
-        all
+        all,
+        this.props.location.query.related_words
       )
     );
   }
@@ -57,17 +58,17 @@ class EventDetail extends React.Component {
   formatDateTime (d) {
     if (!d) return null; // Date is null
 
-    var date = new Date(d)
-    var hours = date.getHours()
-    var mins = date.getMinutes()
+    var date = new Date(d);
+    var hours = date.getHours();
+    var mins = date.getMinutes();
     var ampm = (hours >= 12) ? 'pm' : 'am';
     hours = hours % 12;
-    hours = hours ? hours : 12;
+    hours = hours || 12;
     mins = (mins < 10) ? '0' + mins : mins;
     var time = hours + ':' + mins + ' ' + ampm;
 
-    var monthNames = ["January", "February", "March", "April", "May", "June",
-      "July", "August", "September", "October", "November", "December"
+    var monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December'
     ];
 
     return ([monthNames[date.getMonth()] + ' ' + date.getDate() + ', ' + date.getFullYear(), time]);
@@ -76,23 +77,23 @@ class EventDetail extends React.Component {
   /**
    * Format event time given start and end time
    */
-  formatEventTime(startDate, endDate) {
+  formatEventTime (startDate, endDate) {
     var start = this.formatDateTime(startDate);
     var end = this.formatDateTime(endDate);
     var eventTime = '';
 
     if (start && end) { // Start and end datetime exist
-      if (start[0] == end[0]) { // Same start and end date
-        eventTime = start.join(" at ") + " - " + end[1];
+      if (start[0] === end[0]) { // Same start and end date
+        eventTime = start.join(' at ') + ' - ' + end[1];
       } else {
-        eventTime = start.join(" at ") + " - " + end.join(" at ");
+        eventTime = start.join(' at ') + ' - ' + end.join(' at ');
       }
     } else if (!start && !end) { // Start and end datetime don't exist
-      eventTime = "TBD";
+      eventTime = 'TBD';
     } else if (start) { // Only start datetime exists
-      eventTime = start.join(" at ");
+      eventTime = start.join(' at ');
     } else { // Only end datetime exists
-      eventtime = end.join(" at ");
+      eventTime = end.join(' at ');
     }
 
     return eventTime;
@@ -102,43 +103,39 @@ class EventDetail extends React.Component {
    * Set text to 'None' if empty
    */
   setDefaultText (text) {
-    return (text ? text : "None");
+    return text || 'None';
   }
 
   /**
    * Generate event description string with similar words marked
    */
-  markSimilarWords(eventDesc, simWords) {
-    var words = eventDesc.split(" ");
-
+  markSimilarWords (eventDesc, simWords) {
     simWords.map(function (word) {
       var pattern = new RegExp(word, 'gi');
-      eventDesc = eventDesc.replace(pattern, '<mark class="marked-word">' + word + '</mark>');
+      eventDesc = eventDesc.replace(pattern, "<mark class='marked-word'>" + word + '</mark>');
     });
-
     eventDesc = eventDesc.replace(/\n/g, '<br />');
-
     return eventDesc;
   }
 
   /**
    * Generate category string with similar category marked
    */
-  markSimilarCategs(category, simCateg) {
+  markSimilarCategs (category, simCateg) {
     if (!category) return 'no-categ';
 
-    return (category == simCateg) ? ' marked-categ' : '';
+    return (category === simCateg) ? ' marked-categ' : '';
   }
 
   /**
    * Generate category string with similar category marked
    */
-  formatFeatures(features) {
+  formatFeatures (features) {
     features = features.map(function (feature) {
-      return '<span class="features">' + feature + '</span>'
+      return "<span class='features'>" + feature + '</span>';
     });
 
-    return features.join("")
+    return features.join('');
   }
 
   /**
@@ -160,17 +157,17 @@ class EventDetail extends React.Component {
           </div>
           {/* Date */}
           <div className='event-detail-date'>
-            <div className='icon event-date-icon'></div>
+            <div className='icon event-date-icon' />
             <p className='event-sub-info'>{this.formatEventTime(this.props.data.start_time, this.props.data.end_time)}</p>
           </div>
           {/* Venue */}
           <div className='event-detail-venue'>
-            <div className='icon event-venue-icon'></div>
+            <div className='icon event-venue-icon' />
             <p className='event-sub-info'>{'TBD'}</p> {/* TODO: Get actual venue using this.props.data.venue_id */}
           </div>
           {/* Stats */}
           <div className='event-detail-stats'>
-            <div className='icon event-stats-icon'></div>
+            <div className='icon event-stats-icon' />
             <p className='event-sub-info'>
               {this.props.data.attending + ' Attending · '}
               {this.props.data.maybe + ' Maybe · '}

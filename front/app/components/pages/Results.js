@@ -22,7 +22,8 @@ class Results extends React.Component {
     this.props.dispatch(
       actionCreators.didSearch(
         this.props.location.query.q,
-        this.props.location.query.categs
+        this.props.location.query.categs,
+        this.props.location.query.related_words
       )
     );
   }
@@ -39,6 +40,8 @@ class Results extends React.Component {
         <NavBar
           query={this.props.location.query.q}
           categories={categories && categories.split(',')}
+          initialRelatedWords={this.props.location.query.related_words}
+          relatedWords={response.relatedWords}
           />
         <div className='results-header'>
           <p>{`Showing ${Object.keys(response.venues).length} venues`}</p>
@@ -63,7 +66,6 @@ class Results extends React.Component {
       </div>
     );
   }
-
 }
 
 /** Map the redux state to this component's props */
