@@ -69,19 +69,6 @@ def process_recs(es, sim_words, sim_categs, recs):
     v['suggested_time'] = r['peak']
     graphs.append(r['graph']['data'])
 
-  # for r in recs:
-  #   addition = dict()
-  #   addition['venue_id'] = r['venues']['id']
-  #   addition['venue_name'] = _venue_by_id(r['venues']['id'])['name']
-  #   addition['projected_attendance'] = r['time_graph']
-  #   addition['event_times'] = [
-  #     {
-  #       'event_name': e['name'],
-  #       'time': parser.parse(e['start_time']).hour,
-  #       'attendance': e['attending']
-  #     } for e in r['events']]
-  #   graphs.append(addition)
-
   # Serialize events + add IR info
   events = [event_schema.dump(e).data for e in es]
   for i in xrange(0, len(events)):
@@ -128,17 +115,17 @@ def search():
   # Formatting, rocess recommendations
   return process_recs(es, sim_words, sim_categs, recs.to_dict())
 
+
 @events.route(namespace + '/rocchio', methods=['GET'])
-def search_rocchio():
+def search_feedback():
   """
-  Search with Rocchio relevance feedback
+  Search with Rocchio relevance feedback + relevant words
   """
   # Grab the parameters
   q          = request.args.get('q')
   relevant   = request.args.getlist('relevant') # ids
   irrelevant = request.args.getlist('irrelevant') # ids
   categs = [] if request.args.get('categs') is None else request.args.get('categs').split(",")
-
 
   # Update query by extending it with similar words
   q = thes.add_sim_words(q, 3)
