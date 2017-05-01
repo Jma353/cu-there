@@ -43,13 +43,18 @@ class Results extends React.Component {
           </div>
           <div className='results'>
             <div className='result-text-card-lists'>
-              <div className='result-times'>
+              <div className='result-time-graph'>
                 <TimeGraph data={response.graphs} />
               </div>
-              <div className='result-features'>
+              <div className='result-cards'>
                 <TextCardList
+                  className='result-features'
                   data={response.features}
                   title='Increase attendance by including...' />
+                <TextCardList
+                  className='result-times'
+                  data={response.times}
+                  title='Suggested Times' />
               </div>
             </div>
             <VenueDetailList data={response.venues} title='Venues' />

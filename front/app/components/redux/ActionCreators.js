@@ -11,6 +11,7 @@ export function didSearch (query, categories, relatedWords) {
     promise: () => {
       return axios.get(`/search?q=${encodeURIComponent(query)}&categs=${categories}&related_words=${relatedWords}`)
         .then(resp => {
+          console.log(resp.data.data);
           return Promise.resolve({
             query: query,
             categories: categories,

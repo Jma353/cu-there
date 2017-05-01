@@ -23,14 +23,14 @@
   }
 }
 
-.result-times {
+.result-time-graph {
   flex-basis: 45%;
   @include respond-to(handhelds) {
     flex-basis: 0%;
   }
 }
 
-.result-features {
+.result-cards {
   flex-basis: 45%;
   @include respond-to(handhelds) {
     flex-basis: 100%;
