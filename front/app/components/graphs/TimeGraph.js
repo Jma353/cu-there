@@ -1,5 +1,5 @@
 import React from 'react';
-
+import { formatTime } from '../../utils/time';
 import { Line } from 'react-chartjs-2';
 
 class TimeGraph extends React.Component {
@@ -44,11 +44,24 @@ class TimeGraph extends React.Component {
             scales: {
               xAxes: [{
                 type: 'linear',
-                position: 'bottom'
+                position: 'bottom',
+                ticks: {
+                  callback: function (label, index, labels) {
+                    return formatTime(label);
+                  }
+                },
+                scaleLabel: {
+                  display: true,
+                  labelString: 'Time of Day'
+                }
               }],
               yAxes: [{
                 ticks: {
                   min: 0
+                },
+                scaleLabel: {
+                  display: true,
+                  labelString: 'Attendance'
                 }
               }]
             },
