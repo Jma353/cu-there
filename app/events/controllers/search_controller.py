@@ -87,7 +87,7 @@ def process_recs(es, sim_words, sim_categs, to_return_related_words, recs):
   for i in xrange(0, len(events)):
     events[i]['sim_words'] = sim_words[i]
     events[i]['sim_categs'] = sim_categs[i]
-    events[i]['features'] = [feature.name for feature in FEATURES if feature.apply(es[i]) == 1 and feature.name != DESCRIPTION_LENGTH]
+    events[i]['features'] = [feature.name for feature in FEATURES if feature.apply(es[i]) == 1]
 
   new_pairs = []
   for pair in recs['pairs']:
