@@ -16,8 +16,8 @@ event_schema = EventSchema()
 venue_schema = VenueSchema()
 
 # Variables for linear combo
-A = 0.5
-B = 0.5
+A = 0.6
+B = 0.4
 
 # Thesaurus
 thes = Thesaurus(A, B, app.preprocessed)
@@ -38,7 +38,9 @@ def generate_ir_results(**kwargs):
     doc_by_term=app.preprocessed.doc_by_term,
     count_vec=app.preprocessed.count_vec,
     categ_by_term=app.preprocessed.categ_by_term,
-    categ_name_to_idx=app.preprocessed.categ_name_to_idx
+    categ_name_to_idx=app.preprocessed.categ_name_to_idx,
+    rel=relevant,
+    irrel=irrelevant
   )
 
   # Note: just use rocchio function with empty relevant/irrelevant lists
@@ -147,7 +149,7 @@ def search_feedback():
   q          = request.args.get('q')
   relevant   = request.args.getlist('relevant') # ids
   irrelevant = request.args.getlist('irrelevant') # ids
-  categs = [] if request.args.get('categs') is None else request.args.get('categs').split(",")
+  categs = [] if request.args.get('categs') is None else request.args.get('categs').split(',')
   related_words = [] if request.args.get('related_words') is None else request.args.get('related_words').split(',')
 
   # Related words

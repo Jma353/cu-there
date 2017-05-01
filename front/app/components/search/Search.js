@@ -67,6 +67,15 @@ class Search extends React.Component {
       });
   }
 
+  handleFreshSearch () {
+    this.setState({
+      usedRelatedWords: [],
+      unusedRelatedWords: []
+    }, () => {
+      this.handleSubmit();
+    });
+  }
+
   /**
    * Handle a change to text input
    */
@@ -121,7 +130,7 @@ class Search extends React.Component {
     }
 
     if (event.key === 'Enter') {
-      if (suggestionIndex < 0) this.handleSubmit(event);
+      if (suggestionIndex < 0) this.handleFreshSearch();
       else {
         this.handleSelectSuggestion(suggestionIndex);
       }
@@ -237,12 +246,7 @@ class Search extends React.Component {
     const buttonProps = {
       className: 'submit fa fa-search',
       onClick: () => {
-        this.setState({
-          usedRelatedWords: [],
-          unusedRelatedWords: []
-        }, () => {
-          this.handleSubmit();
-        });
+        this.handleFreshSearch();
       }
     };
 

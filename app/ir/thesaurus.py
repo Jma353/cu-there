@@ -86,7 +86,8 @@ class Thesaurus(object):
     other_werds = []
     for w in q_sp:
       other_werds.extend(self.related_words(w)[:k])
-    other_werds = list(set(other_werds)) # Remove duplicates
+    # Remove duplicates / words we used to generate these
+    other_werds = list(set(other_werds) - set(q_sp))
     print 'Found words related to query:'
     for o in other_werds:
       print o

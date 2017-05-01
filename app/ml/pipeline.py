@@ -72,7 +72,7 @@ class Recommendation:
 
   def get_features(self):
     return self.features
-    
+
   def get_pairs(self):
     return self.pairs
 
@@ -126,7 +126,6 @@ def top_k_recommendations(events, k=10):
   # Times
 
   synthetic_time_data = np.asarray([i for i in xrange(0, 24)])
-  print events[0].id
   time_models = topic_regression.topic_time_models(
     preprocessed.events,
     preprocessed.ids_to_topics,
@@ -167,7 +166,7 @@ if __name__ == "__main__":
     events = Event.query.all()
     events = [event for event in events if query in event.name.lower()]
     rec = top_k_recommendations(events)
-    
+
     # print recs
     print "Top venues:"
     print
