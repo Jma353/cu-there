@@ -103,7 +103,7 @@ def process_recs(es, sim_words, sim_categs, to_return_related_words, recs):
       'graphs': graphs,
       'features': map(lambda f: feature_descriptions[f], recs['features']),
       'events': events,
-      'times': map(lambda t: t['peak'], recs['times']),
+      'times': list(set(map(lambda t: t['peak'], recs['times']))),
       'related_words': to_return_related_words,
       'pairs': new_pairs
     }
