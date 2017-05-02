@@ -138,11 +138,8 @@ def top_k_recommendations(events, k=10):
     model_graph = time_model.generate_graph(synthetic_time_data)
     rec.add_time(peak_time, peak_attendance, model_graph)
 
-<<<<<<< HEAD
   # Meta-features and tag recommendations
 
-=======
->>>>>>> aaadb541a6e943162223a7ece0d5f431467cefd4
   m = MetadataModel(events)
   features_coefs = m.features_coefs()
 
