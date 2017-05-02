@@ -11,6 +11,8 @@ require('../../../public/sass/Results.scss');
 import { connect } from 'react-redux';
 import * as actionCreators from '../redux/actionCreators';
 
+import { formatTime } from '../../utils/time';
+
 /**
  * Results page of the application
  */
@@ -30,15 +32,6 @@ class Results extends React.Component {
   }
 
   /**
-   * Format features
-   */
-  formatFeatures (features) {
-    return features.map(function (f) {
-      return f.toUpperCase().replace(/_/g, ' ');
-    });
-  }
-
-  /**
    * Render
    */
   render () {
@@ -52,11 +45,18 @@ class Results extends React.Component {
           </div>
           <div className='results'>
             <div className='result-text-card-lists'>
-              <div className='result-times'>
+              <div className='result-time-graph'>
                 <TimeGraph data={response.graphs} />
               </div>
-              <div className='result-features'>
-                <TextCardList data={this.formatFeatures(response.features)} title='Suggested Features' />
+              <div className='result-cards'>
+                <TextCardList
+                  className='result-features'
+                  data={response.features}
+                  title='Increase attendance by including...' />
+                <TextCardList
+                  className='result-times'
+                  data={response.times.map((time, i) => formatTime(time))}
+                  title='Suggested Times' />
               </div>
             </div>
             <VenueDetailList data={response.venues} title='Venues' />

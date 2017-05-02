@@ -13,6 +13,7 @@
 .result-text-card-lists {
   display: flex;
   flex-direction: row;
+  justify-content: space-between;
   .time-graph {
     padding: 20px 0px 0px 0px;
     display: block;
@@ -22,15 +23,15 @@
   }
 }
 
-.result-times {
-  flex-basis: 50%;
+.result-time-graph {
+  flex-basis: 45%;
   @include respond-to(handhelds) {
     flex-basis: 0%;
   }
 }
 
-.result-features {
-  flex-basis: 50%;
+.result-cards {
+  flex-basis: 45%;
   @include respond-to(handhelds) {
     flex-basis: 100%;
   }
