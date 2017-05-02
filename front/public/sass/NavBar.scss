@@ -17,7 +17,7 @@
     display: none;
   }
   @include respond-to(medium-screens) {
-    font-size: 18px;
+    font-size: 16px;
   }
 }
 
@@ -25,7 +25,7 @@
   display: flex;
   padding-top: 16px;
   height: 60%;
-  flex-basis: 80%;
+  flex-basis: 75%;
   justify-content: flex-start;
   @include respond-to(handhelds) {
     flex-basis: 100%;

@@ -45,9 +45,7 @@ class Results extends React.Component {
           </div>
           <div className='results'>
             <div className='result-text-card-lists'>
-              <div className='result-time-graph'>
-                <TimeGraph data={response.graphs} />
-              </div>
+              <TimeGraph data={response.graphs} />
               <div className='result-cards'>
                 <TextCardList
                   className='result-features'

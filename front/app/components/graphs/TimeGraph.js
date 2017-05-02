@@ -42,6 +42,7 @@ class TimeGraph extends React.Component {
         <Line
           data={data}
           options={{
+            responsive: true,
             scales: {
               xAxes: [{
                 type: 'linear',
