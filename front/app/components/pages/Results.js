@@ -11,6 +11,8 @@ require('../../../public/sass/Results.scss');
 import { connect } from 'react-redux';
 import * as actionCreators from '../redux/actionCreators';
 
+import { formatTime } from '../../utils/time';
+
 /**
  * Results page of the application
  */
@@ -53,7 +55,7 @@ class Results extends React.Component {
                   title='Increase attendance by including...' />
                 <TextCardList
                   className='result-times'
-                  data={response.times}
+                  data={response.times.map((time, i) => formatTime(time))}
                   title='Suggested Times' />
               </div>
             </div>

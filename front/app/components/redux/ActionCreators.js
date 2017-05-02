@@ -19,7 +19,7 @@ export function didSearch (query, categories, relatedWords) {
               response: {
                 venues: resp.data.data.venues,
                 features: resp.data.data.features,
-                times: [],
+                times: resp.data.data.times,
                 graphs: resp.data.data.graphs,
                 relatedWords: resp.data.data.related_words
               },
@@ -56,7 +56,7 @@ export function didChangeRelevance (query, categories, relevant, irrelevant, all
               response: {
                 venues: resp.data.data.venues,
                 features: resp.data.data.features,
-                times: [],
+                times: resp.data.data.times,
                 graphs: resp.data.data.graphs,
                 relatedWords: resp.data.data.related_words
               },

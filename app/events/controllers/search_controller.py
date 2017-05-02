@@ -94,6 +94,7 @@ def process_recs(es, sim_words, sim_categs, to_return_related_words, recs):
     pair['venue_name'] = queries.get_venues([pair['venue_id']])[0].name
     del pair['venue_id']
     new_pairs.append(pair)
+
   # Prepare response
   response = {
     'success': True,
@@ -102,7 +103,7 @@ def process_recs(es, sim_words, sim_categs, to_return_related_words, recs):
       'graphs': graphs,
       'features': map(lambda f: feature_descriptions[f], recs['features']),
       'events': events,
-      'times': recs['times'],
+      'times': map(lambda t: t['peak'], recs['times']),
       'related_words': to_return_related_words,
       'pairs': new_pairs
     }
