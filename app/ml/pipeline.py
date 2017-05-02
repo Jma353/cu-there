@@ -137,15 +137,16 @@ def top_k_recommendations(events, k=10):
     peak_time, peak_attendance = time_model.find_peak(synthetic_time_data)
     model_graph = time_model.generate_graph(synthetic_time_data)
     rec.add_time(peak_time, peak_attendance, model_graph)
-    
+
+  # Meta-features and tag recommendations
+
   m = MetadataModel(events)
   features_coefs = m.features_coefs()
 
   # For now, let's return the top three features. We can play around with this or generate a number programmatically
 
-  top_feature_names = filter(lambda feat: features_coefs[feat] > 0, 
-    sorted(features_coefs.keys(), key=features_coefs.get, reverse=True))
-  for feature_name in top_feature_names:
+  top_three_feature_names = sorted(features_coefs.keys(), key=features_coefs.get, reverse=True)[:3]
+  for feature_name in top_three_feature_names:
     rec.add_feature(feature_name)
 
   rec.pairs = coupling.suggest_pairs(events, rec.times, rec.venue_ids)
