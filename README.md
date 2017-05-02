@@ -109,13 +109,17 @@ npm run dev
 
 ## Production
 
-`Heroku` is used for this project's production environment.
+* `Heroku` is used for this project's production environment.
 
-`Webpack` must be run locally so it is pushed to `Heroku`
+* `Webpack` must be run locally so it is pushed to `Heroku`
+
+* `Pickle` file must be generated locally to avoid preprocessing occurring on the `Heroku` server
 
 ````bash
 git checkout heroku
 git merge master
+rm -r preprocessed.p
+python remake_dill.py
 cd front
 webpack
 cd ..
