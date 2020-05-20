@@ -16,7 +16,7 @@ gevent==1.2.1
 google-api-python-client==1.6.2
 gunicorn==19.7.1
 haversine==0.4.5
-httplib2==0.10.3
+httplib2==0.18.0
 itsdangerous==0.24
 Jinja2==2.9.5
 Mako==1.0.6
