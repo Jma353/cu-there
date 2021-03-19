@@ -18,7 +18,7 @@ gunicorn==19.7.1
 haversine==0.4.5
 httplib2==0.10.3
 itsdangerous==0.24
-Jinja2==2.9.5
+Jinja2==2.11.3
 Mako==1.0.6
 MarkupSafe==0.23
 marshmallow==2.12.2
